@@ -200,9 +200,14 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/License=License',
 				},
 				
-				viewFactory:edit_field {
+				viewFactory:combo_box {
 					value = bind 'info_license',
 					immediate = true,
+					items = {
+						'{{Cc-by-sa-4.0}}',
+						'{{Cc-by-4.0}}',
+						'{{Cc-zero}}',
+					},
 				},
 			},
 			
