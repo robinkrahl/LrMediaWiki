@@ -20,6 +20,7 @@ local LrView = import 'LrView'
 
 local bind = LrView.bind
 
+local Info = require 'Info'
 local MediaWikiInterface = require 'MediaWikiInterface'
 
 local MediaWikiExportServiceProvider = {}
@@ -87,8 +88,9 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local license = exportSettings.info_license
 			local other = exportSettings.info_other
 			local categories = exportSettings.info_categories
+			local additionalCategories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories')
 			
-			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, other, categories)
+			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, other, categories, additionalCategories)
 			
 			MediaWikiInterface.uploadFile(pathOrMessage, fileDescription)
 			LrFileUtils.delete(pathOrMessage)

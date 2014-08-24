@@ -9,21 +9,18 @@
 -- [1]  <https://commons.wikimedia.org/wiki/Commons:LrMediaWiki>
 -- [2]  <https://raw.githubusercontent.com/LrMediaWiki/LrMediaWiki/master/CREDITS.txt>
 
+-- Code status:
+-- doc:   missing
+-- i18n:  complete
+
 return {
-	LrSdkVersion = 5.0,
-	LrToolkitIdentifier = 'org.ireas.lightroom.mediawiki',
-	LrPluginName = LOC '$$$/LrMediaWiki/PluginName=MediaWiki for Lightroom',
-	
-	LrExportServiceProvider = {
-		title = LOC '$$$/LrMediaWiki/MediaWiki=MediaWiki',
-		file = 'MediaWikiExportServiceProvider.lua',
+	metadataFieldsForPhotos = {
+		{
+			id = 'categories',
+			title = LOC '$$$/LrMediaWiki/Metadata/Categories=Categories',
+			dataType = 'string',
+		},
 	},
 	
-	LrMetadataProvider = 'MediaWikiMetadataProvider.lua',
-	
-	VERSION = {
-		major = 0,
-		minor = 1,
-		revision = 0,
-	},
+	schemaVersion = 1,
 }

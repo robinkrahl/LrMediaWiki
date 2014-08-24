@@ -30,3 +30,4 @@
 "$$$/LrMediaWiki/Interface/InUse=Dateiname schon verwendet"
 "$$$/LrMediaWiki/Interface/InUse/Details=Es gibt bereits eine Datei mit dem Namen ^1. Überschreiben? (Die Dateibeschreibung wird nicht verändert.)"
 "$$$/LrMediaWiki/Interface/UploadFailed=Upload fehlgeschlagen: ^1"
+"$$$/LrMediaWiki/Metadata/Categories=Kategorien"

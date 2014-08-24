@@ -74,10 +74,17 @@ MediaWikiInterface.uploadFile = function(filePath, description)
 	end
 end
 
-MediaWikiInterface.buildFileDescription = function(description, source, timestamp, author, license, other, categories)
+MediaWikiInterface.buildFileDescription = function(description, source, timestamp, author, license, other, categories, additionalCategories)
 	local categoriesString = ''
 	for category in string.gmatch(categories, '[^;]+') do
-		categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
+		if category then
+			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
+		end
+	end
+	for category in string.gmatch(additionalCategories, '[^;]+') do
+		if category then
+			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
+		end
 	end
 	return string.format(MediaWikiInterface.fileDescriptionPattern, description, source, timestamp, author, other, license, categoriesString)
 end
