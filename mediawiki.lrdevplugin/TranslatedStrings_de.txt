@@ -31,3 +31,6 @@
 "$$$/LrMediaWiki/Interface/InUse/Details=Es gibt bereits eine Datei mit dem Namen ^1. Überschreiben? (Die Dateibeschreibung wird nicht verändert.)"
 "$$$/LrMediaWiki/Interface/UploadFailed=Upload fehlgeschlagen: ^1"
 "$$$/LrMediaWiki/Metadata/Categories=Kategorien"
+"$$$/LrMediaWiki/Metadata/DescriptionEn=Beschreibung (en)"
+"$$$/LrMediaWiki/Metadata/DescriptionDe=Beschreibung (de)"
+"$$$/LrMediaWiki/Metadata/DescriptionAdditional=Beschreibung (andere)"
