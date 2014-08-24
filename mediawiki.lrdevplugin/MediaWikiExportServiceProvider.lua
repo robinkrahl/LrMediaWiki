@@ -70,7 +70,19 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local photo = rendition.photo
 			
 			local fallbackDescription = exportSettings.fallback_description
-			local description = photo:getFormattedMetadata('caption')
+			local descriptionEn = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
+			local descriptionDe = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_de')
+			local descriptionAdditional = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_additional')
+			local description = ''
+			if not isStringEmpty(descriptionEn) then
+				description = '{{en|1=' .. descriptionEn .. '}}\n'
+			end
+			if not isStringEmpty(descriptionDe) then
+				description = description .. '{{de|1=' .. descriptionDe .. '}}\n'
+			end
+			if not isStringEmpty(descriptionAdditional) then
+				description = description .. descriptionAdditional
+			end
 			if isStringEmpty(description) then
 				if fallbackDescription then
 					description = fallbackDescription

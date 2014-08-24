@@ -16,11 +16,26 @@
 return {
 	metadataFieldsForPhotos = {
 		{
+			id = 'description_en',
+			title = LOC '$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)',
+			dataType = 'string',
+		},
+		{
+			id = 'description_de',
+			title = LOC '$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)',
+			dataType = 'string',
+		},
+		{
+			id = 'description_additional',
+			title = LOC '$$$/LrMediaWiki/Metadata/DescriptionAdditional=Description (other)',
+			dataType = 'string',
+		},
+		{
 			id = 'categories',
 			title = LOC '$$$/LrMediaWiki/Metadata/Categories=Categories',
 			dataType = 'string',
 		},
 	},
 	
-	schemaVersion = 1,
+	schemaVersion = 2,
 }
