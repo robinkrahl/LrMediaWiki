@@ -69,7 +69,6 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			-- do upload to MediaWiki
 			local photo = rendition.photo
 			
-			local fallbackDescription = exportSettings.fallback_description
 			local descriptionEn = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
 			local descriptionDe = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_de')
 			local descriptionAdditional = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_additional')
@@ -84,11 +83,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				description = description .. descriptionAdditional
 			end
 			if isStringEmpty(description) then
-				if fallbackDescription then
-					description = fallbackDescription
-				else
-					rendition:uploadFailed(LOC '$$$/LrMediaWiki/Export/NoDescription=No description given for this file!')
-				end
+				rendition:uploadFailed(LOC '$$$/LrMediaWiki/Export/NoDescription=No description given for this file!')
 			end
 			local source = exportSettings.info_source
 			local timestampSeconds = photo:getRawMetadata('dateTimeOriginal')
@@ -165,21 +160,6 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 		{
 			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=Upload Information",
 			synopsis = bind 'info_license',
-			
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
-				
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/DefaultDescription=Default description',
-				},
-				
-				viewFactory:edit_field {
-					value = bind 'fallback_description',
-					immediate = true,
-					width_in_chars = 30,
-					height_in_lines = 3,
-				},
-			},
 			
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
@@ -274,7 +254,6 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'username', default = '' },
 	{ key = 'password', default = '' },
 	{ key = 'api_path', default = 'https://commons.wikimedia.org/w/api.php' },
-	{ key = 'fallback_description', default = '' },
 	{ key = 'info_source', default = '{{own}}' },
 	{ key = 'info_author', default = '' },
 	{ key = 'info_license', default = '{{Cc-by-sa-4.0}}' },
