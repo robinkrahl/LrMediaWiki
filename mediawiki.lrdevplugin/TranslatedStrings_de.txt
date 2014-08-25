@@ -32,6 +32,7 @@
 "$$$/LrMediaWiki/Section/Licensing/Categories=Kategorien"
 "$$$/LrMediaWiki/Section/Licensing/License=Lizenz"
 "$$$/LrMediaWiki/Section/Licensing/Other=Andere Felder"
+"$$$/LrMediaWiki/Section/Licensing/Preview=Vorschau des generierten Wikitexts"
 "$$$/LrMediaWiki/Section/Licensing/Source=Quelle"
 "$$$/LrMediaWiki/Section/Licensing/Title=Upload-Informationen"
 "$$$/LrMediaWiki/Section/User/ApiPath/Details=Pfad zur api.php-Datei"

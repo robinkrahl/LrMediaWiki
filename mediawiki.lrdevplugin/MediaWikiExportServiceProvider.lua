@@ -233,6 +233,18 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories/Details=separate with ;',
 				},
 			},
+			
+			viewFactory:row {
+				spacing = viewFactory:control_spacing(),
+				
+				viewFactory:push_button {
+					title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
+					action = function(button)
+						local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->')
+						LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
+					end,
+				},
+			},
 		},
 	}
 end
