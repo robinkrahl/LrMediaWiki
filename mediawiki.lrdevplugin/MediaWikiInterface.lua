@@ -13,12 +13,15 @@
 -- doc:   missing
 -- i18n:  complete
 
+local LrBinding = import 'LrBinding'
 local LrDialogs = import 'LrDialogs'
 local LrErrors = import 'LrErrors'
+local LrFunctionContext = import 'LrFunctionContext'
 local LrPathUtils = import 'LrPathUtils'
+local LrView = import 'LrView'
 
 local MediaWikiApi = require 'MediaWikiApi'
-
+local MediaWikiUtils = require 'MediaWikiUtils'
 
 local MediaWikiInterface = {
 	username = nil,
@@ -54,21 +57,65 @@ MediaWikiInterface.prepareUpload = function(username, password, apiPath)
 	end
 end
 
-MediaWikiInterface.uploadFile = function(filePath, description)
+MediaWikiInterface.prompt = function(title, label, default)
+	return LrFunctionContext.callWithContext('MediaWikiInterface.prompt', function(context)
+		return MediaWikiInterface._prompt(context, title, label, default)
+	end)
+end
+
+MediaWikiInterface._prompt = function(functionContext, title, label, default)
+	local factory = LrView.osFactory()
+	local properties = LrBinding.makePropertyTable(functionContext)
+	properties.dialogValue = default
+	local contents = factory:row {
+		spacing = factory:label_spacing(),
+		bind_to_object = properties,
+		factory:static_text {
+			title = label,
+		},
+		factory:edit_field {
+			fill_horizontal = 1,
+			value = LrView.bind('dialogValue'),
+			width_in_chars = 20,
+		},
+	}
+	local dialogResult = LrDialogs.presentModalDialog({
+		title = title,
+		contents = contents,
+	})
+	local result = nil 
+	if dialogResult == 'ok' then
+		result = properties.dialogValue
+	end
+	return result
+end
+
+MediaWikiInterface.uploadFile = function(filePath, description, fileName)
 	if not MediaWikiInterface.loggedIn then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload.')
 	end
-	local targetFileName = LrPathUtils.leafName(filePath)
+	local comment = 'Uploaded with LrMediaWiki'
+	local targetFileName = fileName or LrPathUtils.leafName(filePath)
 	local ignorewarnings = false
 	if MediaWikiApi.existsFile(targetFileName) then
-		local continue = LrDialogs.confirm(LOC '$$$/LrMediaWiki/Interface/InUse=File name already in use', LOC('$$$/LrMediaWiki/Interface/InUse/Details=There already is a file with the name ^1.  Overwrite?  (File description won\'t be changed.)', targetFileName))
+		local continue = LrDialogs.confirm(LOC '$$$/LrMediaWiki/Interface/InUse=File name already in use', LOC('$$$/LrMediaWiki/Interface/InUse/Details=There already is a file with the name ^1.  Overwrite?  (File description won\'t be changed.)', targetFileName), LOC '$$$/LrMediaWiki/Interface/InUse/OK=Overwrite', LOC '$$$/LrMediaWiki/Interface/InUse/Cancel=Cancel', LOC '$$$/LrMediaWiki/Interface/InUse/Rename=Rename')
 		if continue == 'ok' then
+			local newComment = MediaWikiInterface.prompt(LOC '$$$/LrMediaWiki/Interface/VersionComment=Version comment', LOC '$$$/LrMediaWiki/Interface/VersionComment=Version comment')
+			if not MediaWikiUtils.isStringEmpty(newComment) then
+				comment = newComment .. ' (LrMediaWiki)'
+			end
 			ignorewarnings = true
+		elseif continue == 'other' then
+			local newFileName = MediaWikiInterface.prompt(LOC '$$$/LrMediaWiki/Interface/Rename=Rename file', LOC '$$$/LrMediaWiki/Interface/Rename/NewName=New file name', targetFileName)
+			if not MediaWikiUtils.isStringEmpty(newFileName) and newFileName ~= targetFileName then
+				MediaWikiInterface.uploadFile(filePath, description, newFileName)
+			end
+			return
 		else
 			return
 		end
 	end
-	local uploadResult = MediaWikiApi.upload(targetFileName, filePath, description, 'Uploaded with LrMediaWiki', ignorewarnings)
+	local uploadResult = MediaWikiApi.upload(targetFileName, filePath, description, comment, ignorewarnings)
 	if uploadResult ~= true then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Interface/UploadFailed=Upload failed: ^1', uploadResult))
 	end

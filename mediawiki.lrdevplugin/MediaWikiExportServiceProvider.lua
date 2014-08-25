@@ -22,12 +22,9 @@ local bind = LrView.bind
 
 local Info = require 'Info'
 local MediaWikiInterface = require 'MediaWikiInterface'
+local MediaWikiUtils = require 'MediaWikiUtils'
 
 local MediaWikiExportServiceProvider = {}
-
-local isStringEmpty = function(str)
-	return str == nil or string.match(str, '^%s*$') ~= nil
-end
 
 MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext)
 	-- configure progess display
@@ -40,22 +37,22 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	local exportSettings = assert(exportContext.propertyTable)
 	
 	-- require username, password, apipath, license, author, source
-	if isStringEmpty(exportSettings.username) then
+	if MediaWikiUtils.isStringEmpty(exportSettings.username) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoUsername=No username given!')
 	end
-	if isStringEmpty(exportSettings.password) then
+	if MediaWikiUtils.isStringEmpty(exportSettings.password) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoPassword=No password given!')
 	end
-	if isStringEmpty(exportSettings.api_path) then
+	if MediaWikiUtils.isStringEmpty(exportSettings.api_path) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoApiPath=No API path given!')
 	end
-	if isStringEmpty(exportSettings.info_license) then
+	if MediaWikiUtils.isStringEmpty(exportSettings.info_license) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoLicense=No license given!')
 	end
-	if isStringEmpty(exportSettings.info_author) then
+	if MediaWikiUtils.isStringEmpty(exportSettings.info_author) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoAuthor=No author given!')
 	end
-	if isStringEmpty(exportSettings.info_source) then
+	if MediaWikiUtils.isStringEmpty(exportSettings.info_source) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoSource=No source given!')
 	end
 	
@@ -73,16 +70,16 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local descriptionDe = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_de')
 			local descriptionAdditional = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_additional')
 			local description = ''
-			if not isStringEmpty(descriptionEn) then
+			if not MediaWikiUtils.isStringEmpty(descriptionEn) then
 				description = '{{en|1=' .. descriptionEn .. '}}\n'
 			end
-			if not isStringEmpty(descriptionDe) then
+			if not MediaWikiUtils.isStringEmpty(descriptionDe) then
 				description = description .. '{{de|1=' .. descriptionDe .. '}}\n'
 			end
-			if not isStringEmpty(descriptionAdditional) then
+			if not MediaWikiUtils.isStringEmpty(descriptionAdditional) then
 				description = description .. descriptionAdditional
 			end
-			if isStringEmpty(description) then
+			if MediaWikiUtils.isStringEmpty(description) then
 				rendition:uploadFailed(LOC '$$$/LrMediaWiki/Export/NoDescription=No description given for this file!')
 			end
 			local source = exportSettings.info_source
@@ -95,7 +92,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local license = exportSettings.info_license
 			local other = exportSettings.info_other
 			local categories = exportSettings.info_categories
-			local additionalCategories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories')
+			local additionalCategories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''
 			
 			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, other, categories, additionalCategories)
 			
