@@ -81,6 +81,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			end
 			if MediaWikiUtils.isStringEmpty(description) then
 				rendition:uploadFailed(LOC '$$$/LrMediaWiki/Export/NoDescription=No description given for this file!')
+				return
 			end
 			local source = exportSettings.info_source
 			local timestampSeconds = photo:getRawMetadata('dateTimeOriginal')
@@ -94,6 +95,12 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local other = exportSettings.info_other
 			local categories = exportSettings.info_categories
 			local additionalCategories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''
+			
+			local gps = photo:getRawMetadata('gps')
+			if gps and gps.latitude and gps.longitude then
+				local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude .. '}}\n'
+				templates = location .. templates
+			end
 			
 			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories)
 			
