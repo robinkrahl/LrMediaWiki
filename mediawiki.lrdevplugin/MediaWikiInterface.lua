@@ -37,6 +37,7 @@ local MediaWikiInterface = {
 |other_versions=
 |other_fields=%s
 }}
+%s
 == {{int:license-header}} ==
 %s
 %s[[Category:Uploaded with LrMediaWiki]]]=],
@@ -121,7 +122,7 @@ MediaWikiInterface.uploadFile = function(filePath, description, fileName)
 	end
 end
 
-MediaWikiInterface.buildFileDescription = function(description, source, timestamp, author, license, other, categories, additionalCategories)
+MediaWikiInterface.buildFileDescription = function(description, source, timestamp, author, license, templates, other, categories, additionalCategories)
 	local categoriesString = ''
 	for category in string.gmatch(categories, '[^;]+') do
 		if category then
@@ -133,7 +134,7 @@ MediaWikiInterface.buildFileDescription = function(description, source, timestam
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
-	return string.format(MediaWikiInterface.fileDescriptionPattern, description, source, timestamp, author, other, license, categoriesString)
+	return string.format(MediaWikiInterface.fileDescriptionPattern, description, source, timestamp, author, other, templates, license, categoriesString)
 end
 
 return MediaWikiInterface

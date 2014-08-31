@@ -90,11 +90,12 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			end
 			local author = exportSettings.info_author
 			local license = exportSettings.info_license
+			local templates = exportSettings.info_templates
 			local other = exportSettings.info_other
 			local categories = exportSettings.info_categories
 			local additionalCategories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''
 			
-			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, other, categories, additionalCategories)
+			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories)
 			
 			MediaWikiInterface.uploadFile(pathOrMessage, fileDescription)
 			LrFileUtils.delete(pathOrMessage)
@@ -206,6 +207,19 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				spacing = viewFactory:control_spacing(),
 				
 				viewFactory:static_text {
+					title = LOC '$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates',
+				},
+				
+				viewFactory:edit_field {
+					value = bind 'info_templates',
+					immediate = true,
+				},
+			},
+			
+			viewFactory:row {
+				spacing = viewFactory:control_spacing(),
+				
+				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Other=Other fields',
 				},
 				
@@ -240,7 +254,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:push_button {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
 					action = function(button)
-						local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->')
+						local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->')
 						LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 					end,
 				},
@@ -266,6 +280,7 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'info_source', default = '{{own}}' },
 	{ key = 'info_author', default = '' },
 	{ key = 'info_license', default = '{{Cc-by-sa-4.0}}' },
+	{ key = 'info_templates', default = '' },
 	{ key = 'info_other', default = '' },
 	{ key = 'info_categories', default = '' },
 }
