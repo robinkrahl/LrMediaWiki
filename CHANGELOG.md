@@ -1,5 +1,18 @@
 # LrMediaWiki changelog
 
+## v0.2.1: Templates! (2014-08-31)
+
+The third beta release of **LrMediaWiki** improves template handling:  There is
+an additional field for templates to be added below `{{Information}}`, but
+above the license section, e. g. for `{{Panorama}}` or `{{Personality rights}}`.
+Furthermore a `{{Location}}` template is added automatically if there is GPS
+metadata.
+
+### Fixed issues
+ - #10: Show file settings section in export dialog (enhancement)
+ - #11: Add ‘other templates’ field (enhancement)
+ - #12: Add {{Location}} if GPS metadata is set (enhancement)
+
 ## v0.2: New metadata and improved reuploads (2014-08-25)
 The second beta release of **LrMediaWiki** moves the per-file metadata
 (description and categories) to dedicated metadata fields.  Furthermore the
