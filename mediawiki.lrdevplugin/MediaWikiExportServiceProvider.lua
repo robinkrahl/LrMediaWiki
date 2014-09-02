@@ -92,6 +92,10 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local author = exportSettings.info_author
 			local license = exportSettings.info_license
 			local templates = exportSettings.info_templates
+            local additionalTemplates = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'templates') or ''
+            if not MediaWikiUtils.isStringEmpty(additionalTemplates) then
+                templates = templates .. '\n' .. additionalTemplates
+            end
 			local other = exportSettings.info_other
 			local categories = exportSettings.info_categories
 			local additionalCategories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''

@@ -30,6 +30,11 @@ return {
 			title = LOC '$$$/LrMediaWiki/Metadata/DescriptionAdditional=Description (other)',
 			dataType = 'string',
 		},
+        {
+            id = 'templates',
+            title = LOC '$$$/LrMediaWiki/Metadata/Templates=Templates',
+            dataType = 'string',
+        },
 		{
 			id = 'categories',
 			title = LOC '$$$/LrMediaWiki/Metadata/Categories=Categories',
@@ -37,5 +42,5 @@ return {
 		},
 	},
 	
-	schemaVersion = 2,
+	schemaVersion = 3,
 }

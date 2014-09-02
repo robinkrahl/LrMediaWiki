@@ -26,6 +26,7 @@
 "$$$/LrMediaWiki/Metadata/DescriptionAdditional=Beschreibung (andere)"
 "$$$/LrMediaWiki/Metadata/DescriptionDe=Beschreibung (de)"
 "$$$/LrMediaWiki/Metadata/DescriptionEn=Beschreibung (en)"
+"$$$/LrMediaWiki/Metadata/Templates=Vorlagen"
 "$$$/LrMediaWiki/PluginName=MediaWiki für Lightroom"
 "$$$/LrMediaWiki/Section/Licensing/Author=Urheber"
 "$$$/LrMediaWiki/Section/Licensing/Categories/Details=mit ; trennen"
