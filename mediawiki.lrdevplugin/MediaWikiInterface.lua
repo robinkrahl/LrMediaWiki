@@ -95,7 +95,7 @@ MediaWikiInterface.uploadFile = function(filePath, description, fileName)
 	if not MediaWikiInterface.loggedIn then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload.')
 	end
-	local comment = 'Uploaded with LrMediaWiki'
+	local comment = 'Uploaded with LrMediaWiki ' .. MediaWikiUtils.getVersionString()
 	local targetFileName = fileName or LrPathUtils.leafName(filePath)
 	local ignorewarnings = false
 	if MediaWikiApi.existsFile(targetFileName) then
@@ -103,7 +103,7 @@ MediaWikiInterface.uploadFile = function(filePath, description, fileName)
 		if continue == 'ok' then
 			local newComment = MediaWikiInterface.prompt(LOC '$$$/LrMediaWiki/Interface/VersionComment=Version comment', LOC '$$$/LrMediaWiki/Interface/VersionComment=Version comment')
 			if not MediaWikiUtils.isStringEmpty(newComment) then
-				comment = newComment .. ' (LrMediaWiki)'
+				comment = newComment .. ' (LrMediaWiki ' .. MediaWikiUtils.getVersionString() .. ')'
 			end
 			ignorewarnings = true
 		elseif continue == 'other' then

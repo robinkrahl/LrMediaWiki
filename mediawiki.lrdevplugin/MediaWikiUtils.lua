@@ -13,10 +13,20 @@
 -- doc:   missing
 -- i18n:  complete
 
+local Info = require 'Info'
+
 local MediaWikiUtils = {}
 
 MediaWikiUtils.isStringEmpty = function(str)
 	return str == nil or string.match(str, '^%s*$') ~= nil
+end
+
+MediaWikiUtils.getVersionString = function()
+    local str = Info.VERSION.major .. '.' .. Info.VERSION.minor
+    if Info.VERSION.revision > 0 then
+        str = str .. '.' .. Info.VERSION.revision
+    end
+    return str
 end
 
 return MediaWikiUtils
