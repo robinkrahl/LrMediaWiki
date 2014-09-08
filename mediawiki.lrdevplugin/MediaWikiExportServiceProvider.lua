@@ -206,6 +206,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:combo_box {
 					value = bind 'info_license',
 					immediate = true,
+					width_in_chars = 50,
 					items = {
 						'{{Cc-by-sa-4.0}}',
 						'{{Cc-by-4.0}}',
@@ -265,7 +266,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:push_button {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
 					action = function(button)
-						local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' . propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->')
+						local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->')
 						LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 					end,
 				},
