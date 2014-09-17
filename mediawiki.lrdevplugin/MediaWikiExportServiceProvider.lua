@@ -277,7 +277,7 @@ end
 
 MediaWikiExportServiceProvider.hidePrintResolution = true
 
-MediaWikiExportServiceProvider.showSections = {'fileNaming', 'metadata', 'fileSettings'}
+MediaWikiExportServiceProvider.showSections = {'fileNaming', 'metadata', 'fileSettings', 'imageSettings', 'outputSharpening'}
 
 MediaWikiExportServiceProvider.allowFileFormats = {'JPEG', 'TIFF'}
 
