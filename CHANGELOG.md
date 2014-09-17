@@ -1,5 +1,15 @@
 # LrMediaWiki changelog
 
+## v0.2.2: Bundestag (2014-09-08)
+
+This releases brings a few minor changes needed for uploads for the German
+Bundestag project, e. g. 
+
+### Fixed issues
+ - #13: Add LrMediaWiki version to upload comments (enhancement)
+ - #14: Add ‘Other templates’ field to metadata (enhancement)
+ - #15: Show {{Location}} template in wikitext preview (enhancement)
+
 ## v0.2.1: Templates! (2014-08-31)
 
 The third beta release of **LrMediaWiki** improves template handling:  There is
