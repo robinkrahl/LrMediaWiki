@@ -23,18 +23,9 @@ The plugin code is located in the `mediawiki.lrdevplugin` directory.
 all necessary information to `MediaWikiInterface.lua`.  This file evaluates
 the user input and prepares the file description and the file itself for the
 MediaWiki upload.  The upload is done in `MediaWikiApi.lua`.
-`MediaWikiUtils.lua` provides common utility functions, and `MediaWiki
-
-### Create release
-
-To create a new release,
- - copy the `mediawiki.lrdevplugin` folder and rename it to
-   `mediawiki.lrplugin`,
- - copy the `CREDITS.txt`, `LICENSE.txt` and `README.md` files in the new
-   folder,
- - update the version information in `Info.lua` (if necessary) and finally
- - create an archive of the `mediawiki.lrplugin` folder.
-This archive may now be released.
+`MediaWikiUtils.lua` provides common utility functions, and
+`MediaWikiMetadataProvider.lua` defines the custom metadata containing e. g.
+the file description and additional categories and templates.
 
 [comlrmw]: https://commons.wikimedia.org/wiki/Commons:LrMediaWiki
 [lrsdk]: http://www.adobe.com/devnet/photoshoplightroom.html
