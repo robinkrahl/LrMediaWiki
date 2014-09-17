@@ -23,6 +23,7 @@ The plugin code is located in the `mediawiki.lrdevplugin` directory.
 all necessary information to `MediaWikiInterface.lua`.  This file evaluates
 the user input and prepares the file description and the file itself for the
 MediaWiki upload.  The upload is done in `MediaWikiApi.lua`.
+`MediaWikiUtils.lua` provides common utility functions, and `MediaWiki
 
 ### Create release
 
