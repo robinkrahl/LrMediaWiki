@@ -3,7 +3,7 @@
 ## v0.2.2: Bundestag (2014-09-08)
 
 This releases brings a few minor changes needed for uploads for the German
-Bundestag project, e. g. 
+Bundestag project. 
 
 ### Fixed issues
  - #13: Add LrMediaWiki version to upload comments (enhancement)
