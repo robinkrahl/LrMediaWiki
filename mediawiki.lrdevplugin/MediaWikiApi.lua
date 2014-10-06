@@ -65,7 +65,9 @@ function MediaWikiApi.parseXmlDom(xmlDomInstance)
 		for i = 1, xmlDomInstance:childCount() do
 			local child = xmlDomInstance:childAtIndex(i)
 			local childName, childNamespace = child:name()
-			value[childName] = MediaWikiApi.parseXmlDom(child)
+			if childName then
+				value[childName] = MediaWikiApi.parseXmlDom(child)
+			end
 		end
 	elseif xmlDomInstance:type() == 'text' then
 		value = xmlDomInstance:text()
