@@ -1,5 +1,15 @@
 # LrMediaWiki changelog
 
+## v0.2.3: Bugfix (2014-10-06)
+
+This release fixes a bug that caused all uploads to fail under certain
+circumstances and adds image sizing and sharpening options to the export
+dialog.
+
+### Fixed issues
+ - #22: Add image sizing and sharpening option to export dialog (enhancement)
+ - #23: [string "MediaWikiApi.lua"]:68: table index is nil (bug)
+
 ## v0.2.2: Bundestag (2014-09-08)
 
 This releases brings a few minor changes needed for uploads for the German
