@@ -90,8 +90,10 @@ function MediaWikiApi.performRequest(arguments)
 	}
 	
 	local resultBody, resultHeaders = LrHttp.post(MediaWikiApi.apiPath, requestBody, requestHeaders)
-	
-	if resultHeaders.status ~= 200 then
+
+	if not resultHeaders.status then
+		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/NoConnection=Cannot connect to the MediaWiki API.'))
+	elseif resultHeaders.status ~= 200 then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.', resultHeaders.status))
 	end
 	

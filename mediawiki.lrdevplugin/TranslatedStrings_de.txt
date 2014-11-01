@@ -1,5 +1,6 @@
 ﻿"$$$/LrMediaWiki/Api/HttpError=HTTP-Status ^1 erhalten."
 "$$$/LrMediaWiki/Api/MediaWikiError=Der MediaWiki-Fehler ^1 ist aufgetreten: ^2"
+"$$$/LrMediaWiki/Api/NoConnection=Kann keine Verbindung zur MediaWiki-API aufbauen."
 "$$$/LrMediaWiki/Export/DescriptionError=Fehler beim Lesen der Dateibeschreibung"
 "$$$/LrMediaWiki/Export/NoApiPath=Kein API-Pfad angegeben!"
 "$$$/LrMediaWiki/Export/NoAuthor=Kein Urheber angegeben!"
