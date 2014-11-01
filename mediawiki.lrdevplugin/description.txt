@@ -4,7 +4,7 @@
 |Source=${source}
 |Date=${timestamp}
 |Author=${author}
-|Permission=
+|Permission=${permission}
 |other_versions=
 |other_fields=${other_fields}
 }}

@@ -5,9 +5,9 @@
 -- Copyright (C) 2014 by the LrMediaWiki team (see CREDITS.txt file in the
 -- project root directory or [2])
 --
--- [0]  <https://raw.githubusercontent.com/LrMediaWiki/LrMediaWiki/master/LICENSE.txt>
+-- [0]  <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/LICENSE.txt>
 -- [1]  <https://commons.wikimedia.org/wiki/Commons:LrMediaWiki>
--- [2]  <https://raw.githubusercontent.com/LrMediaWiki/LrMediaWiki/master/CREDITS.txt>
+-- [2]  <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/CREDITS.txt>
 
 -- Code status:
 -- doc:   missing
@@ -91,6 +91,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			end
 			local author = exportSettings.info_author
 			local license = exportSettings.info_license
+			local permission = exportSettings.info_permission
 			local templates = exportSettings.info_templates
             local additionalTemplates = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'templates') or ''
             if not MediaWikiUtils.isStringEmpty(additionalTemplates) then
@@ -106,7 +107,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				templates = location .. templates
 			end
 			
-			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories)
+			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
 			
 			MediaWikiInterface.uploadFile(pathOrMessage, fileDescription)
 			LrFileUtils.delete(pathOrMessage)
@@ -219,6 +220,19 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				spacing = viewFactory:control_spacing(),
 				
 				viewFactory:static_text {
+					title = LOC '$$$/LrMediaWiki/Section/Licensing/Permission=Permission',
+				},
+				
+				viewFactory:edit_field {
+					value = bind 'info_permission',
+					immediate = true,
+				},
+			},
+			
+			viewFactory:row {
+				spacing = viewFactory:control_spacing(),
+				
+				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates',
 				},
 				
@@ -268,7 +282,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					action = function(button)
 						result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 						if result then
-							local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->')
+							local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
 							LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 						else
 							LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
@@ -297,6 +311,7 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'info_source', default = '{{own}}' },
 	{ key = 'info_author', default = '' },
 	{ key = 'info_license', default = '{{Cc-by-sa-4.0}}' },
+	{ key = 'info_permission', default = '' },
 	{ key = 'info_templates', default = '' },
 	{ key = 'info_other', default = '' },
 	{ key = 'info_categories', default = '' },

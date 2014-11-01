@@ -132,7 +132,7 @@ MediaWikiInterface.uploadFile = function(filePath, description, fileName)
 	end
 end
 
-MediaWikiInterface.buildFileDescription = function(description, source, timestamp, author, license, templates, other, categories, additionalCategories)
+MediaWikiInterface.buildFileDescription = function(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
 	local categoriesString = ''
 	for category in string.gmatch(categories, '[^;]+') do
 		if category then
@@ -153,6 +153,7 @@ MediaWikiInterface.buildFileDescription = function(description, source, timestam
 		templates = templates,
 		license = license,
 		categories = categoriesString,
+		permission = permission,
 	}
 	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 end

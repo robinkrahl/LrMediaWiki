@@ -5,9 +5,9 @@
 -- Copyright (C) 2014 by the LrMediaWiki team (see CREDITS.txt file in the
 -- project root directory or [2])
 --
--- [0]  <https://raw.githubusercontent.com/LrMediaWiki/LrMediaWiki/master/LICENSE.txt>
+-- [0]  <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/LICENSE.txt>
 -- [1]  <https://commons.wikimedia.org/wiki/Commons:LrMediaWiki>
--- [2]  <https://raw.githubusercontent.com/LrMediaWiki/LrMediaWiki/master/CREDITS.txt>
+-- [2]  <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/CREDITS.txt>
 
 -- Code status:
 -- doc:   partly
