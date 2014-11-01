@@ -5,9 +5,9 @@
 -- Copyright (C) 2014 by the LrMediaWiki team (see CREDITS.txt file in the
 -- project root directory or [2])
 --
--- [0]  <https://raw.githubusercontent.com/LrMediaWiki/LrMediaWiki/master/LICENSE.txt>
+-- [0]  <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/LICENSE.txt>
 -- [1]  <https://commons.wikimedia.org/wiki/Commons:LrMediaWiki>
--- [2]  <https://raw.githubusercontent.com/LrMediaWiki/LrMediaWiki/master/CREDITS.txt>
+-- [2]  <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/CREDITS.txt>
 
 -- Code status:
 -- doc:   missing
@@ -29,18 +29,18 @@ local MediaWikiInterface = {
 	loggedIn = false,
 	fileDescriptionPattern = [=[== {{int:filedesc}} ==
 {{Information
-|Description=%s
-|Source=%s
-|Date=%s
-|Author=%s
+|Description=${description}
+|Source=${source}
+|Date=${timestamp}
+|Author=${author}
 |Permission=
 |other_versions=
-|other_fields=%s
+|other_fields=${other_fields}
 }}
-%s
+${templates}
 == {{int:license-header}} ==
-%s
-%s[[Category:Uploaded with LrMediaWiki]]]=],
+${license}
+${categories}[[Category:Uploaded with LrMediaWiki]]]=],
 }
 
 MediaWikiInterface.prepareUpload = function(username, password, apiPath)
@@ -134,7 +134,17 @@ MediaWikiInterface.buildFileDescription = function(description, source, timestam
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
-	return string.format(MediaWikiInterface.fileDescriptionPattern, description, source, timestamp, author, other, templates, license, categoriesString)
+	local arguments = {
+		description = description,
+		source = source,
+		timestamp = timestamp,
+		author = author,
+		other_fields = other,
+		templates = templates,
+		license = license,
+		categories = categoriesString,
+	}
+	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 end
 
 return MediaWikiInterface

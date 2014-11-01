@@ -1,7 +1,7 @@
 Copyright (c) 2014 by the LrMediaWiki team (see CREDITS.txt file in the
 project root directory or [0])
 
-[0]  <https://raw.githubusercontent.com/LrMediaWiki/LrMediaWiki/master/CREDITS.txt>
+[0]  <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/CREDITS.txt>
 
 The X11 License
 
