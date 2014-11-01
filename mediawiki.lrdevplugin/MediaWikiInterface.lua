@@ -27,23 +27,28 @@ local MediaWikiInterface = {
 	username = nil,
 	password = nil,
 	loggedIn = false,
-	fileDescriptionPattern = [=[== {{int:filedesc}} ==
-{{Information
-|Description=${description}
-|Source=${source}
-|Date=${timestamp}
-|Author=${author}
-|Permission=
-|other_versions=
-|other_fields=${other_fields}
-}}
-${templates}
-== {{int:license-header}} ==
-${license}
-${categories}[[Category:Uploaded with LrMediaWiki]]]=],
+	fileDescriptionPattern = nil,
 }
 
+MediaWikiInterface.loadFileDescriptionTemplate = function()
+	local result, errorMessage = false
+	local file, message = io.open(_PLUGIN.path .. '/description.txt', 'r')
+	if file then
+		MediaWikiInterface.fileDescriptionPattern = file:read('*all')
+		if not MediaWikiInterface.fileDescriptionPattern then
+			errorMessage = LOC('$$$/LrMediaWiki/Interface/ReadingDescriptionFailed=Could not read the description template file.')
+		else
+			result = true
+		end
+		file:close()
+	else
+		errorMessage = LOC('$$$/LrMediaWiki/Interface/LoadingDescriptionFailed=Could not load the description template file: ^1', message)
+	end
+	return result, errorMessage
+end
+
 MediaWikiInterface.prepareUpload = function(username, password, apiPath)
+	-- MediaWiki login
 	if username and password then
 		MediaWikiInterface.username = username
 		MediaWikiInterface.password = password
@@ -55,6 +60,11 @@ MediaWikiInterface.prepareUpload = function(username, password, apiPath)
 		MediaWikiInterface.loggedIn = true
 	else
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Interface/UsernameOrPasswordMissing=Username or password missing')
+	end
+	-- file description
+	result, message = MediaWikiInterface.loadFileDescriptionTemplate()
+	if not result then
+		LrErrors.throwUserError(message)
 	end
 end
 
@@ -84,7 +94,7 @@ MediaWikiInterface._prompt = function(functionContext, title, label, default)
 		title = title,
 		contents = contents,
 	})
-	local result = nil 
+	local result = nil
 	if dialogResult == 'ok' then
 		result = properties.dialogValue
 	end
