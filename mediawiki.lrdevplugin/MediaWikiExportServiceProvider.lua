@@ -90,10 +90,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			if not MediaWikiUtils.isStringEmpty(descriptionAdditional) then
 				description = description .. descriptionAdditional
 			end
-			if MediaWikiUtils.isStringEmpty(description) then
-				rendition:uploadFailed(LOC '$$$/LrMediaWiki/Export/NoDescription=No description given for this file!')
-				return
-			end
+			local hasDescription = not MediaWikiUtils.isStringEmpty(description)
 			local source = exportSettings.info_source
 			local timestampSeconds = photo:getRawMetadata('dateTimeOriginal')
 			local timestamp = ''
@@ -120,7 +117,10 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 
 			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
 
-			MediaWikiInterface.uploadFile(pathOrMessage, fileDescription)
+			local message = MediaWikiInterface.uploadFile(pathOrMessage, fileDescription, hasDescription)
+			if message then
+				rendition:uploadFailed(message)
+			end
 			LrFileUtils.delete(pathOrMessage)
 		else
 			-- rendering failed --> report failure

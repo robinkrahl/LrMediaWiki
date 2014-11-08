@@ -101,7 +101,7 @@ MediaWikiInterface._prompt = function(functionContext, title, label, default)
 	return result
 end
 
-MediaWikiInterface.uploadFile = function(filePath, description, fileName)
+MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, fileName)
 	if not MediaWikiInterface.loggedIn then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload.')
 	end
@@ -119,17 +119,22 @@ MediaWikiInterface.uploadFile = function(filePath, description, fileName)
 		elseif continue == 'other' then
 			local newFileName = MediaWikiInterface.prompt(LOC '$$$/LrMediaWiki/Interface/Rename=Rename file', LOC '$$$/LrMediaWiki/Interface/Rename/NewName=New file name', targetFileName)
 			if not MediaWikiUtils.isStringEmpty(newFileName) and newFileName ~= targetFileName then
-				MediaWikiInterface.uploadFile(filePath, description, newFileName)
+				MediaWikiInterface.uploadFile(filePath, description, hasDescription, newFileName)
 			end
 			return
 		else
 			return
 		end
+	else
+		if not hasDescription then
+			return LOC '$$$/LrMediaWiki/Export/NoDescription=No description given for this file!'
+		end
 	end
 	local uploadResult = MediaWikiApi.upload(targetFileName, filePath, description, comment, ignorewarnings)
 	if uploadResult ~= true then
-		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Interface/UploadFailed=Upload failed: ^1', uploadResult))
+		return LOC('$$$/LrMediaWiki/Interface/UploadFailed=Upload failed: ^1', uploadResult)
 	end
+	return nil
 end
 
 MediaWikiInterface.buildFileDescription = function(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
