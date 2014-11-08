@@ -13,6 +13,7 @@
 -- doc:   missing
 -- i18n:  complete
 
+local LrDate = import 'LrDate'
 local LrDialogs = import 'LrDialogs'
 local LrErrors = import 'LrErrors'
 local LrFileUtils = import 'LrFileUtils'
@@ -33,9 +34,9 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	local progressScope = exportContext:configureProgress{
 		title = photoCount > 1 and LOC('$$$/LrMediaWiki/Export/Progress=Exporting ^1 photos to a MediaWiki', photoCount) or LOC '$$$/LrMediaWiki/Export/Progress/One=Exporting one photo to a MediaWiki',
 	}
-	
+
 	local exportSettings = assert(exportContext.propertyTable)
-	
+
 	-- require username, password, apipath, license, author, source
 	if MediaWikiUtils.isStringEmpty(exportSettings.username) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoUsername=No username given!')
@@ -55,7 +56,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	if MediaWikiUtils.isStringEmpty(exportSettings.info_source) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoSource=No source given!')
 	end
-	
+
 	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path)
 
 	-- iterate over photos
@@ -63,9 +64,19 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 		-- render photo
 		local success, pathOrMessage = rendition:waitForRender()
 		if success then
-			-- do upload to MediaWiki
 			local photo = rendition.photo
-			
+			local catalog = photo.catalog
+
+			-- create new snapshot
+			local currentTimeStamp = LrDate.currentTime()
+			local currentDate = LrDate.formatShortDate(currentTimeStamp)
+			local currentTime = LrDate.formatShortTime(currentTimeStamp)
+			local snapshotTitle = LOC('$$$/LrMediaWiki/Export/Snapshot=MediaWiki export, ^1 ^2, ^3', currentDate, currentTime, exportSettings.api_path)
+			catalog:withWriteAccessDo('CreateDevelopSnapshot', function(context)
+				photo:createDevelopSnapshot(snapshotTitle, true)
+			end)
+
+			-- do upload to MediaWiki
 			local descriptionEn = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
 			local descriptionDe = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_de')
 			local descriptionAdditional = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_additional')
@@ -93,22 +104,22 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local license = exportSettings.info_license
 			local permission = exportSettings.info_permission
 			local templates = exportSettings.info_templates
-            local additionalTemplates = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'templates') or ''
-            if not MediaWikiUtils.isStringEmpty(additionalTemplates) then
-                templates = templates .. '\n' .. additionalTemplates
-            end
+			local additionalTemplates = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'templates') or ''
+			if not MediaWikiUtils.isStringEmpty(additionalTemplates) then
+				templates = templates .. '\n' .. additionalTemplates
+			end
 			local other = exportSettings.info_other
 			local categories = exportSettings.info_categories
 			local additionalCategories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''
-			
+
 			local gps = photo:getRawMetadata('gps')
 			if gps and gps.latitude and gps.longitude then
 				local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude .. '}}\n'
 				templates = location .. templates
 			end
-			
+
 			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
-			
+
 			MediaWikiInterface.uploadFile(pathOrMessage, fileDescription)
 			LrFileUtils.delete(pathOrMessage)
 		else
@@ -123,45 +134,45 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 		{
 			title = LOC '$$$/LrMediaWiki/Section/User/Title=Login Information',
 			synopsis = bind 'username',
-			
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/User/Username=Username',
 				},
-				
+
 				viewFactory:edit_field {
 					value = bind 'username',
 					immediate = true,
 				},
 			},
-				
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/User/Password=Password',
 				},
-				
+
 				viewFactory:password_field {
 					value = bind 'password',
 				},
 			},
-			
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/User/ApiPath=API path',
 				},
-				
+
 				viewFactory:edit_field {
 					value = bind 'api_path',
 					immediate = true,
 					width_in_chars = 30,
 				},
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/User/ApiPath/Details=Path to the api.php file',
 				},
@@ -170,40 +181,40 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 		{
 			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=Upload Information",
 			synopsis = bind 'info_license',
-			
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Source=Source',
 				},
-				
+
 				viewFactory:edit_field {
 					value = bind 'info_source',
 					immediate = true,
 				},
 			},
-			
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Author=Author',
 				},
-				
+
 				viewFactory:edit_field {
 					value = bind 'info_author',
 					immediate = true,
 				},
 			},
-			
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/License=License',
 				},
-				
+
 				viewFactory:combo_box {
 					value = bind 'info_license',
 					immediate = true,
@@ -215,40 +226,40 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 				},
 			},
-			
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Permission=Permission',
 				},
-				
+
 				viewFactory:edit_field {
 					value = bind 'info_permission',
 					immediate = true,
 				},
 			},
-			
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates',
 				},
-				
+
 				viewFactory:edit_field {
 					value = bind 'info_templates',
 					immediate = true,
 				},
 			},
-			
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Other=Other fields',
 				},
-				
+
 				viewFactory:edit_field {
 					value = bind 'info_other',
 					immediate = true,
@@ -257,26 +268,26 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories=Categories',
 				},
-				
+
 				viewFactory:edit_field {
 					value = bind 'info_categories',
 					immediate = true,
 					width_in_chars = 30,
 					height_in_lines = 3,
 				},
-				
+
 				viewFactory:static_text {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories/Details=separate with ;',
 				},
 			},
-			
+
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
-				
+
 				viewFactory:push_button {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
 					action = function(button)

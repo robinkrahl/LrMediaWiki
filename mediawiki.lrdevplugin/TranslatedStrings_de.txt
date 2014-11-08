@@ -11,6 +11,7 @@
 "$$$/LrMediaWiki/Export/NoUsername=Kein Benutzername angegeben!"
 "$$$/LrMediaWiki/Export/Progress/One=Exportiere ein Bild in ein MediaWiki"
 "$$$/LrMediaWiki/Export/Progress=Exportiere ^1 Bilder in ein MediaWiki"
+"$$$/LrMediaWiki/Export/Snapshot=MediaWiki-Export, ^1 ^2, ^3"
 "$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Interner Fehler: vor dem Upload nicht angemeldet."
 "$$$/LrMediaWiki/Interface/InUse/Cancel=Abbrechen"
 "$$$/LrMediaWiki/Interface/InUse/Details=Es gibt bereits eine Datei mit dem Namen ^1. Überschreiben? (Die Dateibeschreibung wird nicht verändert.)"
