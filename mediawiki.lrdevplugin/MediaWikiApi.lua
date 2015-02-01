@@ -96,7 +96,7 @@ function MediaWikiApi.performRequest(arguments)
 	elseif resultHeaders.status ~= 200 then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.', resultHeaders.status))
 	end
-	
+
 	local resultXml = MediaWikiApi.parseXmlDom(LrXml.parseXml(resultBody))
 	if resultXml.error then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/MediaWikiError=The MediaWiki error ^1 occured: ^2', resultXml.error.code, resultXml.error.info))
@@ -181,7 +181,7 @@ function MediaWikiApi.upload(fileName, sourceFilePath, text, comment, ignoreWarn
 	if resultHeaders.status ~= 200 then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.', resultHeaders.status))
 	end
-	
+       
 	local resultXml = MediaWikiApi.parseXmlDom(LrXml.parseXml(resultBody))
 	if resultXml.error then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/MediaWikiError=The MediaWiki error ^1 occured: ^2', resultXml.error.code, resultXml.error.info))
@@ -190,6 +190,15 @@ function MediaWikiApi.upload(fileName, sourceFilePath, text, comment, ignoreWarn
 	local uploadResult = resultXml.upload.result 
 	if uploadResult == 'Success' then
 		return true
+	elseif uploadResult == 'Warning' then
+		warnings = ''
+		for k, v in pairs(resultXml.upload.warnings) do
+			if warnings ~= '' then
+				warnings = warnings .. ', '
+			end
+			warnings = warnings .. k
+		end
+                return warnings
 	else
 		return uploadResult
 	end
