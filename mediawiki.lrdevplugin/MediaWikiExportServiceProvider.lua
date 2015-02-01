@@ -95,7 +95,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local timestampSeconds = photo:getRawMetadata('dateTimeOriginal')
 			local timestamp = ''
 			if timestampSeconds then
-				timestamp = os.date("!%Y-%m-%d", timestampSeconds + 978307200)
+				timestamp = os.date("!%Y-%m-%d %H:%M:%S", timestampSeconds + 978307200)
 			end
 			local author = exportSettings.info_author
 			local license = exportSettings.info_license
