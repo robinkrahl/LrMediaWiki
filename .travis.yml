@@ -1,0 +1,7 @@
+language: c
+
+install:
+  - sudo apt-get install lua5.2
+
+script:
+  - luac -p mediawiki.lrdevplugin/*.lua
