@@ -1,4 +1,4 @@
-# LrMediaWiki
+# LrMediaWiki [![Build Status](https://travis-ci.org/robinkrahl/LrMediaWiki.svg?branch=master)](https://travis-ci.org/robinkrahl/LrMediaWiki)
 
 **LrMediaWiki** is a plugin for Adobe Photoshop Lightroom that allows users
 to upload images to Wikimedia Commons or any other MediaWiki installation
