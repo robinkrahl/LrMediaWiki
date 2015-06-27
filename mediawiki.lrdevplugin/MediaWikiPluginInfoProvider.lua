@@ -18,17 +18,17 @@ local LrView = import 'LrView'
 local MediaWikiUtils = require 'MediaWikiUtils'
 
 local bind = LrView.bind
-local prefs = import 'LrPrefs'.prefsForPlugin()
 
 local MediaWikiPluginInfoProvider = {}
 
 MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
-  propertyTable.logging = prefs.logging or false
+  propertyTable.logging = MediaWikiUtils.getLogging()
+  propertyTable.create_snapshots = MediaWikiUtils.getCreateSnapshots()
 end
 
 MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
-  prefs.logging = propertyTable.logging
-  MediaWikiUtils.setLogging(prefs.logging)
+  MediaWikiUtils.setLogging(propertyTable.logging)
+  MediaWikiUtils.setCreateSnapshots(propertyTable.create_snapshots)
 end
 
 MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
@@ -42,6 +42,20 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
+
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
+
+					viewFactory:static_text {
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:checkbox {
+						value = bind 'create_snapshots',
+            title = LOC '$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export',
+					},
+				},
 
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),

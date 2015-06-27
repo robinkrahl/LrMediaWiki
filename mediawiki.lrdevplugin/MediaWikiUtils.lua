@@ -42,7 +42,22 @@ MediaWikiUtils.getVersionString = function()
     return str
 end
 
+-- configuration
+
+MediaWikiUtils.getCreateSnapshots = function()
+	return prefs.create_snapshot or false
+end
+
+MediaWikiUtils.setCreateSnapshots = function(create_snapshot)
+	prefs.create_snapshot = create_snapshot
+end
+
+MediaWikiUtils.getLogging = function()
+	return prefs.logging or false
+end
+
 MediaWikiUtils.setLogging = function(logging)
+	prefs.logging = logging
 	if logging then
 		myLogger:enable('logfile')
 	else
