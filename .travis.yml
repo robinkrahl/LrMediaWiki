@@ -1,7 +1,7 @@
 language: c
 
 install:
-  - sudo apt-get install lua5.2 luarocks
+  - sudo apt-get install lua5.1 luarocks
   - sudo luarocks install luacheck
 
 script:
