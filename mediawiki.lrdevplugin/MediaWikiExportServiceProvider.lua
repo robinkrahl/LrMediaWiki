@@ -17,6 +17,7 @@ local LrDate = import 'LrDate'
 local LrDialogs = import 'LrDialogs'
 local LrErrors = import 'LrErrors'
 local LrFileUtils = import 'LrFileUtils'
+local LrPathUtils = import 'LrPathUtils'
 local LrView = import 'LrView'
 
 local bind = LrView.bind
@@ -58,6 +59,9 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	end
 
 	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path)
+
+	-- file names for gallery creation
+	local fileNames = {}
 
 	-- iterate over photos
 	for i, rendition in exportContext:renditions() do
@@ -108,7 +112,11 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 
 			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
 
-			local message = MediaWikiInterface.uploadFile(pathOrMessage, fileDescription, hasDescription)
+			-- ensure that the target file name does not contain a series of spaces or
+			-- underscores (as this would cause the upload to fail without a proper
+			-- error message)
+			local fileName = string.gsub(LrPathUtils.leafName(pathOrMessage), '[ _]+', '_')
+			local message = MediaWikiInterface.uploadFile(pathOrMessage, fileDescription, hasDescription, fileName)
 			if message then
 				rendition:uploadFailed(message)
 			else
@@ -122,12 +130,19 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 						photo:createDevelopSnapshot(snapshotTitle, true)
 					end)
 				end
+
+				-- file name for gallery creation
+				fileNames[#fileNames + 1] = fileName
 			end
 			LrFileUtils.delete(pathOrMessage)
 		else
 			-- rendering failed --> report failure
 			rendition:uploadFailed(pathOrMessage)
 		end
+	end
+
+	if (not MediaWikiUtils.isStringEmpty(exportSettings.gallery)) and fileNames then
+		MediaWikiInterface.addToGallery(fileNames, exportSettings.gallery)
 	end
 end
 
@@ -191,6 +206,22 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 					viewFactory:static_text {
 						title = LOC '$$$/LrMediaWiki/Section/User/ApiPath/Details=Path to the api.php file',
+					},
+				},
+
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
+
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/User/Gallery=Gallery',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:edit_field {
+						value = bind 'gallery',
+						immediate = true,
+						width_in_chars = widthLong,
 					},
 				},
 			},
@@ -371,6 +402,7 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'info_templates', default = '' },
 	{ key = 'info_other', default = '' },
 	{ key = 'info_categories', default = '' },
+	{ key = 'gallery', default = '' },
 }
 
 return MediaWikiExportServiceProvider

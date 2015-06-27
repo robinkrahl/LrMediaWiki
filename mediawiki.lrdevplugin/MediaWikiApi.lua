@@ -175,6 +175,19 @@ function MediaWikiApi.getEditToken()
 	return xml.tokens.edittoken
 end
 
+function MediaWikiApi.appendToPage(page, section, text, comment)
+	local arguments = {
+		action = 'edit',
+		title = page,
+		section = 'new',
+		sectiontitle = section,
+		text = text,
+		summary = comment,
+		token = MediaWikiApi.getEditToken(),
+	}
+	MediaWikiApi.performRequest(arguments)
+end
+
 function MediaWikiApi.existsFile(fileName)
 	local arguments = {
 		action = 'query',

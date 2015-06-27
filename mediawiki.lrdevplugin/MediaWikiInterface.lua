@@ -14,10 +14,10 @@
 -- i18n:  complete
 
 local LrBinding = import 'LrBinding'
+local LrDate = import 'LrDate'
 local LrDialogs = import 'LrDialogs'
 local LrErrors = import 'LrErrors'
 local LrFunctionContext = import 'LrFunctionContext'
-local LrPathUtils = import 'LrPathUtils'
 local LrView = import 'LrView'
 
 local MediaWikiApi = require 'MediaWikiApi'
@@ -101,17 +101,25 @@ MediaWikiInterface._prompt = function(functionContext, title, label, default)
 	return result
 end
 
-MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, fileName)
+MediaWikiInterface.addToGallery = function(fileNames, galleryName)
+	local currentTimeStamp = LrDate.currentTime()
+	local currentDate = LrDate.formatShortDate(currentTimeStamp)
+	local currentTime = LrDate.formatShortTime(currentTimeStamp)
+	local section = '== ' .. currentDate .. ' ' .. currentTime .. ' ==';
+	local text = '<gallery>\n';
+	for i, fileName in pairs(fileNames) do
+		text = text .. fileName .. '\n'
+	end
+	text = text .. '</gallery>'
+	local comment = 'Uploaded with LrMediaWiki ' .. MediaWikiUtils.getVersionString()
+	MediaWikiApi.appendToPage(galleryName, section, text, comment)
+end
+
+MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, targetFileName)
 	if not MediaWikiInterface.loggedIn then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload.')
 	end
 	local comment = 'Uploaded with LrMediaWiki ' .. MediaWikiUtils.getVersionString()
-	local targetFileName = fileName or LrPathUtils.leafName(filePath)
-
-	-- ensure that the target file name does not contain a series of spaces or
-	-- underscores (as this would cause the upload to fail without a proper
-	-- error message)
-	targetFileName = string.gsub(targetFileName, '[ _]+', '_')
 
 	local ignorewarnings = false
 	if MediaWikiApi.existsFile(targetFileName) then

@@ -54,6 +54,7 @@
 "$$$/LrMediaWiki/Section/Licensing/Title=Upload-Informationen"
 "$$$/LrMediaWiki/Section/User/ApiPath/Details=Pfad zur api.php-Datei"
 "$$$/LrMediaWiki/Section/User/ApiPath=API-Pfad"
+"$$$/LrMediaWiki/Section/User/Gallery=Galerie"
 "$$$/LrMediaWiki/Section/User/Password=Passwort"
 "$$$/LrMediaWiki/Section/User/Title=Login-Informationen"
 "$$$/LrMediaWiki/Section/User/Username=Benutzername"
