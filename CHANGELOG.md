@@ -1,5 +1,13 @@
 # LrMediaWiki changelog
 
+## v0.3.1: Bugfix and beauty (2015-06-07)
+
+Fixes some bugs introduced by the last release v0.3 and aligns the export
+dialog more properly.
+
+### Fixed issues
+ - #43: Fix errors introduced by refactoring (bug)
+
 ## v0.3: Errors (2015-06-27)
 
 This release adds improved error handling or even avoids errors. For example,
