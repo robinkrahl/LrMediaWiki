@@ -21,9 +21,9 @@ created after the export.
    formatting (enhancement)
  - #30: Overwrite existing files without adding a description (enhancement)
  - #36: Improve error messages for API errors (enhancement)
- - #38: Ensure the image title does not contain consecutive spaces or
+ - #37: Ensure the image title does not contain consecutive spaces or
   underscores (enhancement)
- - #39: Date format (enhancement)
+ - #38: Date format (enhancement)
 
 ## v0.2.3: Bugfix (2014-10-06)
 
