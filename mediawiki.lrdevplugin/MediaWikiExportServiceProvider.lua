@@ -131,51 +131,66 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 end
 
 MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, propertyTable)
+	local labelAlignment = 'right';
+	local widthLong = 50;
+
 	return {
 		{
 			title = LOC '$$$/LrMediaWiki/Section/User/Title=Login Information',
 			synopsis = bind 'username',
 
-			viewFactory:row {
+			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
 
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/User/Username=Username',
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
+
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/User/Username=Username',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:edit_field {
+						value = bind 'username',
+						immediate = true,
+						width_in_chars = widthLong,
+					},
 				},
 
-				viewFactory:edit_field {
-					value = bind 'username',
-					immediate = true,
-				},
-			},
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
 
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/User/Password=Password',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
 
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/User/Password=Password',
-				},
-
-				viewFactory:password_field {
-					value = bind 'password',
-				},
-			},
-
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
-
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/User/ApiPath=API path',
+					viewFactory:password_field {
+						value = bind 'password',
+						width_in_chars = widthLong,
+					},
 				},
 
-				viewFactory:edit_field {
-					value = bind 'api_path',
-					immediate = true,
-					width_in_chars = 30,
-				},
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
 
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/User/ApiPath/Details=Path to the api.php file',
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/User/ApiPath=API path',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:edit_field {
+						value = bind 'api_path',
+						immediate = true,
+						width_in_chars = widthLong,
+					},
+
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/User/ApiPath/Details=Path to the api.php file',
+					},
 				},
 			},
 		},
@@ -183,123 +198,151 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=Upload Information",
 			synopsis = bind 'info_license',
 
-			viewFactory:row {
+			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
 
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/Source=Source',
-				},
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
 
-				viewFactory:edit_field {
-					value = bind 'info_source',
-					immediate = true,
-				},
-			},
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/Source=Source',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
 
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
-
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/Author=Author',
-				},
-
-				viewFactory:edit_field {
-					value = bind 'info_author',
-					immediate = true,
-				},
-			},
-
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
-
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/License=License',
-				},
-
-				viewFactory:combo_box {
-					value = bind 'info_license',
-					immediate = true,
-					width_in_chars = 50,
-					items = {
-						'{{Cc-by-sa-4.0}}',
-						'{{Cc-by-4.0}}',
-						'{{Cc-zero}}',
+					viewFactory:edit_field {
+						value = bind 'info_source',
+						immediate = true,
+						width_in_chars = widthLong,
 					},
 				},
-			},
 
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
 
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/Permission=Permission',
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/Author=Author',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:edit_field {
+						value = bind 'info_author',
+						immediate = true,
+						width_in_chars = widthLong,
+					},
 				},
 
-				viewFactory:edit_field {
-					value = bind 'info_permission',
-					immediate = true,
-				},
-			},
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
 
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/License=License',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
 
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates',
-				},
-
-				viewFactory:edit_field {
-					value = bind 'info_templates',
-					immediate = true,
-				},
-			},
-
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
-
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/Other=Other fields',
+					viewFactory:combo_box {
+						value = bind 'info_license',
+						immediate = true,
+						width_in_chars = widthLong - 2,
+						items = {
+							'{{Cc-by-sa-4.0}}',
+							'{{Cc-by-4.0}}',
+							'{{Cc-zero}}',
+						},
+					},
 				},
 
-				viewFactory:edit_field {
-					value = bind 'info_other',
-					immediate = true,
-				},
-			},
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
 
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/Permission=Permission',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
 
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories=Categories',
-				},
-
-				viewFactory:edit_field {
-					value = bind 'info_categories',
-					immediate = true,
-					width_in_chars = 30,
-					height_in_lines = 3,
+					viewFactory:edit_field {
+						value = bind 'info_permission',
+						immediate = true,
+						width_in_chars = widthLong,
+					},
 				},
 
-				viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories/Details=separate with ;',
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
+
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:edit_field {
+						value = bind 'info_templates',
+						immediate = true,
+						width_in_chars = widthLong,
+					},
 				},
-			},
 
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
 
-				viewFactory:push_button {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
-					action = function(button)
-						local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
-						if result then
-							local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
-							LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
-						else
-							LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
-						end
-					end,
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/Other=Other fields',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:edit_field {
+						value = bind 'info_other',
+						immediate = true,
+						width_in_chars = widthLong,
+					},
+				},
+
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
+
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories=Categories',
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:edit_field {
+						value = bind 'info_categories',
+						immediate = true,
+						width_in_chars = widthLong,
+						height_in_lines = 3,
+					},
+
+					viewFactory:static_text {
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories/Details=separate with ;',
+					},
+				},
+
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
+
+					viewFactory:static_text {
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:push_button {
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
+						action = function(button)
+							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
+							if result then
+								local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
+								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
+							else
+								LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
+							end
+						end,
+					},
 				},
 			},
 		},
