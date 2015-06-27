@@ -1,6 +1,21 @@
 # LrMediaWiki changelog
 
-## v0.3.1: Bugfix and beauty (2015-06-07)
+## v0.4: Keywords, galleries, updates – and configuration (2015-06-28)
+
+This release adds a configuration section to the plugin settings dialog. In this
+section, you can configure the creation of export snapshots (before: always on),
+the creation of export keywords (new feature), an automatic update check on
+Lightroom starts (new feature) and logging (before: manual activation in a
+Lua file). Hopefully, the next version will be the first stable release v1.0!
+
+### Fixed issues
+
+ - #24: Add gallery option (enhancement)
+ - #31: Add configuration section in the export dialog (enhancement)
+ - #34: Add custom tag when exporting (enhancement)
+ - #44: Check for new versions after start (enhancement)
+
+## v0.3.1: Bugfix and beauty (2015-06-27)
 
 Fixes some bugs introduced by the last release v0.3 and aligns the export
 dialog more properly.
