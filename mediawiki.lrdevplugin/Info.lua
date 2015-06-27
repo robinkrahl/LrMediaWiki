@@ -21,6 +21,8 @@ return {
 
 	LrMetadataProvider = 'MediaWikiMetadataProvider.lua',
 
+	LrPluginInfoProvider = 'MediaWikiPluginInfoProvider.lua',
+
 	VERSION = {
 		major = 0,
 		minor = 3,

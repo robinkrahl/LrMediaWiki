@@ -15,16 +15,13 @@
 
 local LrLogger = import 'LrLogger'
 local Info = require 'Info'
-local myLogger = LrLogger('LrMediaWikiLogger')
-
--- LOGGING
--- If enabled, the log file will appear in your "My Documents" folder. Warning:
--- LrMediaWiki will log all requests sent to MediaWiki, including your password!
--- If you share a log file, make sure you removed your password.
--- To enable logging, uncomment the following line:
--- myLogger:enable("logfile")
 
 local MediaWikiUtils = {}
+local myLogger = LrLogger('LrMediaWikiLogger')
+local prefs = import 'LrPrefs'.prefsForPlugin()
+if prefs.logging then
+	myLogger:enable('logfile')
+end
 
 -- Allows formatting of strings like "${test} eins zwei drei ${test2}"
 -- Based on a solution by http://lua-users.org/wiki/RiciLake shown here:
@@ -43,6 +40,14 @@ MediaWikiUtils.getVersionString = function()
         str = str .. '.' .. Info.VERSION.revision
     end
     return str
+end
+
+MediaWikiUtils.setLogging = function(logging)
+	if logging then
+		myLogger:enable('logfile')
+	else
+		myLogger:disable()
+	end
 end
 
 MediaWikiUtils.trace = function(message)
