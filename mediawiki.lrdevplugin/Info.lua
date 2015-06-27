@@ -13,17 +13,17 @@ return {
 	LrSdkVersion = 5.0,
 	LrToolkitIdentifier = 'org.ireas.lightroom.mediawiki',
 	LrPluginName = LOC '$$$/LrMediaWiki/PluginName=MediaWiki for Lightroom',
-	
+
 	LrExportServiceProvider = {
 		title = LOC '$$$/LrMediaWiki/MediaWiki=MediaWiki',
 		file = 'MediaWikiExportServiceProvider.lua',
 	},
-	
+
 	LrMetadataProvider = 'MediaWikiMetadataProvider.lua',
-	
+
 	VERSION = {
 		major = 0,
-		minor = 2,
-		revision = 3,
+		minor = 3,
+		revision = 0,
 	},
 }
