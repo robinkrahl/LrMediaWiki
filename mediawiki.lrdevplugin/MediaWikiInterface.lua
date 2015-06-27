@@ -107,6 +107,12 @@ MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, 
 	end
 	local comment = 'Uploaded with LrMediaWiki ' .. MediaWikiUtils.getVersionString()
 	local targetFileName = fileName or LrPathUtils.leafName(filePath)
+
+	-- ensure that the target file name does not contain a series of spaces or
+	-- underscores (as this would cause the upload to fail without a proper
+	-- error message)
+	targetFileName = string.gsub(targetFileName, '[ _]+', '_')
+
 	local ignorewarnings = false
 	if MediaWikiApi.existsFile(targetFileName) then
 		local continue = LrDialogs.confirm(LOC '$$$/LrMediaWiki/Interface/InUse=File name already in use', LOC('$$$/LrMediaWiki/Interface/InUse/Details=There already is a file with the name ^1.  Overwrite?  (File description won\'t be changed.)', targetFileName), LOC '$$$/LrMediaWiki/Interface/InUse/OK=Overwrite', LOC '$$$/LrMediaWiki/Interface/InUse/Cancel=Cancel', LOC '$$$/LrMediaWiki/Interface/InUse/Rename=Rename')
