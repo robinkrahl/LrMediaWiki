@@ -1,7 +1,12 @@
 Copyright (c) 2014, 2015 by the LrMediaWiki team (see CREDITS.txt file in the
-project root directory or [0])
+project root directory or [0]), X11 License
 
-[0]  <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/CREDITS.txt>
+Except:
+ - JSON.lua: Copyright 2010-2014 Jeffrey Friedl [1], CC-by 3.0 [2]
+
+[0] <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/CREDITS.txt>
+[1] <http://regex.info/blog/lua/json>
+[2] <http://creativecommons.org/licenses/by/3.0/deed.en_US>
 
 The X11 License
 

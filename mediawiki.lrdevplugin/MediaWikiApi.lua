@@ -18,12 +18,14 @@ local LrHttp = import 'LrHttp'
 local LrPathUtils = import 'LrPathUtils'
 local LrXml = import 'LrXml'
 
+local JSON = require 'JSON'
 local Info = require 'Info'
 local MediaWikiUtils = require 'MediaWikiUtils'
 
 local MediaWikiApi = {
 	userAgent = string.format('LrMediaWiki %d.%d', Info.VERSION.major, Info.VERSION.minor),
 	apiPath = nil,
+	githubApiVersion = 'https://api.github.com/repos/robinkrahl/LrMediaWiki/releases',
 }
 
 --- URL-encode a string according to RFC 3986.
@@ -53,7 +55,7 @@ function MediaWikiApi.createRequestBody(arguments)
 		end
 		body = body .. MediaWikiApi.urlEncode(key) .. '=' .. MediaWikiApi.urlEncode(value)
 	end
-	return body
+	return body or ''
 end
 
 function MediaWikiApi.parseXmlDom(xmlDomInstance)
@@ -76,9 +78,39 @@ function MediaWikiApi.parseXmlDom(xmlDomInstance)
 	return value
 end
 
+function MediaWikiApi.performHttpRequest(path, arguments, requestHeaders, post)
+	local requestBody = MediaWikiApi.createRequestBody(arguments)
+
+	MediaWikiUtils.trace('Performing HTTP request');
+	MediaWikiUtils.trace('Path:')
+	MediaWikiUtils.trace(path)
+	MediaWikiUtils.trace('Request body:');
+	MediaWikiUtils.trace(requestBody);
+
+	local resultBody, resultHeaders
+	if post then
+		resultBody, resultHeaders = LrHttp.post(path, requestBody, requestHeaders)
+	else
+		resultBody, resultHeaders = LrHttp.get(path .. '?' .. requestBody, requestHeaders)
+	end
+
+	MediaWikiUtils.trace('Result status:');
+	MediaWikiUtils.trace(resultHeaders.status);
+
+	if not resultHeaders.status then
+		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/NoConnection=No network connection.'))
+	elseif resultHeaders.status ~= 200 then
+		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.', resultHeaders.status))
+	end
+
+	MediaWikiUtils.trace('Result body:');
+	MediaWikiUtils.trace(resultBody);
+
+	return resultBody
+end
+
 function MediaWikiApi.performRequest(arguments)
 	arguments.format = 'xml'
-	local requestBody = MediaWikiApi.createRequestBody(arguments)
 	local requestHeaders = {
 		{
 			field = 'User-Agent',
@@ -89,29 +121,29 @@ function MediaWikiApi.performRequest(arguments)
 			value = 'application/x-www-form-urlencoded',
 		},
 	}
-	MediaWikiUtils.trace('Performing API request');
-	MediaWikiUtils.trace('Request body:');
-	MediaWikiUtils.trace(requestBody);
 
-	local resultBody, resultHeaders = LrHttp.post(MediaWikiApi.apiPath, requestBody, requestHeaders)
-
-	MediaWikiUtils.trace('Result status:');
-	MediaWikiUtils.trace(resultHeaders.status);
-
-	if not resultHeaders.status then
-		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/NoConnection=Cannot connect to the MediaWiki API.'))
-	elseif resultHeaders.status ~= 200 then
-		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.', resultHeaders.status))
-	end
-
-	MediaWikiUtils.trace('Result body:');
-	MediaWikiUtils.trace(resultBody);
-
+	local resultBody = MediaWikiApi.performHttpRequest(MediaWikiApi.apiPath, arguments, requestHeaders, true)
 	local resultXml = MediaWikiApi.parseXmlDom(LrXml.parseXml(resultBody))
 	if resultXml.error then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/MediaWikiError=The MediaWiki error ^1 occured: ^2', resultXml.error.code, resultXml.error.info))
 	end
 	return resultXml
+end
+
+function MediaWikiApi.getCurrentPluginVersion()
+	local requestHeaders = {
+		{
+			field = 'User-Agent',
+			value = MediaWikiApi.userAgent,
+		},
+	}
+	local resultBody = MediaWikiApi.performHttpRequest(MediaWikiApi.githubApiVersion, {}, requestHeaders, false)
+	local resultJson = JSON:decode(resultBody)
+	local firstKey = MediaWikiUtils.getFirstKey(resultJson)
+	if firstKey ~= nil then
+		return resultJson[firstKey].tag_name
+	end
+	return nil
 end
 
 function MediaWikiApi.login(username, password, token)

@@ -27,5 +27,12 @@ MediaWiki upload.  The upload is done in `MediaWikiApi.lua`.
 `MediaWikiMetadataProvider.lua` defines the custom metadata containing e. g.
 the file description and additional categories and templates.
 
+### Libraries
+
+LrMediaWiki contains a copy of [`JSON.lua`][jsonlua] written by Jeffrey Friedl
+and released under [CC-by 3.0][ccby3].
+
 [comlrmw]: https://commons.wikimedia.org/wiki/Commons:LrMediaWiki
 [lrsdk]: http://www.adobe.com/devnet/photoshoplightroom.html
+[jsonlua]: http://regex.info/blog/lua/json
+[ccby3]: http://creativecommons.org/licenses/by/3.0/deed.en_US

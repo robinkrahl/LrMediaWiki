@@ -14,6 +14,8 @@ return {
 	LrToolkitIdentifier = 'org.ireas.lightroom.mediawiki',
 	LrPluginName = LOC '$$$/LrMediaWiki/PluginName=MediaWiki for Lightroom',
 
+	LrInitPlugin = 'MediaWikiInit.lua',
+
 	LrExportServiceProvider = {
 		title = LOC '$$$/LrMediaWiki/MediaWiki=MediaWiki',
 		file = 'MediaWikiExportServiceProvider.lua',

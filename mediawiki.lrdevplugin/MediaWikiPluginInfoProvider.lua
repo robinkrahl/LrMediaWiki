@@ -24,11 +24,13 @@ local MediaWikiPluginInfoProvider = {}
 MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
   propertyTable.logging = MediaWikiUtils.getLogging()
   propertyTable.create_snapshots = MediaWikiUtils.getCreateSnapshots()
+  propertyTable.check_version = MediaWikiUtils.getCheckVersion()
 end
 
 MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
   MediaWikiUtils.setLogging(propertyTable.logging)
   MediaWikiUtils.setCreateSnapshots(propertyTable.create_snapshots)
+  MediaWikiUtils.setCheckVersion(propertyTable.check_version)
 end
 
 MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
@@ -53,6 +55,20 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					viewFactory:checkbox {
 						value = bind 'create_snapshots',
             title = LOC '$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export',
+					},
+				},
+
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
+
+					viewFactory:static_text {
+						alignment = labelAlignment,
+						width = LrView.share "label_width",
+					},
+
+					viewFactory:checkbox {
+						value = bind 'check_version',
+            title = LOC '$$$/LrMediaWiki/Section/Config/Version=Check for new plugin versions after Lightroom starts',
 					},
 				},
 

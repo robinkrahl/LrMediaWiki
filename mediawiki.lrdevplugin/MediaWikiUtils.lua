@@ -34,6 +34,13 @@ MediaWikiUtils.isStringEmpty = function(str)
 	return str == nil or string.match(str, '^%s*$') ~= nil
 end
 
+MediaWikiUtils.getFirstKey = function(table)
+  for key, value in pairs(table) do
+		return key
+	end
+  return nil
+end
+
 MediaWikiUtils.getVersionString = function()
     local str = Info.VERSION.major .. '.' .. Info.VERSION.minor
     if Info.VERSION.revision > 0 then
@@ -50,6 +57,14 @@ end
 
 MediaWikiUtils.setCreateSnapshots = function(create_snapshot)
 	prefs.create_snapshot = create_snapshot
+end
+
+MediaWikiUtils.getCheckVersion = function()
+	return prefs.check_version or false
+end
+
+MediaWikiUtils.setCheckVersion = function(check_version)
+	prefs.check_version = check_version
 end
 
 MediaWikiUtils.getLogging = function()
