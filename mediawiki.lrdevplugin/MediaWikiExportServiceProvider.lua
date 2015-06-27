@@ -67,15 +67,6 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local photo = rendition.photo
 			local catalog = photo.catalog
 
-			-- create new snapshot
-			local currentTimeStamp = LrDate.currentTime()
-			local currentDate = LrDate.formatShortDate(currentTimeStamp)
-			local currentTime = LrDate.formatShortTime(currentTimeStamp)
-			local snapshotTitle = LOC('$$$/LrMediaWiki/Export/Snapshot=MediaWiki export, ^1 ^2, ^3', currentDate, currentTime, exportSettings.api_path)
-			catalog:withWriteAccessDo('CreateDevelopSnapshot', function(context)
-				photo:createDevelopSnapshot(snapshotTitle, true)
-			end)
-
 			-- do upload to MediaWiki
 			local descriptionEn = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
 			local descriptionDe = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_de')
@@ -120,6 +111,17 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local message = MediaWikiInterface.uploadFile(pathOrMessage, fileDescription, hasDescription)
 			if message then
 				rendition:uploadFailed(message)
+			else
+				-- create new snapshot if the upload was successful
+				if MediaWikiUtils.getCreateSnapshots() then
+					local currentTimeStamp = LrDate.currentTime()
+					local currentDate = LrDate.formatShortDate(currentTimeStamp)
+					local currentTime = LrDate.formatShortTime(currentTimeStamp)
+					local snapshotTitle = LOC('$$$/LrMediaWiki/Export/Snapshot=MediaWiki export, ^1 ^2, ^3', currentDate, currentTime, exportSettings.api_path)
+					catalog:withWriteAccessDo('CreateDevelopSnapshot', function(context)
+						photo:createDevelopSnapshot(snapshotTitle, true)
+					end)
+				end
 			end
 			LrFileUtils.delete(pathOrMessage)
 		else

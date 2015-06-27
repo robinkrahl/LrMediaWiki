@@ -37,6 +37,7 @@
 "$$$/LrMediaWiki/Section/Config/Logging/Description=Wenn du das Logging aktivierst, werden die API-Abfragen geloggt. Die Logdatei wird in deinem Eigene-Dokumente-Ordner abgelegt."
 "$$$/LrMediaWiki/Section/Config/Logging/Password=Die Logdatei enthält auch dein Passwort im Klartext!"
 "$$$/LrMediaWiki/Section/Config/Logging/Warning=Achtung:"
+"$$$/LrMediaWiki/Section/Config/Snapshots=Beim Export einen Schnappschuss anlegen"
 "$$$/LrMediaWiki/Section/Config/Title=Einstellungen"
 "$$$/LrMediaWiki/Section/Licensing/Author=Urheber"
 "$$$/LrMediaWiki/Section/Licensing/Categories/Details=mit ; trennen"
