@@ -35,6 +35,7 @@
 "$$$/LrMediaWiki/Metadata/DescriptionEn=Beschreibung (en)"
 "$$$/LrMediaWiki/Metadata/Templates=Vorlagen"
 "$$$/LrMediaWiki/PluginName=MediaWiki für Lightroom"
+"$$$/LrMediaWiki/Section/Config/ExportKeyword=Export-Schlüsselwort"
 "$$$/LrMediaWiki/Section/Config/Logging=Logging aktivieren"
 "$$$/LrMediaWiki/Section/Config/Logging/Description=Wenn du das Logging aktivierst, werden die API-Abfragen geloggt. Die Logdatei wird in deinem Eigene-Dokumente-Ordner abgelegt."
 "$$$/LrMediaWiki/Section/Config/Logging/Password=Die Logdatei enthält auch dein Passwort im Klartext!"

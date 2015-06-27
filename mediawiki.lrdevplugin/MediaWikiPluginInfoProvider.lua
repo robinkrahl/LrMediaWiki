@@ -25,16 +25,19 @@ MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
   propertyTable.logging = MediaWikiUtils.getLogging()
   propertyTable.create_snapshots = MediaWikiUtils.getCreateSnapshots()
   propertyTable.check_version = MediaWikiUtils.getCheckVersion()
+  propertyTable.export_keyword = MediaWikiUtils.getExportKeyword()
 end
 
 MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
   MediaWikiUtils.setLogging(propertyTable.logging)
   MediaWikiUtils.setCreateSnapshots(propertyTable.create_snapshots)
   MediaWikiUtils.setCheckVersion(propertyTable.check_version)
+  MediaWikiUtils.setExportKeyword(propertyTable.export_keyword)
 end
 
 MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right';
+  local widthLong = 50;
 
 	return {
 		{
@@ -46,11 +49,6 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
 
 					viewFactory:checkbox {
 						value = bind 'create_snapshots',
@@ -64,7 +62,18 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					viewFactory:static_text {
 						alignment = labelAlignment,
 						width = LrView.share "label_width",
+            title = LOC '$$$/LrMediaWiki/Section/Config/ExportKeyword=Export keyword',
 					},
+
+					viewFactory:edit_field {
+						value = bind 'export_keyword',
+						immediate = true,
+						width_in_chars = widthLong,
+					},
+				},
+
+				viewFactory:row {
+					spacing = viewFactory:label_spacing(),
 
 					viewFactory:checkbox {
 						value = bind 'check_version',
@@ -74,11 +83,6 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
 
 					viewFactory:checkbox {
 						value = bind 'logging',
@@ -90,11 +94,6 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					spacing = viewFactory:label_spacing(),
 
 					viewFactory:static_text {
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
-
-					viewFactory:static_text {
             title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Description=If you enable logging, all API requests are logged. The log file is located in your "My Documents" directory.',
             wrap = true,
 					},
@@ -102,11 +101,6 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
 
 					viewFactory:static_text {
             title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Warning=Warning:',

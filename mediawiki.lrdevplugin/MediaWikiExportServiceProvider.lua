@@ -131,6 +131,14 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 					end)
 				end
 
+				-- add configured export keyword
+				local keyword = MediaWikiUtils.getExportKeyword()
+				if not MediaWikiUtils.isStringEmpty(keyword) then
+					catalog:withWriteAccessDo('AddExportKeyword', function(context)
+						photo:addKeyword(catalog:createKeyword(keyword, {}, false, nil, true))
+					end)
+				end
+
 				-- file name for gallery creation
 				fileNames[#fileNames + 1] = fileName
 			end

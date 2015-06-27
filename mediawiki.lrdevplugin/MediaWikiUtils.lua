@@ -80,6 +80,14 @@ MediaWikiUtils.setLogging = function(logging)
 	end
 end
 
+MediaWikiUtils.getExportKeyword = function()
+	return prefs.export_keyword or nil
+end
+
+MediaWikiUtils.setExportKeyword = function(tag)
+	prefs.export_keyword = tag
+end
+
 MediaWikiUtils.trace = function(message)
 	myLogger:trace(message)
 end
