@@ -12,8 +12,8 @@ Wikimedia Commons.
 ## Developer information
 
 LrMediaWiki is developed in Lua using the [Lightroom SDK][lrsdk].  It is
-released under the MIT/X11 license.  LrMediaWiki should work with all 
-Lightroom 5 installations both on Windows and on Mac OS.
+released under the MIT/X11 license.  LrMediaWiki should work with all
+Lightroom 5 and 6 installations both on Windows and on Mac OS.
 
 ### Code structure
 

@@ -1,5 +1,30 @@
 # LrMediaWiki changelog
 
+## v0.3: Errors (2015-06-27)
+
+This release adds improved error handling or even avoids errors. For example,
+the error messages for a missing network connection and for API warnings are
+improved. And if the image title contains consecutive spaces or underscores, the
+upload will no longer fail without a proper error message (but succeed!).
+
+Furthermore, the file description template is moved in a dedicated text file
+making it possible to customize it. As some users requested that, the
+permission field is added to the export dialog and a development snapshot is
+created after the export.
+
+### Fixed issues
+
+ - #26: Add snapshot on export (enhancement)
+ - #27: Add permission field to export dialog (enhancement)
+ - #28: Check error message when there is no internet connection (enhancement)
+ - #29: Move file description template into a file and improve the string
+   formatting (enhancement)
+ - #30: Overwrite existing files without adding a description (enhancement)
+ - #36: Improve error messages for API errors (enhancement)
+ - #38: Ensure the image title does not contain consecutive spaces or
+  underscores (enhancement)
+ - #39: Date format (enhancement)
+
 ## v0.2.3: Bugfix (2014-10-06)
 
 This release fixes a bug that caused all uploads to fail under certain
@@ -13,7 +38,7 @@ dialog.
 ## v0.2.2: Bundestag (2014-09-08)
 
 This releases brings a few minor changes needed for uploads for the German
-Bundestag project. 
+Bundestag project.
 
 ### Fixed issues
  - #13: Add LrMediaWiki version to upload comments (enhancement)

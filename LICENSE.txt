@@ -1,4 +1,4 @@
-Copyright (c) 2014 by the LrMediaWiki team (see CREDITS.txt file in the
+Copyright (c) 2014, 2015 by the LrMediaWiki team (see CREDITS.txt file in the
 project root directory or [0])
 
 [0]  <https://raw.githubusercontent.com/ireas/LrMediaWiki/master/CREDITS.txt>
