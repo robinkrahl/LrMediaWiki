@@ -33,7 +33,6 @@ end
 
 MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right';
-	local widthLong = 50;
 
 	return {
 		{
