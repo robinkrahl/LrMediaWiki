@@ -60,8 +60,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path)
 
 	-- iterate over photos
-	for item in exportContext:renditions() do
-		local rendition = item[1]
+	for i, rendition in exportContext:renditions() do
 		-- render photo
 		local success, pathOrMessage = rendition:waitForRender()
 		if success then

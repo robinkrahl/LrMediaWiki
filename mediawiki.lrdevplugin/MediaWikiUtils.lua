@@ -13,7 +13,16 @@
 -- doc:   missing
 -- i18n:  complete
 
+local LrLogger = import 'LrLogger'
 local Info = require 'Info'
+local myLogger = LrLogger('LrMediaWikiLogger')
+
+-- LOGGING
+-- If enabled, the log file will appear in your "My Documents" folder. Warning:
+-- LrMediaWiki will log all requests sent to MediaWiki, including your password!
+-- If you share a log file, make sure you removed your password.
+-- To enable logging, uncomment the following line:
+-- myLogger:enable("logfile")
 
 local MediaWikiUtils = {}
 
@@ -34,6 +43,10 @@ MediaWikiUtils.getVersionString = function()
         str = str .. '.' .. Info.VERSION.revision
     end
     return str
+end
+
+MediaWikiUtils.trace = function(message)
+	myLogger:trace(message)
 end
 
 return MediaWikiUtils

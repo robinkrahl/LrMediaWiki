@@ -19,6 +19,7 @@ local LrPathUtils = import 'LrPathUtils'
 local LrXml = import 'LrXml'
 
 local Info = require 'Info'
+local MediaWikiUtils = require 'MediaWikiUtils'
 
 local MediaWikiApi = {
 	userAgent = string.format('LrMediaWiki %d.%d', Info.VERSION.major, Info.VERSION.minor),
@@ -64,7 +65,7 @@ function MediaWikiApi.parseXmlDom(xmlDomInstance)
 		end
 		for i = 1, xmlDomInstance:childCount() do
 			local child = xmlDomInstance:childAtIndex(i)
-			local childName = child:name()[0]
+			local childName = child:name()
 			if childName then
 				value[childName] = MediaWikiApi.parseXmlDom(child)
 			end
@@ -88,14 +89,23 @@ function MediaWikiApi.performRequest(arguments)
 			value = 'application/x-www-form-urlencoded',
 		},
 	}
+	MediaWikiUtils.trace('Performing API request');
+	MediaWikiUtils.trace('Request body:');
+	MediaWikiUtils.trace(requestBody);
 
 	local resultBody, resultHeaders = LrHttp.post(MediaWikiApi.apiPath, requestBody, requestHeaders)
+
+	MediaWikiUtils.trace('Result status:');
+	MediaWikiUtils.trace(resultHeaders.status);
 
 	if not resultHeaders.status then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/NoConnection=Cannot connect to the MediaWiki API.'))
 	elseif resultHeaders.status ~= 200 then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.', resultHeaders.status))
 	end
+
+	MediaWikiUtils.trace('Result body:');
+	MediaWikiUtils.trace(resultBody);
 
 	local resultXml = MediaWikiApi.parseXmlDom(LrXml.parseXml(resultBody))
 	if resultXml.error then
