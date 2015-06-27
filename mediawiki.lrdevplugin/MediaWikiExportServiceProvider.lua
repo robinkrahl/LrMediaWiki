@@ -31,7 +31,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	-- configure progess display
 	local exportSession = exportContext.exportSession
 	local photoCount = exportSession:countRenditions()
-	local progressScope = exportContext:configureProgress{
+	exportContext:configureProgress{
 		title = photoCount > 1 and LOC('$$$/LrMediaWiki/Export/Progress=Exporting ^1 photos to a MediaWiki', photoCount) or LOC '$$$/LrMediaWiki/Export/Progress/One=Exporting one photo to a MediaWiki',
 	}
 
@@ -60,7 +60,8 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path)
 
 	-- iterate over photos
-	for i, rendition in exportContext:renditions() do
+	for item in exportContext:renditions() do
+		local rendition = item[1]
 		-- render photo
 		local success, pathOrMessage = rendition:waitForRender()
 		if success then
@@ -291,7 +292,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:push_button {
 					title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
 					action = function(button)
-						result, message = MediaWikiInterface.loadFileDescriptionTemplate()
+						local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 						if result then
 							local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
 							LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')

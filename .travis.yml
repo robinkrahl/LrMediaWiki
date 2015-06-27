@@ -1,7 +1,9 @@
 language: c
 
 install:
-  - sudo apt-get install lua5.2
+  - sudo apt-get install lua5.2 luarocks
+  - sudo luarocks install luacheck
 
 script:
   - luac -p mediawiki.lrdevplugin/*.lua
+  - luacheck mediawiki.lrdevplugin/*.lua --globals LOC import _PLUGIN -a

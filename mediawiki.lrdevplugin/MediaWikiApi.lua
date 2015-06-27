@@ -36,7 +36,7 @@ function MediaWikiApi.urlEncode(str)
 			function(c) return string.format('%%%02X', string.byte(c)) end)
 		str = string.gsub(str, ' ', '+')
 	end
-	return str	
+	return str
 end
 
 --- Convert HTTP arguments to a URL-encoded request body.
@@ -64,7 +64,7 @@ function MediaWikiApi.parseXmlDom(xmlDomInstance)
 		end
 		for i = 1, xmlDomInstance:childCount() do
 			local child = xmlDomInstance:childAtIndex(i)
-			local childName, childNamespace = child:name()
+			local childName = child:name()[0]
 			if childName then
 				value[childName] = MediaWikiApi.parseXmlDom(child)
 			end
@@ -88,7 +88,7 @@ function MediaWikiApi.performRequest(arguments)
 			value = 'application/x-www-form-urlencoded',
 		},
 	}
-	
+
 	local resultBody, resultHeaders = LrHttp.post(MediaWikiApi.apiPath, requestBody, requestHeaders)
 
 	if not resultHeaders.status then
@@ -114,14 +114,14 @@ function MediaWikiApi.login(username, password, token)
 		arguments.lgtoken = token
 	end
 	local xml = MediaWikiApi.performRequest(arguments)
-	
+
 	local loginResult = xml.login.result
 	if loginResult == 'Success' then
 		return true
 	elseif not token and loginResult == 'NeedToken' then
 		return MediaWikiApi.login(username, password, xml.login.token)
 	end
-	
+
 	return loginResult
 end
 
@@ -175,30 +175,30 @@ function MediaWikiApi.upload(fileName, sourceFilePath, text, comment, ignoreWarn
 		filePath = sourceFilePath,
 		contentType = 'application/octet-stream',
 	}
-	
+
 	local resultBody, resultHeaders = LrHttp.postMultipart(MediaWikiApi.apiPath, requestBody, requestHeaders)
-	
+
 	if resultHeaders.status ~= 200 then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.', resultHeaders.status))
 	end
-       
+
 	local resultXml = MediaWikiApi.parseXmlDom(LrXml.parseXml(resultBody))
 	if resultXml.error then
 		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/MediaWikiError=The MediaWiki error ^1 occured: ^2', resultXml.error.code, resultXml.error.info))
 	end
-	
-	local uploadResult = resultXml.upload.result 
+
+	local uploadResult = resultXml.upload.result
 	if uploadResult == 'Success' then
 		return true
 	elseif uploadResult == 'Warning' then
-		warnings = ''
-		for k, v in pairs(resultXml.upload.warnings) do
+		local warnings = ''
+		for pair in pairs(resultXml.upload.warnings) do
 			if warnings ~= '' then
 				warnings = warnings .. ', '
 			end
-			warnings = warnings .. k
+			warnings = warnings .. pair[0]
 		end
-                return warnings
+    return warnings
 	else
 		return uploadResult
 	end

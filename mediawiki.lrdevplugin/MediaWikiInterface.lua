@@ -62,7 +62,7 @@ MediaWikiInterface.prepareUpload = function(username, password, apiPath)
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Interface/UsernameOrPasswordMissing=Username or password missing')
 	end
 	-- file description
-	result, message = MediaWikiInterface.loadFileDescriptionTemplate()
+	local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 	if not result then
 		LrErrors.throwUserError(message)
 	end
