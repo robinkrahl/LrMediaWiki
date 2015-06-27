@@ -119,11 +119,11 @@ local OBJDEF = {
 --            :
 --
 --          for i, photo in ipairs(photosToProcess) do
---               :             
---               :             
+--               :
+--               :
 --               local data = JSON:decode(someJsonText, { photo = photo })
---               :             
---               :             
+--               :
+--               :
 --          end
 --
 --
@@ -234,9 +234,9 @@ local OBJDEF = {
 --   An example of setting align_keys to true:
 --
 --     JSON:encode_pretty(data, nil, { pretty = true, indent = "  ", align_keys = true })
---  
+--
 --   produces:
---   
+--
 --      {
 --           "city": "Kyoto",
 --        "climate": {
@@ -260,7 +260,7 @@ local OBJDEF = {
 --   when non-positive numeric keys exist), numeric keys are converted to
 --   strings.
 --
---   For example, 
+--   For example,
 --     JSON:encode({ "one", "two", "three", SOMESTRING = "some string" }))
 --   produces the JSON object
 --     {"1":"one","2":"two","3":"three","SOMESTRING":"some string"}
@@ -483,7 +483,7 @@ local function grok_string(self, text, start, etc)
                if lo_surrogate then
                   i = i + 6 -- bypass the low surrogate we just read
                   codepoint = 0x2400 + (codepoint - 0xD800) * 0x400 + tonumber(lo_surrogate, 16)
-               else
+               -- else
                   -- not a proper low, so we'll just leave the first codepoint as is and spit it out.
                end
             end
@@ -537,7 +537,8 @@ local function grok_object(self, text, start, etc)
 
       i = skip_whitespace(text, i + 1)
 
-      local new_val, new_i = grok_one(self, text, i)
+      local new_val
+      new_val, new_i = grok_one(self, text, i)
 
       VALUE[key] = new_val
 
@@ -1021,7 +1022,7 @@ return OBJDEF:new()
 --
 --                 To maintain the prior throw-an-error semantics, set
 --                      JSON.noKeyConversion = true
---                 
+--
 --   20131004.7    Release under a Creative Commons CC-BY license, which I should have done from day one, sorry.
 --
 --   20130120.6    Comment update: added a link to the specific page on my blog where this code can

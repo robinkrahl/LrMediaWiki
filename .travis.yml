@@ -6,4 +6,4 @@ install:
 
 script:
   - luac -p mediawiki.lrdevplugin/*.lua
-  - luacheck mediawiki.lrdevplugin/*.lua --globals LOC import _PLUGIN -a
+  - luacheck mediawiki.lrdevplugin/*.lua --globals LOC import _PLUGIN -a --ignore 512
