@@ -1,5 +1,14 @@
 # LrMediaWiki changelog
 
+## v0.4.1: Bugfix for Lightroom 6.2
+
+This bugfix releases fixes a typo that caused errors in the new Lightroom
+version.
+
+### Fixed issues
+
+ - #46: Malformed ZString (missing trailing quote)
+
 ## v0.4: Keywords, galleries, updates – and configuration (2015-06-28)
 
 This release adds a configuration section to the plugin settings dialog. In this

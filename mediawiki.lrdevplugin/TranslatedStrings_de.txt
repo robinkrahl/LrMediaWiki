@@ -26,9 +26,10 @@
 "$$$/LrMediaWiki/Interface/Rename/NewName=Neuer Dateiname"
 "$$$/LrMediaWiki/Interface/Rename=Datei umbenennen"
 "$$$/LrMediaWiki/Interface/UploadFailed=Upload fehlgeschlagen: ^1"
-"$$$/LrMediaWiki/Interface/UsernameOrPasswordMissing=Nutzername oder Password nicht angegeben
+"$$$/LrMediaWiki/Interface/UsernameOrPasswordMissing=Nutzername oder Password nicht angegeben"
 "$$$/LrMediaWiki/Interface/VersionComment=Versionskommentar"
 "$$$/LrMediaWiki/MediaWiki=MediaWiki"
+"$$$/LrMediaWiki/Menu/Mapping=Stichwort-Kategorie-Zuordnung"
 "$$$/LrMediaWiki/Metadata/Categories=Kategorien"
 "$$$/LrMediaWiki/Metadata/DescriptionAdditional=Beschreibung (andere)"
 "$$$/LrMediaWiki/Metadata/DescriptionDe=Beschreibung (de)"
