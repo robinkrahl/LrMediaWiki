@@ -247,11 +247,12 @@ function MediaWikiApi.upload(fileName, sourceFilePath, text, comment, ignoreWarn
 		return true
 	elseif uploadResult == 'Warning' then
 		local warnings = ''
-		for pair in pairs(resultXml.upload.warnings) do
+		-- concatenate the keys of the warnings table (= MediaWiki name of the warning)
+		for warning in pairs(resultXml.upload.warnings) do
 			if warnings ~= '' then
 				warnings = warnings .. ', '
 			end
-			warnings = warnings .. pair[0]
+			warnings = warnings .. warning
 		end
     return warnings
 	else
