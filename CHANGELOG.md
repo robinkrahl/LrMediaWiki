@@ -42,9 +42,8 @@ My next steps are, to check a comprehensive set of test cases, using
 * 3 different LR versions (LR 6, 5, 4)
 * 2 different operating systems (Windows, OS X)
 * 2 different LR language settings (English, German)
-In summary, there are 3 x 2 x 2 = 12 test cases.
 
-I'm able to do these tests, because I own licenses of the 3 LR versions and have access to machines running the both operating systems supported by Adobe, Windows and OS X.
+In summary, there are 3 x 2 x 2 = 12 test cases. I'm able to do these tests, because I own licenses of the 3 LR versions and have access to machines running the both operating systems supported by Adobe, Windows and OS X.
 
 In general, I don't intend, to perform these comprehensive test cases in future, due to the high effort.
 But it seems to me, it's useful, to do these tests at minimum once. The need to test different LR versions
