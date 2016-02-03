@@ -146,8 +146,8 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 						location = location .. '|heading:' .. heading -- append heading at location
 						local headingRounded = string.format("%.0f", heading) -- rounding, e.g. 359.9876 -> 360
 						-- There are problems inserting newlines (\n) in JASON strings. Workaround, splitting the message in 4 parts:
-						local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL1=Hint: The Lightroom field \"Direction\" has a value of ^1°.', headingRounded)
-						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL2=This value has been used to set the \"heading\" parameter at {{Location}} template.')
+						local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL1=Hint: The Lightroom field “Direction” has a value of ^1°.', headingRounded)
+						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL2=This value has been used to set the “heading” parameter at {{Location}} template.')
 						local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL3=This feature requires a Lightroom version 6/CC or higher.')
 						local hintLine4 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL4=This Lightroom version is ^1, therefore this feature works.', LrVersionString )
 						hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3 .. '\n' .. hintLine4
@@ -156,17 +156,20 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 					else
 						-- This shouldn't happen, because LR has a good direction field check, accepting only valid values.
 						-- It might be impossible, to test this case. However, shit happens.
-						LrDialogs.message(LOC '$$$/LrMediaWiki/Interface/InvalidDirectionValue=\"Direction\" has an invalid value.', subText, 'critical')
+						LrDialogs.message(LOC '$$$/LrMediaWiki/Interface/InvalidDirectionValue=“Direction” has an invalid value.', subText, 'critical')
 					end
-				else
-					local table = nil
-					-- There are problems inserting newlines (\n) in JASON strings. Workaround, splitting the message in 3 parts:
-					local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hint: If the Lightroom field \"Direction\" has a value, this can not be used to set a \"heading\" parameter at {{Location}} template.')
-					local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL2=This feature requires a Lightroom version 6/CC or higher.')
-					local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL3=This Lightroom version is ^1, therefore this feature works not.', LrVersionString )
-					hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3
-					table = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
-					LrDialogs.messageWithDoNotShow(table)
+				else -- LrMajorVersion < 6
+					if LrMajorVersion == 5 then 
+						-- LR versions < 5 don't have a "Direction" field
+						local table = nil
+						-- There are problems inserting newlines (\n) in JASON strings. Workaround, splitting the message in 3 parts:
+						local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hint: If the Lightroom field “Direction” has a value, this can not be used to set a “heading” parameter at {{Location}} template.')
+						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL2=This feature requires a Lightroom version 6/CC or higher.')
+						local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL3=This Lightroom version is ^1, therefore this feature works not.', LrVersionString )
+						hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3
+						table = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
+						LrDialogs.messageWithDoNotShow(table)
+					end
 				end
 				location = location .. '}}\n' -- close Location template
 				templates = location .. templates
