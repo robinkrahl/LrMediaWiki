@@ -17,7 +17,7 @@ This enhancement introduces a LR version check during export. The version check 
 
 At both cases a hint message box is shown – with different messages, depending on the LR version:
 * (a) Users of a LR version 6 or higher get informed about this feature, if the user has set the "Direction" field.
-* (b) Users of a LR version 5, 4 or lower get informed, the feature is not available, due to the insufficient LR version.
+* (b) Users of a LR version 5 or 4 get informed, the feature is not available, due to the insufficient LR version.
 
 At both cases the hint message box includes a "Don't show again" (German: "Nicht erneut anzeigen") checkbox.
 If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
@@ -44,7 +44,7 @@ My next steps are, to check a comprehensive set of test cases, using
 In summary, there are 3 x 2 x 2 = 12 test cases.
 
 I'm able to do these tests, because
-* I own license keys of the 3 LR versions and
+* I own licenses of the 3 LR versions and
 * have access to machines running the both operating systems supported by Adobe, Windows and OS X.
 
 In general, I don't intend, to perform these comprehensive test cases in future, due to the high effort.
@@ -59,7 +59,7 @@ It seems to me, up to now LrMediaWiki has been tested only using LR version 5, r
 using English and German LR language settings.
 As a side effect of my changes and tests, a compatibility with LR version 4
 could be achieved by setting "LrSdkMinimumVersion = 4.0" at file "info.lua".
-Prior of this change, at LR 4 plug-in manager the plug-in was mentioned to be installed, but working improperly.
+Prior of this change, at LR 4 the plug-in manager mentioned, the plug-in has been installed, but works improperly.
 Maybe, this small change is out of interest. Maybe, there are users, still working with LR 4. I don't know.
 
 LR versions < 4 are out of my interests, due to two reasons:
