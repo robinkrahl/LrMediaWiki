@@ -2,7 +2,8 @@
 
 ## v0.4.2: 
 
-- #35: Extract direction/heading of the location out of EXIF/metadata (enhancement)
+- [#35]: Extract direction/heading of the location out of EXIF/metadata (enhancement)
+[#35]: https://github.com/robinkrahl/LrMediaWiki/issues/35
 
 Up to now, this pre-release of version 0.4.2 is in progress, to fulfill the requested enhancement and to test several use cases.
 It is shared for tests and code inspections, it's not yet intended to be merged with the major branch of LrMediaWiki.
@@ -11,16 +12,17 @@ The enhancement is available by users of a Lightroom (LR) version >= 6.
 The version dependency is caused by Adobe: The function to retrieve the direction has been
 introduced by Adobe at LR and LR SDK version 6.0, stated to be a bug fix.
 Therefore this enhancement is not available by users using a LR version < 6, like LR 5 or LR 4.
-This enhancement introduces a LR version check during export:
-The version check differs two cases of major LR versions: (a) >= 6 and (b) < 6
+
+This enhancement introduces a LR version check during export. The version check differs two cases of major LR versions: (a) >= 6 and (b) < 6
+
 At both cases a hint message box is shown – with different messages, depending on the LR version:
 * (a) Users of a LR version 6 or higher get informed about this feature, if the user has set the "Direction" field.
 * (b) Users of a LR version 5, 4 or lower get informed, the feature is not available, due to the insufficient LR version.
 
 At both cases the hint message box includes a "Don't show again" (German: "Nicht erneut anzeigen") checkbox.
 If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
-English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
-German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
+* English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
+* German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
 
 At users with a LR version >= 6:
 LR can store a direction value with up to 4 digits beyond a decimal point,
@@ -44,6 +46,7 @@ In summary, there are 3 x 2 x 2 = 12 test cases.
 I'm able to do these tests, because
 * I own license keys of the 3 LR versions and
 * have access to machines running the both operating systems supported by Adobe, Windows and OS X.
+
 In general, I don't intend, to perform these comprehensive test cases in future, due to the high effort.
 But it seems to me, it's useful, to do these tests at minimum once. The need to test different LR versions
 is caused by the need to test the implemented LR version check.
@@ -51,20 +54,24 @@ is caused by the need to test the implemented LR version check.
 The aim of these multiple test cases is
 * to test the new enhancement under several conditions
 * to test LrMediaWiki in general, if it works with different LR versions and operating systems.
+
 It seems to me, up to now LrMediaWiki has been tested only using LR version 5, running at Windows,
 using English and German LR language settings.
 As a side effect of my changes and tests, a compatibility with LR version 4
 could be achieved by setting "LrSdkMinimumVersion = 4.0" at file "info.lua".
 Prior of this change, at LR 4 plug-in manager the plug-in was mentioned to be installed, but working improperly.
 Maybe, this small change is out of interest. Maybe, there are users, still working with LR 4. I don't know.
-LR versions < 4 are out of my interests, due to two reasons: (a) I don't own licence keys of these "ancient" versions and
-(b) I assume, there is no need, to let LrMediaWiki be compliant with antique LR versions.
+
+LR versions < 4 are out of my interests, due to two reasons:
+* I don't own licence keys of these "ancient" versions and
+* I assume, there is no need, to let LrMediaWiki be compliant with antique LR versions.
+
 However, potential users of LrMediaWiki, using the old version LR 4, could be affected by this change.
 
 Up to now, this description section is not complete and is a matter of change.
 The results of the comprehensive version test set I will describe here in next days, after completion of these tests.
 At the moment it seems, LrMediaWiki works with LR 4 and OS X is supported – with a restriction:
-- The localized descriptions (in German) are not loaded.
+* The localized descriptions (in German) are not loaded.
 
 This means, messages are shown in English, even the LR user has set e.g. German as interface language.
 I will examine in detail, which test cases cause this behaviour.
