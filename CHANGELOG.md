@@ -2,7 +2,7 @@
 
 ## v0.4.2: 
 
-- [#35]: Extract direction/heading of the location out of EXIF/metadata (enhancement)
+- Issue [#35]: Extract direction/heading of the location out of EXIF/metadata (enhancement)
 [#35]: https://github.com/robinkrahl/LrMediaWiki/issues/35
 
 Up to now, this pre-release of version 0.4.2 is in progress, to fulfill the requested enhancement and to test several use cases.
