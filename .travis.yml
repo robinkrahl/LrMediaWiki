@@ -1,8 +1,13 @@
 language: c
+sudo: false
+cache:
+  directories: here
 
 install:
-  - sudo apt-get install lua5.1 luarocks
-  - sudo luarocks install luacheck
+  - wget https://raw.githubusercontent.com/mpeterv/hererocks/0.3.1/hererocks.py
+  - python hererocks.py here --lua 5.1 -r https://github.com/mpeterv/luarocks@upgrade-install
+  - export PATH=$PATH:$PWD/here/bin
+  - luarocks install luacheck --upgrade --upgrade-deps
 
 script:
   - luac -p mediawiki.lrdevplugin/*.lua
