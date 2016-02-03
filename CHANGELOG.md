@@ -5,7 +5,7 @@
 - Issue [#35]: Extract direction/heading of the location out of EXIF/metadata (enhancement)
 [#35]: https://github.com/robinkrahl/LrMediaWiki/issues/35
 
-The develoment of this pre-release of version 0.4.2 is considered to be finished, now several use cases are tested.
+The development of this pre-release of version 0.4.2 is considered to be finished, now several use cases are tested.
 The pre-release is shared for tests and code inspections, it's not yet intended to be merged with the major branch of LrMediaWiki.
 
 The enhancement is available by users of a Lightroom (LR) version >= 6.
