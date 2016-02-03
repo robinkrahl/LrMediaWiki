@@ -153,6 +153,10 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 						hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3 .. '\n' .. hintLine4
 						local messageTable = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 						LrDialogs.messageWithDoNotShow(messageTable)
+					else
+						-- This shouldn't happen, because LR has a good direction field check, accepting only valid values.
+						-- It might be impossible, to test this case. However, shit happens.
+						LrDialogs.message(LOC '$$$/LrMediaWiki/Interface/InvalidDirectionValue=\"Direction\" has an invalid value.', subText, 'critical')
 					end
 				else
 					local table = nil
