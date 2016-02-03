@@ -16,6 +16,7 @@ The version check differs two cases of major LR versions: (a) >= 6 and (b) < 6
 At both cases a hint message box is shown – with different messages, depending on the LR version:
 * (a) Users of a LR version 6 or higher get informed about this feature, if the user has set the "Direction" field.
 * (b) Users of a LR version 5, 4 or lower get informed, the feature is not available, due to the insufficient LR version.
+
 At both cases the hint message box includes a "Don't show again" (German: "Nicht erneut anzeigen") checkbox.
 If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
 English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
@@ -38,12 +39,15 @@ My next steps are, to check a comprehensive set of test cases, using
 * 3 different LR versions (LR 6, 5, 4)
 * 2 different operating systems (Windows, OS X)
 * 2 different LR language settings (English, German)
-In summary, there are 3 x 2 x 2 = 12 test cases. I'm able to do these tests, because
+In summary, there are 3 x 2 x 2 = 12 test cases.
+
+I'm able to do these tests, because
 * I own license keys of the 3 LR versions and
 * have access to machines running the both operating systems supported by Adobe, Windows and OS X.
 In general, I don't intend, to perform these comprehensive test cases in future, due to the high effort.
 But it seems to me, it's useful, to do these tests at minimum once. The need to test different LR versions
 is caused by the need to test the implemented LR version check.
+
 The aim of these multiple test cases is
 * to test the new enhancement under several conditions
 * to test LrMediaWiki in general, if it works with different LR versions and operating systems.
@@ -61,9 +65,11 @@ Up to now, this description section is not complete and is a matter of change.
 The results of the comprehensive version test set I will describe here in next days, after completion of these tests.
 At the moment it seems, LrMediaWiki works with LR 4 and OS X is supported – with a restriction:
 - The localized descriptions (in German) are not loaded.
+
 This means, messages are shown in English, even the LR user has set e.g. German as interface language.
 I will examine in detail, which test cases cause this behaviour.
 Until now, I have only one idea, what could trigger this effect: the version of the included "JSON.lua" package, http://regex.info/blog/lua/json
+
 This is only an assumption. Any hint to get rid of this restriction are welcome!
 
 ## v0.4.1: Bugfix for Lightroom 6.2
