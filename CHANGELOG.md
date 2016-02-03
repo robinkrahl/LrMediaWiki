@@ -5,7 +5,7 @@
 - #35: Extract direction/heading of the location out of EXIF/metadata (enhancement)
 
 Up to now, this pre-release of version 0.4.2 is in progress, to fulfill the requested enhancement and to test several use cases.
-It is shared for tests and code inspections, it's not intended to be merged with the major branch of LrMediaWiki.
+It is shared for tests and code inspections, it's not yet intended to be merged with the major branch of LrMediaWiki.
 
 The enhancement is available by users of a Lightroom (LR) version >= 6.
 The version dependency is caused by Adobe: The function to retrieve the direction has been
