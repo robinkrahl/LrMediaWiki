@@ -2,81 +2,54 @@
 
 ## v0.4.2: 
 
-- Issue [#35]: Extract direction/heading of the location out of EXIF/metadata (enhancement)
-[#35]: https://github.com/robinkrahl/LrMediaWiki/issues/35
+- Issue [#35] (https://github.com/robinkrahl/LrMediaWiki/issues/35): Extract direction/heading of the location out of EXIF/metadata (enhancement)
 
-The development of this pre-release of version 0.4.2 is considered to be finished, now several use cases are tested.
-The pre-release is shared for tests and code inspections, it's not yet intended to be merged with the major branch of LrMediaWiki.
+The development of this pre-release of version 0.4.2 is considered to be finished, now several use cases are tested. The pre-release is shared for tests and code inspections, it's not yet intended to be merged with the major branch of LrMediaWiki.
 
-The enhancement is available by users of a Lightroom (LR) version >= 6.
-The version dependency is caused by Adobe: The function to retrieve the direction has been
-introduced by Adobe at LR and LR SDK version 6.0, stated to be a bug fix.
-Therefore this enhancement is not available by users of a LR version < 6, like LR 5 or LR 4.
+The enhancement is available by users of a Lightroom (LR) version >= 6. The version dependency is caused by Adobe: The function to retrieve the direction has been introduced by Adobe at LR and LR SDK version 6.0, stated to be a bug fix. Therefore this enhancement is not available by users of a LR version 5. Users of LR versions < 5 are not affected, because Adobe introduced the "Direction" field with LR 5.
 
-This enhancement introduces a LR version check during export. The version check differs two cases of major LR versions: (a) >= 6 and (b) < 6
+This enhancement introduces a LR version check during export. The version check differs two cases of major LR versions: (a) >= 6, (b) == 5.
 
 At both cases a hint message box is shown – with different messages, depending on the LR version:
 * (a) Users of a LR version 6 or higher get informed about this feature, if the user has set the `Direction` field.
-* (b) Users of a LR version 5 or 4 get informed, the feature is not available, due to the insufficient LR version.
+* (b) Users of a LR version 5 get informed, the feature is not available, due to the insufficient LR version.
 
-At both cases the hint message box includes a "Don't show again" (German: "Nicht erneut anzeigen") checkbox.
-If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
+At both cases the hint message box includes a "Don't show again" (German: "Nicht erneut anzeigen") checkbox. If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
 * English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
 * German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
 
 At users with a LR version >= 6:
 
-LR can store a direction value with up to 4 digits beyond a decimal point,
-but shows at user interface a rounded value without decimal places (by mouse over the direction field).
-Showing a rounded value is done by the two LrMediaWiki hint messages too, to avoid confusion of the user seeing different values.
-The `Location` template parameter `heading` is filled by the storage value of LR.
-Sample: A LR direction input of 359.987654321 is stored by LR as 359.9876, shown by LR and by the hint messages
-as 360°, at Location template the LR stored value of 359.9876 is set.
+LR can store a direction value with up to 4 digits beyond a decimal point, but shows at user interface a rounded value without decimal places (by mouse over the direction field). Showing a rounded value is done by the two LrMediaWiki hint messages too, to avoid confusion of the user seeing different values. The `Location` template parameter `heading` is filled by the storage value of LR. Sample: A LR direction input of 359.987654321 is stored by LR as 359.9876, shown by LR and by the hint messages as 360°, at Location template the LR stored value of 359.9876 is set.
 
-Comments by Eckhard Henkel:
-Today (February 3, 2016), I consider the development of the enhancement to be complete.
-At this stadium of development and testing, most of my recent tests show expected results.
-Exceptions/restrictions are described at this section later.
-As a next step, code inspections and/or tests by other users can be done.
-My next steps are, to check a comprehensive set of test cases, using
+Comments by Eckhard Henkel:<br />
+Today (February 3, 2016), I consider the development of the enhancement to be complete. At this stadium of development and testing, most of my recent tests show expected results. Exceptions/restrictions are described at this section later. As a next step, code inspections and/or tests by other users can be done. My next steps are, to check a comprehensive set of test cases, using
 * 3 different LR versions (LR 6, 5, 4)
 * 2 different operating systems (Windows, OS X)
 * 2 different LR language settings (English, German)
 
 In summary, there are 3 x 2 x 2 = 12 test cases. I'm able to do these tests, because I own licenses of the 3 LR versions and have access to machines running the both operating systems supported by Adobe, Windows and OS X.
 
-In general, I don't intend, to perform these comprehensive test cases in future, due to the high effort.
-But it seems to me, it's useful, to do these tests at minimum once. The need to test different LR versions
-is caused by the need to test the implemented LR version check.
+In general, I don't intend, to perform these comprehensive test cases in future, due to the high effort. But it seems to me, it's useful, to do these tests at minimum once. The need to test different LR versions is caused by the need to test the implemented LR version check.
 
 The aim of these multiple test cases is
 * to test the new enhancement under several conditions
 * to test LrMediaWiki in general, if it works with different LR versions and operating systems.
 
-It seems to me, up to now LrMediaWiki has been tested only using LR version 5, running at Windows,
-using English and German LR language settings.
-As a side effect of my changes and tests, a compatibility with LR version 4
-could be achieved by setting "LrSdkMinimumVersion = 4.0" at file "info.lua".
-Prior of this change, at LR 4 the plug-in manager mentioned, the plug-in has been installed, but works improperly.
-Maybe, this small change is out of interest. Maybe, there are users, still working with LR 4. I don't know.
+It seems to me, up to now LrMediaWiki has been tested only using LR version 5, running at Windows, using English and German LR language settings. As a side effect of my changes and tests, a compatibility with LR version 4 could be achieved by setting "LrSdkMinimumVersion = 4.0" at file "info.lua". Prior of this change, at LR 4 the plug-in manager mentioned, the plug-in has been installed, but works improperly. Maybe, this small change is out of interest. Maybe, there are users, still working with LR 4. I don't know.
 
 LR versions < 4 are out of my interests, because I don't own licences of these "ancient" versions and I assume, there is no need, to let LrMediaWiki be compliant with antique LR versions.
 
 However, potential users of LrMediaWiki, using the old version LR 4, could be affected by this change.
 
-Up to now, this description section is not complete and is a matter of change.
-The results of the comprehensive version test set I will describe here in next days, after completion of these tests.
-At the moment it seems, LrMediaWiki works with LR 4 and OS X is supported – with a restriction:
+Up to now, this description section is not complete and is a matter of change. The results of the comprehensive version test set I will describe here in next days, after completion of these tests. At the moment it seems, LrMediaWiki works with LR 4 and OS X is supported – with a restriction:
 * The localized descriptions (in German) are not loaded.
 
-This means, messages are shown in English, even the LR user has set e.g. German as interface language.
-I will examine in detail, which test cases cause this behaviour.
-Until now I have only one idea, what could trigger this effect: the version of the included "JSON.lua" package, http://regex.info/blog/lua/json. This is only an assumption. Any hint to get rid of this restriction are welcome!
+This means, messages are shown in English, even the LR user has set e.g. German as interface language. I will examine in detail, which test cases cause this behaviour. Until now I have only one idea, what could trigger this effect: the version of the included ["JSON.lua" package] (http://regex.info/blog/lua/json). This is only an assumption. Any hint to get rid of this restriction are welcome!
 
 ## v0.4.1: Bugfix for Lightroom 6.2
 
-This bugfix releases fixes a typo that caused errors in the new Lightroom
-version.
+This bugfix releases fixes a typo that caused errors in the new Lightroom version.
 
 ### Fixed issues
 
