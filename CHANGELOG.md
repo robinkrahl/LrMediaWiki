@@ -8,11 +8,11 @@ The development of this pre-release of version 0.4.2 is considered to be finishe
 
 The enhancement is available by users of a Lightroom (LR) version >= 6. The version dependency is caused by Adobe: The function to retrieve the direction has been introduced by Adobe at LR and LR SDK version 6.0, stated to be a bug fix. Therefore this enhancement is not available by users of a LR version 5. Users of LR versions < 5 are not affected, because Adobe introduced the "Direction" field with LR 5.
 
-This enhancement introduces a LR version check during export. The version check differs two cases of major LR versions: (a) >= 6, (b) = 5.
+This enhancement introduces a LR version check during export. The version check differs two cases of major LR versions: version 6 and version 5.
 
 At both cases a hint message box is shown – with different messages, depending on the LR version:
-* (a) Users of a LR version 6 or higher get informed about this feature, if the user has set the `Direction` field.
-* (b) Users of a LR version 5 get informed, the feature is not available, due to the insufficient LR version.
+* Users of a LR version 6 or higher get informed about this feature, if the user has set the `Direction` field.
+* Users of a LR version 5 get informed, the feature is not available, due to the insufficient LR version.
 
 At both cases the hint message box includes a "Don't show again" (German: "Nicht erneut anzeigen") checkbox. If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
 * English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
