@@ -4,10 +4,10 @@
 ### Fixed issues
 - Issue [#35] (https://github.com/robinkrahl/LrMediaWiki/issues/35): Extract direction/heading of the location out of EXIF/metadata (enhancement)
 
-The enhancement is available by users of a Lightroom (LR) version >= 6. The function to retrieve the direction has been introduced by Adobe with version 6. Therefore this enhancement is not available by users of a LR version 5. Users of LR versions < 5 are not affected, because Adobe introduced the "Direction" field with LR 5.
+The enhancement is available by users of a Lightroom (LR) version 6 or higher. The function to retrieve the direction has been introduced by Adobe with version 6. Therefore this enhancement is not available by users of LR 5. Users of LR versions lower than 5 are not affected, because Adobe introduced the "Direction" field with version 5.
 
-This enhancement differs two cases of LR versions, LR 6 and LR 5. Hint messages are shown – with light differences, depending on the LR version:
-* LR 6 or higher: Users get informed about this feature, if the user has set the `Direction` field.
+This enhancement differs two cases of LR versions, LR 6 (or higher) and LR 5. Depending on the LR version, different hint messages are shown:
+* LR 6 or higher: If the `Direction` field is set, the user gets informed about this feature. Uploads of files without a direction setting don't cause the warning message.
 * LR 5: Users get informed, the feature is not available, due to the insufficient LR version.
 
 The hint messages include a "Don't show again" (German: "Nicht erneut anzeigen") checkbox. If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
