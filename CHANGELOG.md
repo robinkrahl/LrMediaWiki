@@ -16,7 +16,8 @@ The hint messages include a "Don't show again" (German: "Nicht erneut anzeigen")
 
 LR can store a direction value with up to 4 digits beyond a decimal point, but shows at user interface a rounded value without decimal places (by mouse over the direction field). The hint message shows the same rounded value, to avoid confusion of the user seeing different values. The `{{Location}}` template parameter `heading` is filled by the stored value of LR. Sample: A direction input of 359.987654321 is stored as 359.9876, shown as 360°. At `{{Location}}` template the LR stored value of 359.9876 is set.
 
-- Issue [#50] (https://github.com/robinkrahl/LrMediaWiki/issues/50): Support of LR 4 (enhancement)
+- Issue [#50] (https://github.com/robinkrahl/LrMediaWiki/issues/50): Support of LR 4
+- Issue [#51] (https://github.com/robinkrahl/LrMediaWiki/issues/51): Tests of Windows 10 and OS X
 
 ## v0.4.1: Bugfix for Lightroom 6.2
 
