@@ -31,7 +31,7 @@ The aim of these multiple test cases is
 * to test the new enhancement under several conditions
 * to test LrMediaWiki in general, if it works with different LR versions and operating systems.
 
-It seems to me, up to now LrMediaWiki has been tested only using LR version 5, running at Windows, using English and German LR language settings. As a side effect of my changes and tests, a compatibility with LR version 4 could be achieved by setting "LrSdkMinimumVersion = 4.0" at file "info.lua". Prior of this change, at LR 4 the plug-in manager mentioned, the plug-in has been installed, but works improperly. Maybe, this small change is out of interest. Maybe, there are users, still working with LR 4. I don't know.
+It seems to me, up to now LrMediaWiki has been tested only using LR version 5, running at Windows, using English and German LR language settings. As a side effect of my changes and tests, a compatibility with LR version 4 could be achieved by a small configuration change. Prior of this change, at LR 4 the plug-in manager mentioned, the plug-in has been installed, but works improperly. Maybe, this small change is out of interest. Maybe, there are users, still working with LR 4. I don't know.
 
 LR versions < 4 are out of my interests, because I don't own licences of these "ancient" versions and I assume, there is no need, to let LrMediaWiki be compliant with antique LR versions. However, potential users of LrMediaWiki, using the old version LR 4, could be affected by this change.
 
