@@ -4,17 +4,17 @@
 ### Fixed issues
 - Issue [#35] (https://github.com/robinkrahl/LrMediaWiki/issues/35): Extract direction/heading of the location out of EXIF/metadata (enhancement)
 
-The enhancement is available by users of a Lightroom (LR) version >= 6. The version dependency is caused by Adobe: The function to retrieve the direction has been introduced by Adobe at LR and LR SDK version 6.0, stated to be a bug fix. Therefore this enhancement is not available by users of a LR version 5. Users of LR versions < 5 are not affected, because Adobe introduced the "Direction" field with LR 5.
+The enhancement is available by users of a Lightroom (LR) version >= 6. The version dependency is caused by Adobe: The function to retrieve the direction has been introduced by Adobe at LR version 6. Therefore this enhancement is not available by users of a LR version 5. Users of LR versions < 5 are not affected, because Adobe introduced the "Direction" field with LR 5.
 
-This enhancement introduces a LR version check during export. The version check differs two cases of major LR versions, version 6 and version 5. At both cases a hint message box is shown – with different messages, depending on the LR version:
-* Users of a LR version 6 or higher get informed about this feature, if the user has set the `Direction` field.
-* Users of a LR version 5 get informed, the feature is not available, due to the insufficient LR version.
+This enhancement differs two cases of LR versions, LR 6 and LR 5. Hint messages are shown – with light differences, depending on the LR version:
+* LR 6 or higher: Users get informed about this feature, if the user has set the `Direction` field.
+* LR 5: Users get informed, the feature is not available, due to the insufficient LR version.
 
-At both cases the hint message box includes a "Don't show again" (German: "Nicht erneut anzeigen") checkbox. If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
+The hint messages include a "Don't show again" (German: "Nicht erneut anzeigen") checkbox. If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
 * English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
 * German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
 
-LR can store a direction value with up to 4 digits beyond a decimal point, but shows at user interface a rounded value without decimal places (by mouse over the direction field). Showing a rounded value is done by the two LrMediaWiki hint messages too, to avoid confusion of the user seeing different values. The `Location` template parameter `heading` is filled by the storage value of LR. Sample: A LR direction input of 359.987654321 is stored by LR as 359.9876, shown by LR and by the hint messages as 360°, at Location template the LR stored value of 359.9876 is set.
+LR can store a direction value with up to 4 digits beyond a decimal point, but shows at user interface a rounded value without decimal places (by mouse over the direction field). The hint messages show a rounded value too, to avoid confusion of the user seeing different values. The `Location` template parameter `heading` is filled by the storage value of LR. Sample: A LR direction input of 359.987654321 is stored by LR as 359.9876, shown by LR and by the hint messages as 360°, at Location template the LR stored value of 359.9876 is set.
 
 - Issue [#50] (https://github.com/robinkrahl/LrMediaWiki/issues/50): Support of LR 4 (enhancement)
 
