@@ -14,7 +14,7 @@ The hint messages include a "Don't show again" (German: "Nicht erneut anzeigen")
 * English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
 * German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
 
-LR can store a direction value with up to 4 digits beyond a decimal point, but shows at user interface a rounded value without decimal places (by mouse over the direction field). The hint message shows the same rounded value, to avoid confusion of the user seeing different values. The `Location` template parameter `heading` is filled by the storage value of LR. Sample: A LR direction input of 359.987654321 is stored by LR as 359.9876, shown as 360°. At {{Location}} template the LR stored value of 359.9876 is set.
+LR can store a direction value with up to 4 digits beyond a decimal point, but shows at user interface a rounded value without decimal places (by mouse over the direction field). The hint message shows the same rounded value, to avoid confusion of the user seeing different values. The `{{Location}}` template parameter `heading` is filled by the stored value of LR. Sample: A direction input of 359.987654321 is stored as 359.9876, shown as 360°. At `{{Location}}` template the LR stored value of 359.9876 is set.
 
 - Issue [#50] (https://github.com/robinkrahl/LrMediaWiki/issues/50): Support of LR 4 (enhancement)
 
