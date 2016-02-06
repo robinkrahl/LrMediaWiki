@@ -22,6 +22,12 @@ return {
 		file = 'MediaWikiMappingMenuItem.lua',
 	},
 
+    LrExportMenuItems = {               -- Items that you add in LrExportMenuItems appear in the Plug-in Extras submenu of the File menu 
+        title = "Show &Exposure Value", -- The display text for the menu item. "&" only has an effect on Windows, Mac ignores it.
+        file = "MediaWikiInit.lua", -- The script that runs when the item is selected
+        enabledWhen = "photosSelected"  -- This plugin is only selectable if at least one photo is currently selected by the user.
+    }
+
 	LrExportServiceProvider = {
 		title = LOC '$$$/LrMediaWiki/MediaWiki=MediaWiki',
 		file = 'MediaWikiExportServiceProvider.lua',
