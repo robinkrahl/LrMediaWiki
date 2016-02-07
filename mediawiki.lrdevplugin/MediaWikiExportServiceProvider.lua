@@ -19,7 +19,7 @@ local LrErrors = import 'LrErrors'
 local LrFileUtils = import 'LrFileUtils'
 local LrPathUtils = import 'LrPathUtils'
 local LrView = import 'LrView'
-
+local LrApplication = import 'LrApplication'
 local bind = LrView.bind
 
 local Info = require 'Info'
@@ -105,8 +105,71 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local additionalCategories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''
 
 			local gps = photo:getRawMetadata('gps')
+			local LrMajorVersion = LrApplication.versionTable().major -- number type
+			local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
+			local hintMessage = nil
+			local subText = LOC('$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom')
 			if gps and gps.latitude and gps.longitude then
-				local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude .. '}}\n'
+				local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
+				-- If LR field "Direction" (German: "Richtung") is set, add "heading" parameter to Commons template "Location"
+
+				-- The LR version is checked, because Adobe introduced the parameter "gpsImgDirection" to the 
+				-- call of photo:getRawMetadata with LR SDK 6.0.
+				-- Without LR version check, the usage of this plug-in shows
+				-- a warning message at export, if using LR version < 6 (e.g. 5):
+				-- English: Warning – Unable to Export: An internal error has occurred: Unknown key: "gpsImgDirection"
+				-- German: Warnung – Export nicht möglich: Ein interner Fehler ist aufgetreten: Unknown key: "gpsImgDirection"
+				-- Even it's a warning, the export is cancelled.
+				-- To avoid this warning message, the version check is needed – substituted by a hint message.
+
+				-- The version check differs between two cases of major LR versions: (a) >= 6 and (b) < 6
+				-- At both cases a hint message box is shown – with different messages, depending on the LR version:
+				-- * (a) Users of LR 6 or higher get informed about this feature, if the user has set the "Direction" field.
+				-- * (b) Users of LR 5 or LR 4 get informed, the feature is not available, due to the insufficient LR version.
+				-- At both cases the hint message box includes a "Don't show again" (German: "Nicht erneut anzeigen") checkbox.
+				-- If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
+				-- English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
+				-- German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
+
+				if LrMajorVersion >= 6 then
+					local heading = photo:getRawMetadata('gpsImgDirection')
+					 -- The call of "getRawMetadata" with parameter "gpsImgDirection" is supported since LR 6.0
+					if heading then
+						-- At users with a LR version >= 6:
+						-- LR can store a direction value with up to 4 digits beyond a decimal point,
+						-- but shows at user interface a rounded value without decimal places (by mouse over the direction field).
+						-- Showing a rounded value is done by the two LrMediaWiki hint messages too, to avoid confusion of the user seeing different values.
+						-- The Location template parameter "heading" is filled by the storage value of LR.
+						-- Sample: A LR direction input of 359.987654321 is stored by LR as 359.9876, shown by LR and by the hint messages
+						-- as 360°, at Location template the LR stored value of 359.9876 is set.
+						location = location .. '|heading:' .. heading -- append heading at location
+						local headingRounded = string.format("%.0f", heading) -- rounding, e.g. 359.9876 -> 360
+						-- There are problems inserting newlines (\n) in JASON strings. Workaround, splitting the message in 4 parts:
+						local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL1=Hint: The Lightroom field “Direction” has a value of ^1°.', headingRounded)
+						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL2=This value has been used to set the “heading” parameter at {{Location}} template.')
+						local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL3=This feature requires a Lightroom version 6/CC or higher.')
+						local hintLine4 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL4=This Lightroom version is ^1, therefore this feature works.', LrVersionString )
+						hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3 .. '\n' .. hintLine4
+						local messageTable = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
+						LrDialogs.messageWithDoNotShow(messageTable)
+					else
+						-- This shouldn't happen, because LR has a good direction field check, accepting only valid values.
+						-- It might be impossible, to test this case. However, shit happens.
+						LrDialogs.message(LOC '$$$/LrMediaWiki/Interface/InvalidDirectionValue=“Direction” has an invalid value.', subText, 'critical')
+					end
+				else -- LrMajorVersion < 6
+					if LrMajorVersion == 5 then 
+						-- LR versions < 5 don't have a "Direction" field
+						-- There are problems inserting newlines (\n) in JASON strings. Workaround, splitting the message in 3 parts:
+						local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hint: If the Lightroom field “Direction” has a value, this can not be used to set a “heading” parameter at {{Location}} template.')
+						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL2=This feature requires a Lightroom version 6/CC or higher.')
+						local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL3=This Lightroom version is ^1, therefore this feature works not.', LrVersionString )
+						hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3
+						local table = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
+						LrDialogs.messageWithDoNotShow(table)
+					end
+				end
+				location = location .. '}}\n' -- close Location template
 				templates = location .. templates
 			end
 
