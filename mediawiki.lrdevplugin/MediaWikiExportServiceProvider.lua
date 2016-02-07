@@ -30,7 +30,7 @@ local MediaWikiExportServiceProvider = {}
 
 MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext)
 	-- configure progess display
-	exportSession = exportContext.exportSession
+	local exportSession = exportContext.exportSession
 	local photoCount = exportSession:countRenditions()
 	exportContext:configureProgress{
 		title = photoCount > 1 and LOC('$$$/LrMediaWiki/Export/Progress=Exporting ^1 photos to a MediaWiki', photoCount) or LOC '$$$/LrMediaWiki/Export/Progress/One=Exporting one photo to a MediaWiki',
