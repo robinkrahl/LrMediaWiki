@@ -10,7 +10,7 @@ This enhancement differs two cases of LR versions, LR 6 (or higher) and LR 5. De
 * LR 6 or higher: If the `Direction` field is set, the user gets informed about this feature. Uploads of files without a direction setting don't cause the information message.
 * LR 5: Users get informed, the feature is not available, due to the insufficient LR version.
 
-The hint messages include a "Don't show again" (German: "Nicht erneut anzeigen") checkbox. If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
+The information messages include a "Don't show again" (German: "Nicht erneut anzeigen") checkbox. If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
 * English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
 * German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
 
