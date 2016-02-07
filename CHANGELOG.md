@@ -8,7 +8,7 @@ This enhancement is available by users of a Lightroom (LR) version 6 or higher. 
 
 This enhancement differs several LR versions. Depending on the LR version, different information messages are shown (or not):
 * LR 6 or higher: If the `Direction` field is set, the user gets informed about this feature. Uploads of files without a direction setting don't cause this information message, because at such cases the user is not affected.
-* LR 5: Users get informed, the feature is not available, due to the insufficient LR version. Adobe introduced the "Direction" field with LR version 5, but forgot to include it at LR SDK 5. At release notes of LR SDK 6 this has been mentioned to be a bug fix of LR SDK 5.
+* LR 5: Users get informed, the feature is not available, due to the insufficient LR version. Adobe introduced the "Direction" field with LR version 5, but forgot to include it at the corresponding LR SDK 5. Therefore this feature can not be used by users of LR 5. At release notes of LR SDK 6 this has been mentioned to be a bug fix of LR SDK 5.
 * LR 4: Users of this LR version are not affected, because Adobe introduced the "Direction" field with LR version 5. Therefore users of LR 4 don't get any information message.
 * LR versions lower 4: LrMediaWiki supports LR users starting with versions 4. Users of LR versions < 4 are not supported by LrMediaWiki.
 
