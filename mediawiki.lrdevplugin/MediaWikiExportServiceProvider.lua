@@ -107,11 +107,10 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local gps = photo:getRawMetadata('gps')
 			local LrMajorVersion = LrApplication.versionTable().major -- number type
 			local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
-			local heading = nil
 			local hintMessage = nil
 			local subText = LOC('$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom')
 			if gps and gps.latitude and gps.longitude then
-				location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
+				local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
 				-- If LR field "Direction" (German: "Richtung") is set, add "heading" parameter to Commons template "Location"
 
 				-- The LR version is checked, because Adobe introduced the parameter "gpsImgDirection" to the 
@@ -133,7 +132,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				-- German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
 
 				if LrMajorVersion >= 6 then
-					heading = photo:getRawMetadata('gpsImgDirection')
+					local heading = photo:getRawMetadata('gpsImgDirection')
 					 -- The call of "getRawMetadata" with parameter "gpsImgDirection" is supported since LR 6.0
 					if heading then
 						-- At users with a LR version >= 6:
@@ -161,13 +160,12 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				else -- LrMajorVersion < 6
 					if LrMajorVersion == 5 then 
 						-- LR versions < 5 don't have a "Direction" field
-						local table = nil
 						-- There are problems inserting newlines (\n) in JASON strings. Workaround, splitting the message in 3 parts:
 						local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hint: If the Lightroom field “Direction” has a value, this can not be used to set a “heading” parameter at {{Location}} template.')
 						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL2=This feature requires a Lightroom version 6/CC or higher.')
 						local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL3=This Lightroom version is ^1, therefore this feature works not.', LrVersionString )
 						hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3
-						table = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
+						local table = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 						LrDialogs.messageWithDoNotShow(table)
 					end
 				end
