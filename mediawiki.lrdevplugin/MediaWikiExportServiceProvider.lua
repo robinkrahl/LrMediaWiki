@@ -30,7 +30,7 @@ local MediaWikiExportServiceProvider = {}
 
 MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext)
 	-- configure progess display
-	exportSession = exportContext.exportSession
+	local exportSession = exportContext.exportSession
 	local photoCount = exportSession:countRenditions()
 	exportContext:configureProgress{
 		title = photoCount > 1 and LOC('$$$/LrMediaWiki/Export/Progress=Exporting ^1 photos to a MediaWiki', photoCount) or LOC '$$$/LrMediaWiki/Export/Progress/One=Exporting one photo to a MediaWiki',
@@ -438,7 +438,11 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						action = function(button)
 							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 							if result then
-								local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
+								-- local photoToExport = exportSession:photosToExport()
+								-- exportPresetFields exportSettings
+								local wikitext = MediaWikiInterface.buildWikitext(propertyTable)
+
+								-- local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 							else
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
@@ -465,6 +469,7 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'username', default = '' },
 	{ key = 'password', default = '' },
 	{ key = 'api_path', default = 'https://commons.wikimedia.org/w/api.php' },
+	{ key = 'gallery', default = '' },
 	{ key = 'info_source', default = '{{own}}' },
 	{ key = 'info_author', default = '' },
 	{ key = 'info_license', default = '{{Cc-by-sa-4.0}}' },
@@ -472,7 +477,6 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'info_templates', default = '' },
 	{ key = 'info_other', default = '' },
 	{ key = 'info_categories', default = '' },
-	{ key = 'gallery', default = '' },
 }
 
 return MediaWikiExportServiceProvider

@@ -177,4 +177,30 @@ MediaWikiInterface.buildFileDescription = function(description, source, timestam
 	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 end
 
+MediaWikiInterface.buildWikitext = function(properties)
+	local categoriesString = ''
+	for category in string.gmatch(properties.categories, '[^;]+') do
+		if category then
+			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
+		end
+	end
+	for category in string.gmatch(properties.additionalCategories, '[^;]+') do
+		if category then
+			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
+		end
+	end
+	local arguments = {
+		description = properties.description,
+		source = properties.source,
+		timestamp = properties.timestamp,
+		author = properties.author,
+		other_fields = properties.other,
+		templates = properties.templates,
+		license = properties.license,
+		categories = properties.categoriesString,
+		permission = properties.permission,
+	}
+	return 'Test\n' .. MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
+end
+
 return MediaWikiInterface
