@@ -1,3 +1,4 @@
+-- Test
 -- This file is part of the LrMediaWiki project and distributed under the terms
 -- of the MIT license (see LICENSE.txt file in the project root directory or
 -- [0]).  See [1] for more information about LrMediaWiki.
