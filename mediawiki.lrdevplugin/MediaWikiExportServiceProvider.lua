@@ -107,7 +107,6 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local gps = photo:getRawMetadata('gps')
 			local LrMajorVersion = LrApplication.versionTable().major -- number type
 			local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
-			local hintMessage = nil
 			local subText = LOC('$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom')
 			if gps and gps.latitude and gps.longitude then
 				local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
@@ -149,7 +148,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL2=This value has been used to set the “heading” parameter at {{Location}} template.')
 						local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL3=This feature requires a Lightroom version 6/CC or higher.')
 						local hintLine4 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL4=This Lightroom version is ^1, therefore this feature works.', LrVersionString )
-						hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3 .. '\n' .. hintLine4
+						local hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3 .. '\n' .. hintLine4
 						local messageTable = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 						LrDialogs.messageWithDoNotShow(messageTable)
 					else
@@ -164,7 +163,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 						local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hint: If the Lightroom field “Direction” has a value, this can not be used to set a “heading” parameter at {{Location}} template.')
 						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL2=This feature requires a Lightroom version 6/CC or higher.')
 						local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL3=This Lightroom version is ^1, therefore this feature works not.', LrVersionString )
-						hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3
+						local hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3
 						local table = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 						LrDialogs.messageWithDoNotShow(table)
 					end
