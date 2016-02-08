@@ -29,7 +29,7 @@ local MediaWikiUtils = require 'MediaWikiUtils'
 local MediaWikiExportServiceProvider = {}
 
 MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext)
-	-- configure progess display
+	-- configure progress display
 	local exportSession = exportContext.exportSession
 	local photoCount = exportSession:countRenditions()
 	exportContext:configureProgress{
@@ -443,18 +443,21 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 								local exportFields = {
 									-- gallery = exportFields.gallery,
 									description = '<!-- description -->',
-									source = exportFields.info_source,
+									source = propertyTable.info_source,
 									timestamp = '<!-- date -->',
-									author = exportFields.info_author,
-									license = exportFields.info_license,
-									other_fields = exportFields.info_other,
-									location = '<!-- {{Location}} if GPS metadata is available -->\n',
-									templates = exportFields.info_templates,
-									permission = '<!-- permission -->',
-									categories = categoriesString,
+									author = propertyTable.info_author,
+									permission = propertyTable.info_permission,
+									other_fields = propertyTable.info_other,
+									-- location = MediaWikiExportServiceProvider.location,
+									templates = '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates,
+									license = propertyTable.info_license,
+									categories = '<!-- per-file categories -->',
+									additionalCategories = propertyTable.info_categories,
 								}
-								-- local wikitext = MediaWikiInterface.buildWikitext(exportFields)
-								local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
+								-- local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
+								-- LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
+								-- Test:
+								local wikitext = MediaWikiInterface.buildWikitext(exportFields)
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 							else
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
