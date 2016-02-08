@@ -438,7 +438,12 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						action = function(button)
 							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 							if result then
-								-- local photoToExport = exportSession:photosToExport()
+								local photo
+                                local LrLogger('photosToExport') 
+								for photo in exportSession:photosToExport() do 
+									-- (do something with photo)
+                                    LrLogger.logger:tracef( "fileName: <%s>, gps: <%s>\n", photo:getFormattedMetadata(fileName), photo:getFormattedMetadata(gps))
+								end
 								-- exportPresetFields exportSettings
 								local exportFields = {
 									-- gallery = exportFields.gallery,

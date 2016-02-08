@@ -1,0 +1,1 @@
+loggers.photosToExport = { trace = 'photosToExport.log' }
