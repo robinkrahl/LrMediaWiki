@@ -177,30 +177,31 @@ MediaWikiInterface.buildFileDescription = function(description, source, timestam
 	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 end
 
-MediaWikiInterface.buildWikitext = function(properties)
+MediaWikiInterface.buildWikitext = function(exportFields)
 	local categoriesString = ''
-	for category in string.gmatch(properties.categories, '[^;]+') do
+	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
-	for category in string.gmatch(properties.additionalCategories, '[^;]+') do
+	for category in string.gmatch(exportFields.additionalCategories, '[^;]+') do
 		if category then
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
 	local arguments = {
-		description = properties.description,
-		source = properties.source,
-		timestamp = properties.timestamp,
-		author = properties.author,
-		other_fields = properties.other,
-		templates = properties.templates,
-		license = properties.license,
-		categories = properties.categoriesString,
-		permission = properties.permission,
+		-- gallery = exportFields.gallery,
+		description = exportFields.description,
+		source = exportFields.source,
+		timestamp = exportFields.timestamp,
+		author = exportFields.author,
+		permission = exportFields.permission,
+		other_fields = exportFields.other,
+		templates = exportFields.templates,
+		license = exportFields.license,
+		categories = categoriesString,
 	}
-	return 'Test\n' .. MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
+	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 end
 
 return MediaWikiInterface

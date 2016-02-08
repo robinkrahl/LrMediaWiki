@@ -440,9 +440,21 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							if result then
 								-- local photoToExport = exportSession:photosToExport()
 								-- exportPresetFields exportSettings
-								local wikitext = MediaWikiInterface.buildWikitext(propertyTable)
-
-								-- local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
+								local exportFields = {
+									-- gallery = exportFields.gallery,
+									description = '<!-- description -->',
+									source = exportFields.info_source,
+									timestamp = '<!-- date -->',
+									author = exportFields.info_author,
+									license = exportFields.info_license,
+									other_fields = exportFields.info_other,
+									location = '<!-- {{Location}} if GPS metadata is available -->\n',
+									templates = exportFields.info_templates,
+									permission = '<!-- permission -->',
+									categories = categoriesString,
+								}
+								-- local wikitext = MediaWikiInterface.buildWikitext(exportFields)
+								local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 							else
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
