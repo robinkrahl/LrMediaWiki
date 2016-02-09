@@ -151,33 +151,7 @@ MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, 
 	return nil
 end
 
-MediaWikiInterface.buildFileDescription = function(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
-	local categoriesString = ''
-	for category in string.gmatch(categories, '[^;]+') do
-		if category then
-			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
-		end
-	end
-	for category in string.gmatch(additionalCategories, '[^;]+') do
-		if category then
-			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
-		end
-	end
-	local arguments = {
-		description = description,
-		source = source,
-		timestamp = timestamp,
-		author = author,
-		other_fields = other,
-		templates = templates,
-		license = license,
-		categories = categoriesString,
-		permission = permission,
-	}
-	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
-end
-
-MediaWikiInterface.buildWikitext = function(exportFields)
+MediaWikiInterface.buildFileDescription = function(exportFields)
 	local categoriesString = ''
 	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then

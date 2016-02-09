@@ -1,1 +1,1 @@
-loggers.photosToExport = { trace = 'photosToExport.log' }
+-- loggers.photosToExport = { trace = 'photosToExport.log' }

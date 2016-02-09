@@ -15,6 +15,9 @@
 
 local LrDialogs = import 'LrDialogs'
 local LrTasks = import 'LrTasks'
+local logger = import 'LrLogger'
+-- MediaWikiLogger = logger( 'MediaWiki.log' ) -- the log file name
+-- MediaWikiLogger:enable( 'logfile' )
 
 local MediaWikiApi = require 'MediaWikiApi'
 local MediaWikiUtils = require 'MediaWikiUtils'
