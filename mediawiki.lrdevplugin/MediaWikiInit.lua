@@ -15,7 +15,7 @@
 
 local LrDialogs = import 'LrDialogs'
 local LrTasks = import 'LrTasks'
-logger = import 'LrLogger'
+-- logger = import 'LrLogger'
 -- MediaWikiLogger = logger( 'MediaWiki.log' ) -- the log file name
 -- MediaWikiLogger:enable( 'logfile' )
 
