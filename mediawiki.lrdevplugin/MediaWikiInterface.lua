@@ -164,7 +164,7 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 		end
 	end
 	local arguments = {
-		-- gallery = exportFields.gallery,
+		gallery = exportFields.gallery,
 		description = exportFields.description,
 		source = exportFields.source,
 		timestamp = exportFields.timestamp,
