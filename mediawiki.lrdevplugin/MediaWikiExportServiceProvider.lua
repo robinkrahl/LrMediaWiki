@@ -440,7 +440,6 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						action = function(button)
 							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 							if result then
-                                local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(propertyTable)
 								local wikitext = MediaWikiInterface.buildFileDescription(formattedWikitext)
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 							else
@@ -453,11 +452,6 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 		},
 	}
 end
-
-MediaWikiExportServiceProvider.formatWikitext = function(propertyTable)
-    local exportContext = LrExportContext
-    local exportSession = LrExportSession
-    -- local photoCount, a
 
     local LexportFields = {
     -- gallery = exportFields.gallery,
@@ -473,56 +467,6 @@ MediaWikiExportServiceProvider.formatWikitext = function(propertyTable)
     categories = '<!-- per-file categories -->',
     additionalCategories = propertyTable.info_categories,
     }
-
---[[
-    local photo
-	local photosToExport = exportSession:photosToExport()
-	local LrLogger = import 'LrLogger'
-	local logger = LrLogger( 'MediaWiki.log' ) -- the log file name
-	logger:enable( 'print' )
-        folderName = photo:getFormattedMetadata( "folderName" )  
-        a = photo.photoCount
-        logger:warn( "folderName: <%s>, photoCount: <%s>\n", folderName, a )
-    exportSession.catalog:withCatalogDo( function()
-    end )
-    for photo in exportSession:photosToExport() do 
-        -- (do something with photo)
-    end
-
-    -- Retrieves the active photo, if any. This is the selected photo, or the brightest ("most selected")
-    -- photo among multiple selected photos, or nil if no photos are selected.
-    -- render photo
-    local rendition = exportContext:renditions()
-    local success = rendition:waitForRender()
-    if success then
-        -- local photo = rendition.photo
-        -- local catalog = photo.catalog
-        -- LexportFields.description = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
-    end
-
-    if success then
-        -- LexportFields.description = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
-    end
-
-]]
-    -- local rendition = exportContext:renditions()
-    -- local success, pathOrMessage = rendition:skipRender()
-	-- local photoCount = exportSession:countRenditions()
-
---[[
-	for i, rendition in exportContext:renditions() do
-		-- render photo
-		local success, pathOrMessage = rendition:waitForRender()
-		if success then
-			local photo = rendition.photo
-			local catalog = photo.catalog
-        end
-    end
-]]
-    local catalog  = LrApplication.activeCatalog()  
-    local photo = catalog:getTargetPhotos(1) -- first photo
-
-    -- LexportFields.description = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
 
     return LexportFields
 end
