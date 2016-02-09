@@ -440,7 +440,22 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						action = function(button)
 							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 							if result then
-								local wikitext = MediaWikiInterface.buildFileDescription(formattedWikitext)
+								local exportFields = {
+									gallery = propertyTable.gallery,
+									description = '<!-- description -->',
+									source = propertyTable.source,
+									timestamp = '<!-- date -->',
+									author = propertyTable.author,
+									permission = propertyTable.permission,
+									other_fields = propertyTable.other_fields,
+									location = '<!-- {{Location}} if GPS metadata is available -->',
+									templates = propertyTable.info_templates,
+									license = propertyTable.license,
+									categories = '<!-- per-file categories -->',
+									additionalCategories = propertyTable.additionalCategories,
+								}
+								-- local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(exportFields)
+								local wikitext = MediaWikiInterface.buildFileDescription(exportFields)
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 							else
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
@@ -453,20 +468,24 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 	}
 end
 
-    local LexportFields = {
-    -- gallery = exportFields.gallery,
-    description = '<!-- description -->',
-    source = propertyTable.info_source,
-    timestamp = '<!-- date -->',
-    author = propertyTable.info_author,
-    permission = propertyTable.info_permission,
-    other_fields = propertyTable.info_other,
-    -- location = MediaWikiExportServiceProvider.location,
-    templates = '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates,
-    license = propertyTable.info_license,
-    categories = '<!-- per-file categories -->',
-    additionalCategories = propertyTable.info_categories,
-    }
+MediaWikiExportServiceProvider.formatWikitext = function(exportFields)
+    -- local exportContext = LrExportContext
+    -- local exportSession = exportContext.exportSession
+
+	local LexportFields = {
+	gallery = exportFields.gallery,
+	description = exportFields.description, -- '<!-- description -->'
+	source = exportFields.source,
+	timestamp = exportFields.timestamp, -- '<!-- date -->'
+	author = exportFields.author,
+	permission = exportFields.permission,
+	other_fields = exportFields.other_fields,
+	location = exportFields.location, -- '<!-- {{Location}} if GPS metadata is available -->'
+	templates = exportFields.templates,
+	license = exportFields.license,
+	categories = exportFields.categories, -- '<!-- per-file categories -->'
+	additionalCategories = exportFields.additionalCategories,
+	}
 
     return LexportFields
 end
