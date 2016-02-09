@@ -455,7 +455,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 									categories = '<!-- per-file categories -->',
 									additionalCategories = propertyTable.info_categories,
 								}
-                                local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(exportFields)
+                                				local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(exportFields)
 								local wikitext = MediaWikiInterface.buildFileDescription(formattedWikitext)
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 							else
@@ -471,11 +471,7 @@ end
 
 MediaWikiExportServiceProvider.formatWikitext = function(exportFields)
     local LexportFields = exportFields
-<<<<<<< HEAD
     local exportContext = LrExportContext
-=======
-    -- local exportContext = Class LrExportContext
->>>>>>> 73be52df89054e977d6e4df5e297dd6156ef9b7b
     local exportSession = exportContext.exportSession
     local photoCount, a
 
@@ -496,8 +492,7 @@ MediaWikiExportServiceProvider.formatWikitext = function(exportFields)
     LexportFields.categories = exportFields.categories -- '<!-- per-file categories -->'
     LexportFields.additionalCategories = exportFields.additionalCategories
 
-<<<<<<< HEAD
-    local MediaWikiLogger = logger( 'MediaWiki.log' ) -- the log file name
+--[[    local MediaWikiLogger = logger( 'MediaWiki.log' ) -- the log file name
     MediaWikiLogger.enable( 'logfile' )
 
     for photo in exportSession:photosToExport() do 
@@ -505,13 +500,8 @@ MediaWikiExportServiceProvider.formatWikitext = function(exportFields)
         folderName = photo:getFormattedMetadata( "folderName" )  
         a = photo.photoCount
         logger:tracef( "folderName: <%s>, photoCount: <%s>\n", folderName, a )
-=======
-    for photo in exportSession:photosToExport() do 
-        -- (do something with photo)
-        a = photoCount -- first photo of exportSession
->>>>>>> 73be52df89054e977d6e4df5e297dd6156ef9b7b
-    end 
-   
+    end
+]]
     return LexportFields
 end
 
