@@ -440,22 +440,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						action = function(button)
 							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 							if result then
-								-- exportPresetFields exportSettings
-								local exportFields = {
-									-- gallery = exportFields.gallery,
-									description = '<!-- description -->',
-									source = propertyTable.info_source,
-									timestamp = '<!-- date -->',
-									author = propertyTable.info_author,
-									permission = propertyTable.info_permission,
-									other_fields = propertyTable.info_other,
-									-- location = MediaWikiExportServiceProvider.location,
-									templates = '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates,
-									license = propertyTable.info_license,
-									categories = '<!-- per-file categories -->',
-									additionalCategories = propertyTable.info_categories,
-								}
-                                local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(exportFields)
+                                local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(propertyTable)
 								local wikitext = MediaWikiInterface.buildFileDescription(formattedWikitext)
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 							else
@@ -469,39 +454,76 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 	}
 end
 
-MediaWikiExportServiceProvider.formatWikitext = function(exportFields)
-    local LexportFields = exportFields
+MediaWikiExportServiceProvider.formatWikitext = function(propertyTable)
     local exportContext = LrExportContext
-    local exportSession = exportContext.exportSession
-    local photoCount, a
+    local exportSession = LrExportSession
+    -- local photoCount, a
 
-    -- LexportFields.gallery = exportFields.gallery,
+    local LexportFields = {
+    -- gallery = exportFields.gallery,
+    description = '<!-- description -->',
+    source = propertyTable.info_source,
+    timestamp = '<!-- date -->',
+    author = propertyTable.info_author,
+    permission = propertyTable.info_permission,
+    other_fields = propertyTable.info_other,
+    -- location = MediaWikiExportServiceProvider.location,
+    templates = '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates,
+    license = propertyTable.info_license,
+    categories = '<!-- per-file categories -->',
+    additionalCategories = propertyTable.info_categories,
+    }
 
-    LexportFields.description = exportFields.description -- '<!-- description -->'
-	-- local photo = rendition.photo
-    -- LexportFields.description = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
-
-    LexportFields.source = exportFields.source
-    LexportFields.timestamp = exportFields.timestamp -- '<!-- date -->'
-    LexportFields.author = exportFields.author
-    LexportFields.permission = exportFields.permission
-    LexportFields.other_fields = exportFields.other_fields
-    -- o.location = exportFields.location
-    LexportFields.templates = exportFields.templates -- '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates
-    LexportFields.license = exportFields.license
-    LexportFields.categories = exportFields.categories -- '<!-- per-file categories -->'
-    LexportFields.additionalCategories = exportFields.additionalCategories
-
-    local MediaWikiLogger = logger( 'MediaWiki.log' ) -- the log file name
-    MediaWikiLogger.enable( 'logfile' )
-
-    for photo in exportSession:photosToExport() do 
-        -- (do something with photo)
+--[[
+    local photo
+	local photosToExport = exportSession:photosToExport()
+	local LrLogger = import 'LrLogger'
+	local logger = LrLogger( 'MediaWiki.log' ) -- the log file name
+	logger:enable( 'print' )
         folderName = photo:getFormattedMetadata( "folderName" )  
         a = photo.photoCount
-        logger:tracef( "folderName: <%s>, photoCount: <%s>\n", folderName, a )
-    end 
-   
+        logger:warn( "folderName: <%s>, photoCount: <%s>\n", folderName, a )
+    exportSession.catalog:withCatalogDo( function()
+    end )
+    for photo in exportSession:photosToExport() do 
+        -- (do something with photo)
+    end
+
+    -- Retrieves the active photo, if any. This is the selected photo, or the brightest ("most selected")
+    -- photo among multiple selected photos, or nil if no photos are selected.
+    -- render photo
+    local rendition = exportContext:renditions()
+    local success = rendition:waitForRender()
+    if success then
+        -- local photo = rendition.photo
+        -- local catalog = photo.catalog
+        -- LexportFields.description = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
+    end
+
+    if success then
+        -- LexportFields.description = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
+    end
+
+]]
+    -- local rendition = exportContext:renditions()
+    -- local success, pathOrMessage = rendition:skipRender()
+	-- local photoCount = exportSession:countRenditions()
+
+--[[
+	for i, rendition in exportContext:renditions() do
+		-- render photo
+		local success, pathOrMessage = rendition:waitForRender()
+		if success then
+			local photo = rendition.photo
+			local catalog = photo.catalog
+        end
+    end
+]]
+    local catalog  = LrApplication.activeCatalog()  
+    local photo = catalog:getTargetPhotos(1) -- first photo
+
+    -- LexportFields.description = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
+
     return LexportFields
 end
 
