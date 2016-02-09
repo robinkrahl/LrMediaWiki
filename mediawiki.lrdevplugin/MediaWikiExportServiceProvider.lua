@@ -440,23 +440,22 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						action = function(button)
 							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 							if result then
-								-- exportPresetFields exportSettings
 								local exportFields = {
-									-- gallery = exportFields.gallery,
+									gallery = propertyTable.gallery,
 									description = '<!-- description -->',
-									source = propertyTable.info_source,
+									source = propertyTable.source,
 									timestamp = '<!-- date -->',
-									author = propertyTable.info_author,
-									permission = propertyTable.info_permission,
-									other_fields = propertyTable.info_other,
-									-- location = MediaWikiExportServiceProvider.location,
-									templates = '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates,
-									license = propertyTable.info_license,
+									author = propertyTable.author,
+									permission = propertyTable.permission,
+									other_fields = propertyTable.other_fields,
+									location = '<!-- {{Location}} if GPS metadata is available -->',
+									templates = propertyTable.info_templates,
+									license = propertyTable.license,
 									categories = '<!-- per-file categories -->',
-									additionalCategories = propertyTable.info_categories,
+									additionalCategories = propertyTable.additionalCategories,
 								}
-                                				local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(exportFields)
-								local wikitext = MediaWikiInterface.buildFileDescription(formattedWikitext)
+								-- local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(exportFields)
+								local wikitext = MediaWikiInterface.buildFileDescription(exportFields)
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 							else
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
@@ -470,38 +469,26 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 end
 
 MediaWikiExportServiceProvider.formatWikitext = function(exportFields)
-    local LexportFields = exportFields
     -- local exportContext = LrExportContext
     -- local exportSession = exportContext.exportSession
-    -- local photoCount, a
 
-    -- LexportFields.gallery = exportFields.gallery,
+	local LexportFields = {
+	gallery = exportFields.gallery,
+	description = exportFields.description, -- '<!-- description -->'
+	source = exportFields.source,
+	timestamp = exportFields.timestamp, -- '<!-- date -->'
+	author = exportFields.author,
+	permission = exportFields.permission,
+	other_fields = exportFields.other_fields,
+	location = exportFields.location, -- '<!-- {{Location}} if GPS metadata is available -->'
+	templates = exportFields.templates,
+	license = exportFields.license,
+	categories = exportFields.categories, -- '<!-- per-file categories -->'
+	additionalCategories = exportFields.additionalCategories,
+	}
 
-    LexportFields.description = exportFields.description -- '<!-- description -->'
-	-- local photo = rendition.photo
-    -- LexportFields.description = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
+    -- description = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
 
-    LexportFields.source = exportFields.source
-    LexportFields.timestamp = exportFields.timestamp -- '<!-- date -->'
-    LexportFields.author = exportFields.author
-    LexportFields.permission = exportFields.permission
-    LexportFields.other_fields = exportFields.other_fields
-    -- o.location = exportFields.location
-    LexportFields.templates = exportFields.templates -- '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates
-    LexportFields.license = exportFields.license
-    LexportFields.categories = exportFields.categories -- '<!-- per-file categories -->'
-    LexportFields.additionalCategories = exportFields.additionalCategories
-
---[[    local MediaWikiLogger = logger( 'MediaWiki.log' ) -- the log file name
-    MediaWikiLogger.enable( 'logfile' )
-
-    for photo in exportSession:photosToExport() do 
-        -- (do something with photo)
-        folderName = photo:getFormattedMetadata( "folderName" )  
-        a = photo.photoCount
-        logger:tracef( "folderName: <%s>, photoCount: <%s>\n", folderName, a )
-    end
-]]
     return LexportFields
 end
 
