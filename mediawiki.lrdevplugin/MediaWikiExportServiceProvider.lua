@@ -471,9 +471,9 @@ end
 
 MediaWikiExportServiceProvider.formatWikitext = function(exportFields)
     local LexportFields = exportFields
-    local exportContext = LrExportContext
-    local exportSession = exportContext.exportSession
-    local photoCount, a
+    -- local exportContext = LrExportContext
+    -- local exportSession = exportContext.exportSession
+    -- local photoCount, a
 
     -- LexportFields.gallery = exportFields.gallery,
 
