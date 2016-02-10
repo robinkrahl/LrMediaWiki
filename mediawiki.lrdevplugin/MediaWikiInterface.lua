@@ -153,6 +153,14 @@ end
 
 MediaWikiInterface.buildFileDescription = function(exportFields)
 	local categoriesString = ''
+	-- The following 2 calls of the Lua function "string.gmatch()" iterate the given strings
+	-- "categories" and "additionalCategories" by the pattern "[^;]+".
+	-- It separates all occurrences of categories (by using "+") without the character ";".
+	-- The ";" preceding character "^" means NOT.
+	-- In other words: The strings are separated by the character ";" and the calls
+	-- of gmatch() separate multiple occurrences of the categories.
+	-- Lua uses a specific set of patterns; it doesn't use regular expressions.
+	-- According Lua patterns reference: <http://www.lua.org/manual/5.3/manual.html#6.4.1>
 	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
@@ -163,8 +171,9 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
+
 	local arguments = {
-		gallery = exportFields.gallery,
+		-- gallery = exportFields.gallery,
 		description = exportFields.description,
 		source = exportFields.source,
 		timestamp = exportFields.timestamp,
@@ -174,7 +183,8 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 		location = exportFields.location,
 		templates = exportFields.templates,
 		license = exportFields.license,
-		categories = categoriesString,
+		categories = categoriesString,	-- The string concatenation of "categories" and "additionalCategories" is 
+		-- done prior in this function. The need of this list "arguments" is caused by this concatenation.
 	}
 	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 end

@@ -92,6 +92,23 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local timestampSeconds = photo:getRawMetadata('dateTimeOriginal')
 			local timestamp = ''
 			if timestampSeconds then
+				-- The usage of the following correction of "timestampSeconds" by the known constant value
+				-- needs to be checked by usages of LR at Windows and OS X.
+				-- My actual assumption is, the correction is needed by Windows LR users, not by OS X users.
+				-- If this assumption could be confirmed, an OS check has to be done, to differ between Windows and OS X
+				-- users. In this case, the LR SDK needs to be checked, if the used OS can be retrieved.
+				-- A second problem could be: date/time are retrieved by the local machine.
+				-- Maybe, it would be better, to determine the actual servers date/time – if it's possible easy.
+				-- Taking date/time of the server would (a) avoid cheats of users, setting inapplicable
+				-- client date/time at local machine and (b) would avoid the prior mentioned check of the local OS
+				-- and to differ between local operating systems.
+				-- A third assumption is: The prior mentioned two themes could be a bug of LR SDK.
+				-- Again: This has to be proved.
+				-- Maybe, these 3 themes should be addressed as an "item" at the master of the projects
+				-- version control system at GitHub. Prior of this, the assumptions needs to be proved.
+				-- In the case, the assumptions get confirmed, parts of this comment can be used to describe
+				-- an "item" at GitHub.
+				-- Comments by Eckhard Henkel, 2016-02-10, MediaWiki v0.4.1, marked as CHECK for personal use
 				timestamp = os.date("!%Y-%m-%d %H:%M:%S", timestampSeconds + 978307200)
 			end
 			local author = exportSettings.info_author
@@ -110,12 +127,15 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local LrMajorVersion = LrApplication.versionTable().major -- number type
 			local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
 			local subText = LOC('$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom')
+			local location
 			if gps and gps.latitude and gps.longitude then
-				local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
-				-- If LR field "Direction" (German: "Richtung") is set, add "heading" parameter to Commons template "Location"
+				location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
+				
+				-- In addition: If the LR field "Direction" (German: "Richtung") is set, add "heading" parameter to 
+				-- Commons template "Location"
 
-				-- The LR version is checked, because Adobe introduced the parameter "gpsImgDirection" to the 
-				-- call of photo:getRawMetadata with LR SDK 6.0.
+				-- Primary, the LR version needs to be checked, because Adobe introduced the parameter "gpsImgDirection" 
+				-- to the call of photo:getRawMetadata with LR SDK 6.0.
 				-- Without LR version check, the usage of this plug-in shows
 				-- a warning message at export, if using LR version < 6 (e.g. 5):
 				-- English: Warning – Unable to Export: An internal error has occurred: Unknown key: "gpsImgDirection"
@@ -170,11 +190,24 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 						LrDialogs.messageWithDoNotShow(table)
 					end
 				end
-				location = location .. '}}\n' -- close Location template
-				templates = location .. templates
+				location = location .. '}}' -- close Location template
 			end
 
-			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
+			local exportFields = {
+				-- gallery = propertyTable.gallery,
+				description = description,
+				source = source,
+				timestamp = timestamp,
+				author = author,
+				permission = permission,
+				other_fields = other,
+				location = location,
+				templates = templates,
+				license = license,
+				categories = categories,
+				additionalCategories = additionalCategories,
+			}
+			local fileDescription = MediaWikiInterface.buildFileDescription(exportFields)
 
 			-- ensure that the target file name does not contain a series of spaces or
 			-- underscores (as this would cause the upload to fail without a proper
@@ -441,19 +474,20 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 							if result then
 								local exportFields = {
-									gallery = propertyTable.gallery,
+									-- gallery = propertyTable.gallery,
 									description = '<!-- description -->',
-									source = propertyTable.source,
+									source = propertyTable.info_source,
 									timestamp = '<!-- date -->',
-									author = propertyTable.author,
-									permission = propertyTable.permission,
-									other_fields = propertyTable.other_fields,
-									location = '<!-- {{Location}} if GPS metadata is available -->',
+									author = propertyTable.info_author,
+									permission = propertyTable.info_permission,
+									other_fields = propertyTable.info_other,
+									-- location = '<!-- {{Location}} if GPS metadata is available -->',
 									templates = propertyTable.info_templates,
-									license = propertyTable.license,
+									license = propertyTable.info_license,
 									categories = '<!-- per-file categories -->',
-									additionalCategories = propertyTable.additionalCategories,
+									additionalCategories = propertyTable.info_categories,
 								}
+								-- local t = exportFields.description .. exportFields.timestamp .. exportFields.timestamp
 								-- local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(exportFields)
 								local wikitext = MediaWikiInterface.buildFileDescription(exportFields)
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
