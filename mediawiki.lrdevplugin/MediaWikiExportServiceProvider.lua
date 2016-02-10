@@ -156,6 +156,13 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 					local heading = photo:getRawMetadata('gpsImgDirection')
 					 -- The call of "getRawMetadata" with parameter "gpsImgDirection" is supported since LR 6.0
 					if heading then
+						-- Test cases:
+						-- (1) heading has a value, e.g. 359.9876 => {{Location|50.9|8.5|heading:359.9876}}
+						-- (2) direction field is empty, heading should be '' => {{Location|50.9|8.5}}
+						-- (3) gps and direction are empty => no Location template
+						-- (4) direction is '0' (== North) => {{Location|50.9|8.5|heading:0}}
+						-- All test cases should be done (a) one photo is marked, (b) multiple photos are marked
+						
 						-- At users with a LR version >= 6:
 						-- LR can store a direction value with up to 4 digits beyond a decimal point,
 						-- but shows at user interface a rounded value without decimal places (by mouse over the direction field).
@@ -173,10 +180,6 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 						local hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3 .. '\n' .. hintLine4
 						local messageTable = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 						LrDialogs.messageWithDoNotShow(messageTable)
-					else
-						-- This shouldn't happen, because LR has a good direction field check, accepting only valid values.
-						-- It might be impossible, to test this case. However, shit happens.
-						LrDialogs.message(LOC '$$$/LrMediaWiki/Interface/InvalidDirectionValue=“Direction” has an invalid value.', subText, 'critical')
 					end
 				else -- LrMajorVersion < 6
 					if LrMajorVersion == 5 then 
@@ -191,6 +194,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 					end
 				end
 				location = location .. '}}' -- close Location template
+				templates = location .. '\n' .. templates
 			end
 
 			local exportFields = {
