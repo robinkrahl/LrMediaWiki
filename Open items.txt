@@ -1,0 +1,11 @@
+At this time, this file is a (temporarily?) working document.
+It lists cases to be proved.
+Only, if the mentioned cases are validated, they might be candidates to be "items" at ""GitHub".
+Last change: 2016-02-10
+
+* At file "MediaWikiExportServiceProvider.lua" a comment is marked by "CHECK".
+
+* Lightroom offers "Export" even in the case, if no image is selected.
+  This might be a bug of Ligtroom.
+  "Export" should be offered only if a minimum of one image is selected.
+

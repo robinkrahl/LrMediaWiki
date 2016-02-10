@@ -26,6 +26,11 @@ return {
 		title = LOC '$$$/LrMediaWiki/MediaWiki=MediaWiki',
 		file = 'MediaWikiExportServiceProvider.lua',
 	},
+	
+	LrExportMenuItems = {
+		title = "Debug Script",
+		file = "DebugScript.lua"
+	},
 
 	LrMetadataProvider = 'MediaWikiMetadataProvider.lua',
 
