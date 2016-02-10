@@ -28,16 +28,6 @@ local Info = require 'Info'
 local MediaWikiInterface = require 'MediaWikiInterface'
 local MediaWikiUtils = require 'MediaWikiUtils'
 
--- Embed John R. Ellis' "Debugging Toolkit for Lightroom SDK"
--- Download for free at <http://www.johnrellis.com/lightroom/debugging-toolkit.htm>
--- John states: "When your plugin executes from a directory ending in .lrdevplugin, 
--- the debugger will be enabled; when it executes from any other directory (e.g. a 
--- release directory ending in .lrplugin) it will be disabled and have no impact on execution."
-local Require = require 'Require'.path ("../debugscript.lrdevplugin")
-local Debug = require 'Debug'.init()
-require 'strict'
--- End of embedding "Debugging Toolkit for Lightroom SDK"
-
 local MediaWikiExportServiceProvider = {}
 
 MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext)
@@ -484,31 +474,30 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:push_button {
 						title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
 							action = function(button)
-								local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
-								if result then
-									local exportFields = {
-										description = '<!-- description -->',
-										source = propertyTable.info_source,
-										timestamp = '<!-- date -->',
-										author = propertyTable.info_author,
-										permission = propertyTable.info_permission,
-										other_fields = propertyTable.info_other,
-										location = '<!-- Location if GPS metadata is available -->',
-										templates = propertyTable.info_templates,
-										license = propertyTable.info_license,
-										categories = '<!-- per-file categories -->',
-										additionalCategories = propertyTable.info_categories,
-									}
-									-- local t = exportFields.description .. exportFields.timestamp .. exportFields.timestamp
-									-- Debug.pause (exportFields, x, i, items [i].prev)
+							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
+							if result then
+								local exportFields = {
+									description = '<!-- description -->',
+									source = propertyTable.info_source,
+									timestamp = '<!-- date -->',
+									author = propertyTable.info_author,
+									permission = propertyTable.info_permission,
+									other_fields = propertyTable.info_other,
+									location = '<!-- Location if GPS metadata is available -->',
+									templates = propertyTable.info_templates,
+									license = propertyTable.info_license,
+									categories = '<!-- per-file categories -->',
+									additionalCategories = propertyTable.info_categories,
+								}
+								-- local t = exportFields.description .. exportFields.timestamp .. exportFields.timestamp
 
-									local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(exportFields)
-									local wikitext = MediaWikiInterface.buildFileDescription(formattedWikitext)
-									LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
-								else
-									LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
-								end
+								local formattedWikitext = MediaWikiExportServiceProvider.formatWikitext(exportFields)
+								local wikitext = MediaWikiInterface.buildFileDescription(formattedWikitext)
+								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
+							else
+								LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
 							end
+						end
 					},
 				},
 			},
@@ -613,8 +602,8 @@ MediaWikiExportServiceProvider.formatWikitext = function(exportFields)
 	author = exportFields.author,
 	permission = exportFields.permission,
 	other_fields = exportFields.other_fields,
-	location = location,
-	templates = templates,
+	location = exportFields.location,
+	templates = exportFields.templates,
 	license = exportFields.license,
 	categories = exportFields.categories, -- '<!-- per-file categories -->'
 	additionalCategories = exportFields.additionalCategories,

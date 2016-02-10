@@ -69,14 +69,9 @@ MediaWikiInterface.prepareUpload = function(username, password, apiPath)
 end
 
 MediaWikiInterface.prompt = function(title, label, default)
---	return LrFunctionContext.callWithContext('MediaWikiInterface.prompt', function(context)
---		return MediaWikiInterface._prompt(context, title, label, default)
---	end)
-
--- "Debug.showErrors" embedded John R. Ellis' "Debugging Toolkit for Lightroom SDK"
-	return LrFunctionContext.callWithContext('MediaWikiInterface.prompt', Debug.showErrors( function(context)
-		return MediaWikiInterface._prompt(context, title, label, default)
-	end))
+	return LrFunctionContext.callWithContext('MediaWikiInterface.prompt', function(context)
+			return MediaWikiInterface._prompt(context, title, label, default)
+	end)
 end
 
 MediaWikiInterface._prompt = function(functionContext, title, label, default)
