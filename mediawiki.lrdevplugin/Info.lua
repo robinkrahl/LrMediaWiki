@@ -10,7 +10,8 @@
 -- [2]  <https://raw.githubusercontent.com/LrMediaWiki/LrMediaWiki/master/CREDITS.txt>
 
 return {
-	LrSdkVersion = 5.0,
+	LrSdkVersion = 6.0,
+	LrSdkMinimumVersion = 4.0,
 	LrToolkitIdentifier = 'org.ireas.lightroom.mediawiki',
 	LrPluginName = LOC '$$$/LrMediaWiki/PluginName=MediaWiki for Lightroom',
 
@@ -25,7 +26,7 @@ return {
 		title = LOC '$$$/LrMediaWiki/MediaWiki=MediaWiki',
 		file = 'MediaWikiExportServiceProvider.lua',
 	},
-
+	
 	LrMetadataProvider = 'MediaWikiMetadataProvider.lua',
 
 	LrPluginInfoProvider = 'MediaWikiPluginInfoProvider.lua',
@@ -33,6 +34,6 @@ return {
 	VERSION = {
 		major = 0,
 		minor = 4,
-		revision = 1,
+		revision = 2,
 	},
 }

@@ -19,7 +19,9 @@ local LrErrors = import 'LrErrors'
 local LrFileUtils = import 'LrFileUtils'
 local LrPathUtils = import 'LrPathUtils'
 local LrView = import 'LrView'
-
+local LrApplication = import 'LrApplication'
+-- local LrExportContext = import 'LrExportContext'
+-- local LrExportSession = import 'LrExportSession'
 local bind = LrView.bind
 
 local Info = require 'Info'
@@ -29,7 +31,7 @@ local MediaWikiUtils = require 'MediaWikiUtils'
 local MediaWikiExportServiceProvider = {}
 
 MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext)
-	-- configure progess display
+	-- configure progress display
 	local exportSession = exportContext.exportSession
 	local photoCount = exportSession:countRenditions()
 	exportContext:configureProgress{
@@ -105,12 +107,93 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local additionalCategories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''
 
 			local gps = photo:getRawMetadata('gps')
+			local LrMajorVersion = LrApplication.versionTable().major -- number type
+			local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
+			local subText = LOC('$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom')
+			local location
 			if gps and gps.latitude and gps.longitude then
-				local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude .. '}}\n'
-				templates = location .. templates
+				location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
+				
+				-- In addition: If the LR field "Direction" (German: "Richtung") is set, add "heading" parameter to 
+				-- Commons template "Location"
+
+				-- Primary, the LR version needs to be checked, because Adobe introduced the parameter "gpsImgDirection" 
+				-- to the call of photo:getRawMetadata with LR SDK 6.0.
+				-- Without LR version check, the usage of this plug-in shows
+				-- a warning message at export, if using LR version < 6 (e.g. 5):
+				-- English: Warning – Unable to Export: An internal error has occurred: Unknown key: "gpsImgDirection"
+				-- German: Warnung – Export nicht möglich: Ein interner Fehler ist aufgetreten: Unknown key: "gpsImgDirection"
+				-- Even it's a warning, the export is cancelled.
+				-- To avoid this warning message, the version check is needed – substituted by a hint message.
+
+				-- The version check differs between two cases of major LR versions: (a) >= 6 and (b) < 6
+				-- At both cases a hint message box is shown – with different messages, depending on the LR version:
+				-- * (a) Users of LR 6 or higher get informed about this feature, if the user has set the "Direction" field.
+				-- * (b) Users of LR 5 or LR 4 get informed, the feature is not available, due to the insufficient LR version.
+				-- At both cases the hint message box includes a "Don't show again" (German: "Nicht erneut anzeigen") checkbox.
+				-- If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
+				-- English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
+				-- German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
+
+				if LrMajorVersion >= 6 then
+					local heading = photo:getRawMetadata('gpsImgDirection')
+					 -- The call of "getRawMetadata" with parameter "gpsImgDirection" is supported since LR 6.0
+					if heading then
+						-- Test cases:
+						-- (1) heading has a value, e.g. 359.9876 => {{Location|50.9|8.5|heading:359.9876}}
+						-- (2) direction field is empty, heading should be '' => {{Location|50.9|8.5}}
+						-- (3) gps and direction are empty => no Location template
+						-- (4) direction is '0' (== North) => {{Location|50.9|8.5|heading:0}}
+						-- All test cases should be done (a) one photo is marked, (b) multiple photos are marked
+						
+						-- At users with a LR version >= 6:
+						-- LR can store a direction value with up to 4 digits beyond a decimal point,
+						-- but shows at user interface a rounded value without decimal places (by mouse over the direction field).
+						-- Showing a rounded value is done by the two LrMediaWiki hint messages too, to avoid confusion of the user seeing different values.
+						-- The Location template parameter "heading" is filled by the storage value of LR.
+						-- Sample: A LR direction input of 359.987654321 is stored by LR as 359.9876, shown by LR and by the hint messages
+						-- as 360°, at Location template the LR stored value of 359.9876 is set.
+						location = location .. '|heading:' .. heading -- append heading at location
+						local headingRounded = string.format("%.0f", heading) -- rounding, e.g. 359.9876 -> 360
+						-- There are problems inserting newlines (\n) in JASON strings. Workaround, splitting the message in 4 parts:
+						local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL1=Hint: The Lightroom field “Direction” has a value of ^1°.', headingRounded)
+						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL2=This value has been used to set the “heading” parameter at {{Location}} template.')
+						local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL3=This feature requires a Lightroom version 6/CC or higher.')
+						local hintLine4 = LOC('$$$/LrMediaWiki/Interface/HintHeadingTrueL4=This Lightroom version is ^1, therefore this feature works.', LrVersionString )
+						local hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3 .. '\n' .. hintLine4
+						local messageTable = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
+						LrDialogs.messageWithDoNotShow(messageTable)
+					end
+				else -- LrMajorVersion < 6
+					if LrMajorVersion == 5 then 
+						-- LR versions < 5 don't have a "Direction" field
+						-- There are problems inserting newlines (\n) in JASON strings. Workaround, splitting the message in 3 parts:
+						local hintLine1 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hint: If the Lightroom field “Direction” has a value, this can not be used to set a “heading” parameter at {{Location}} template.')
+						local hintLine2 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL2=This feature requires a Lightroom version 6/CC or higher.')
+						local hintLine3 = LOC('$$$/LrMediaWiki/Interface/HintHeadingFalseL3=This Lightroom version is ^1, therefore this feature works not.', LrVersionString )
+						local hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3
+						local table = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
+						LrDialogs.messageWithDoNotShow(table)
+					end
+				end
+				location = location .. '}}' -- close Location template
+				templates = location .. '\n' .. templates
 			end
 
-			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
+			local exportFields = {
+				description = description,
+				source = source,
+				timestamp = timestamp,
+				author = author,
+				permission = permission,
+				other_fields = other,
+				location = location,
+				templates = templates,
+				license = license,
+				categories = categories,
+				additionalCategories = additionalCategories,
+			}
+			local fileDescription = MediaWikiInterface.buildFileDescription(exportFields)
 
 			-- ensure that the target file name does not contain a series of spaces or
 			-- underscores (as this would cause the upload to fail without a proper
@@ -373,20 +456,64 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 					viewFactory:push_button {
 						title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
-						action = function(button)
+							action = function(button)
 							local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
 							if result then
-								local wikitext = MediaWikiInterface.buildFileDescription('<!-- description -->', propertyTable.info_source, '<!-- date -->', propertyTable.info_author, propertyTable.info_license, '<!-- {{Location}} if GPS metadata is available -->\n' .. propertyTable.info_templates, propertyTable.info_other, propertyTable.info_categories, '<!-- per-file categories -->', '<!-- permission -->')
+								local exportFields = {
+									description = '<!-- description -->',
+									source = propertyTable.info_source,
+									timestamp = '<!-- date -->',
+									author = propertyTable.info_author,
+									permission = propertyTable.info_permission,
+									other_fields = propertyTable.info_other,
+									location = '<!-- Location if GPS metadata is available -->',
+									templates = propertyTable.info_templates,
+									license = propertyTable.info_license,
+									categories = '<!-- per-file categories -->',
+									additionalCategories = propertyTable.info_categories,
+								}
+								local filledExportFields = MediaWikiExportServiceProvider.fillExportFields(exportFields)
+								local wikitext = MediaWikiInterface.buildFileDescription(filledExportFields)
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
 							else
 								LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
 							end
-						end,
+						end
 					},
 				},
 			},
 		},
 	}
+end
+
+MediaWikiExportServiceProvider.fillExportFields = function(exportFields)
+	local lExportFields = {
+	description = exportFields.description, -- '<!-- description -->'
+	source = exportFields.source,
+	timestamp = exportFields.timestamp, -- '<!-- date -->'
+	author = exportFields.author,
+	permission = exportFields.permission,
+	other_fields = exportFields.other_fields,
+	location = exportFields.location,
+	templates = exportFields.templates,
+	license = exportFields.license,
+	categories = exportFields.categories, -- '<!-- per-file categories -->'
+	additionalCategories = exportFields.additionalCategories,
+	}
+--[[
+    local exportSession = assert(exportContext.exportSession)
+	local photoCount = exportSession:countRenditions()
+	MediaWikiUtils.traceDebug(string.format("photoCount: %d", photoCount))
+	local photo
+	local countPhotos = 1
+	for photos in exportSession:photosToExport() do
+		if (countPhotos == 1) then
+			photo = photos -- take first photo
+			countPhotos = countPhotos + 1 -- ignore all other photos
+		end
+	end
+]]
+	return lExportFields
 end
 
 MediaWikiExportServiceProvider.hidePrintResolution = true
@@ -403,6 +530,7 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'username', default = '' },
 	{ key = 'password', default = '' },
 	{ key = 'api_path', default = 'https://commons.wikimedia.org/w/api.php' },
+	{ key = 'gallery', default = '' },
 	{ key = 'info_source', default = '{{own}}' },
 	{ key = 'info_author', default = '' },
 	{ key = 'info_license', default = '{{Cc-by-sa-4.0}}' },
@@ -410,7 +538,6 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'info_templates', default = '' },
 	{ key = 'info_other', default = '' },
 	{ key = 'info_categories', default = '' },
-	{ key = 'gallery', default = '' },
 }
 
 return MediaWikiExportServiceProvider

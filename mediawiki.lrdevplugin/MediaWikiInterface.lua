@@ -70,7 +70,7 @@ end
 
 MediaWikiInterface.prompt = function(title, label, default)
 	return LrFunctionContext.callWithContext('MediaWikiInterface.prompt', function(context)
-		return MediaWikiInterface._prompt(context, title, label, default)
+			return MediaWikiInterface._prompt(context, title, label, default)
 	end)
 end
 
@@ -151,28 +151,39 @@ MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, 
 	return nil
 end
 
-MediaWikiInterface.buildFileDescription = function(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
+MediaWikiInterface.buildFileDescription = function(exportFields)
 	local categoriesString = ''
-	for category in string.gmatch(categories, '[^;]+') do
+	-- The following 2 calls of the Lua function "string.gmatch()" iterate the given strings
+	-- "categories" and "additionalCategories" by the pattern "[^;]+".
+	-- It separates all occurrences of categories (by using "+") without the character ";".
+	-- The ";" preceding character "^" means NOT.
+	-- In other words: The strings are separated by the character ";" and the calls
+	-- of gmatch() separate multiple occurrences of the categories.
+	-- Lua uses a specific set of patterns; it doesn't use regular expressions.
+	-- According Lua patterns reference: <http://www.lua.org/manual/5.3/manual.html#6.4.1>
+	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
-	for category in string.gmatch(additionalCategories, '[^;]+') do
+	for category in string.gmatch(exportFields.additionalCategories, '[^;]+') do
 		if category then
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
+
 	local arguments = {
-		description = description,
-		source = source,
-		timestamp = timestamp,
-		author = author,
-		other_fields = other,
-		templates = templates,
-		license = license,
-		categories = categoriesString,
-		permission = permission,
+		description = exportFields.description,
+		source = exportFields.source,
+		timestamp = exportFields.timestamp,
+		author = exportFields.author,
+		permission = exportFields.permission,
+		other_fields = exportFields.other_fields,
+		location = exportFields.location,
+		templates = exportFields.templates,
+		license = exportFields.license,
+		categories = categoriesString,	-- The string concatenation of "categories" and "additionalCategories" is 
+		-- done prior in this function. The need of this list "arguments" is caused by this concatenation.
 	}
 	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 end
