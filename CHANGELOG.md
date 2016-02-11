@@ -1,26 +1,5 @@
 # LrMediaWiki changelog
 
-## v0.4.2: 
-### Fixed issues
-- Issue [#35] (https://github.com/robinkrahl/LrMediaWiki/issues/35): Extract direction/heading of the location out of EXIF/metadata (enhancement)
-
-This enhancement is available by users of a Lightroom (LR) version 6 or higher. The function to retrieve the direction has been introduced by Adobe with version 6. Therefore this enhancement is not available by users of versions lower 6.
-
-This enhancement differs several LR versions. Depending on the version, different information messages are shown (or not):
-* LR 6 or higher: If the `Direction` field is set, the user gets informed about this feature. Uploads of files without a direction setting don’t cause this information message, because at such cases the user is not affected.
-* LR 5: Users get informed, the feature is not available, due to the insufficient LR version. Adobe introduced the “Direction” field with LR version 5, but forgot to include it at the corresponding LR SDK 5. Therefore this feature can not be used by users of LR 5. At release notes of LR SDK 6 this has been mentioned to be a bug fix of LR SDK 5.
-* LR 4: Users of this version are not affected, because Adobe introduced the “Direction” field with version 5. Therefore users of LR 4 don’t get any information message.
-* LR versions lower 4: These versions are not supported by LrMediaWiki.
-
-The information messages include a “Don’t show again” (German: „Nicht erneut anzeigen“) checkbox. If the user decides, to set this option and decides to revert this decision later, a reset of warning dialogs at LR is needed:
-* English: Edit -> Preferences... -> General -> Prompts -> Reset all warning dialogs
-* German: Bearbeiten -> Voreinstellungen -> Allgemein -> Eingabeaufforderungen -> Alle Warndialogfelder zurücksetzen
-
-LR can store a direction value with up to 4 digits beyond a decimal point, but shows at user interface a rounded value without decimal places (by mouse over the direction field). The information message shows the same rounded value, to avoid confusion of the user seeing different values. The `{{Location}}` template parameter `heading` is filled by the stored value of LR. Sample: A direction input of 359.987654321 is stored as 359.9876, shown as 360°. At `{{Location}}` template the LR stored value of 359.9876 is set.
-
-- Issue [#50] (https://github.com/robinkrahl/LrMediaWiki/issues/50): Support of LR 4
-- Issue [#51] (https://github.com/robinkrahl/LrMediaWiki/issues/51): Tests of Windows 10 and OS X
-
 ## v0.4.1: Bugfix for Lightroom 6.2
 
 This bugfix releases fixes a typo that caused errors in the new Lightroom version.
