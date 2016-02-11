@@ -27,11 +27,6 @@ return {
 		file = 'MediaWikiExportServiceProvider.lua',
 	},
 	
-	LrExportMenuItems = {
-		title = "Debug Script",
-		file = "DebugScript.lua"
-	},
-
 	LrMetadataProvider = 'MediaWikiMetadataProvider.lua',
 
 	LrPluginInfoProvider = 'MediaWikiPluginInfoProvider.lua',
