@@ -17,7 +17,10 @@ local LrLogger = import 'LrLogger'
 local Info = require 'Info'
 
 local MediaWikiUtils = {}
-local myLogger = LrLogger('LrMediaWikiLogger')
+local myLogger		= LrLogger('LrMediaWikiLogger')
+local myLoggerDebug	= LrLogger('LrMediaWikiLoggerDebug')
+local myLoggerDebugOn = true -- should be set to "false" before delivery
+
 local prefs = import 'LrPrefs'.prefsForPlugin()
 if prefs.logging then
 	myLogger:enable('logfile')
@@ -90,6 +93,12 @@ end
 
 MediaWikiUtils.trace = function(message)
 	myLogger:trace(message)
+end
+
+MediaWikiUtils.traceDebug = function(message)
+	if myLoggerDebugOn then
+		myLoggerDebug:trace(message)
+	end
 end
 
 return MediaWikiUtils
