@@ -22,7 +22,6 @@
 "$$$/LrMediaWiki/Interface/HintHeadingTrueL3=Dieses Feature erfordert eine Lightroom-Version 6/CC oder höher."
 "$$$/LrMediaWiki/Interface/HintHeadingTrueL4=Diese Lightroom-Version ist ^1, daher funktioniert das Feature."
 "$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Interner Fehler: vor dem Upload nicht angemeldet."
-"$$$/LrMediaWiki/Interface/InvalidDirectionValue=„Richtung“ hat einen ungültigen Wert."
 "$$$/LrMediaWiki/Interface/InUse/Cancel=Abbrechen"
 "$$$/LrMediaWiki/Interface/InUse/Details=Es gibt bereits eine Datei mit dem Namen ^1. Überschreiben? (Die Dateibeschreibung wird nicht verändert.)"
 "$$$/LrMediaWiki/Interface/InUse/OK=Überschreiben"

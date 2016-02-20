@@ -29,7 +29,7 @@ local MediaWikiUtils = require 'MediaWikiUtils'
 local MediaWikiExportServiceProvider = {}
 
 MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext)
-	-- configure progess display
+	-- configure progress display
 	local exportSession = exportContext.exportSession
 	local photoCount = exportSession:countRenditions()
 	exportContext:configureProgress{
@@ -110,10 +110,10 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			local subText = LOC('$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom')
 			if gps and gps.latitude and gps.longitude then
 				local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
-				-- If LR field "Direction" (German: "Richtung") is set, add "heading" parameter to Commons template "Location"
-
-				-- The LR version is checked, because Adobe introduced the parameter "gpsImgDirection" to the 
-				-- call of photo:getRawMetadata with LR SDK 6.0.
+				-- In addition: If the LR field "Direction" (German: "Richtung") is set, add "heading" parameter to
+				-- Commons template "Location"
+				-- Primary, the LR version needs to be checked, because Adobe introduced the parameter "gpsImgDirection"
+				-- to the call of photo:getRawMetadata with LR SDK 6.0.
 				-- Without LR version check, the usage of this plug-in shows
 				-- a warning message at export, if using LR version < 6 (e.g. 5):
 				-- English: Warning – Unable to Export: An internal error has occurred: Unknown key: "gpsImgDirection"
@@ -134,6 +134,13 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 					local heading = photo:getRawMetadata('gpsImgDirection')
 					 -- The call of "getRawMetadata" with parameter "gpsImgDirection" is supported since LR 6.0
 					if heading then
+
+						-- Test cases:
+						-- (1) heading has a value, e.g. 359.9876 => {{Location|50.9|8.5|heading:359.9876}}
+						-- (2) direction field is empty, heading should be '' => {{Location|50.9|8.5}}
+						-- (3) gps and direction are empty => no Location template
+						-- (4) direction is '0' (== North) => {{Location|50.9|8.5|heading:0}}^M
+						-- All test cases should be done (a) one photo is marked, (b) multiple photos are marked
 						-- At users with a LR version >= 6:
 						-- LR can store a direction value with up to 4 digits beyond a decimal point,
 						-- but shows at user interface a rounded value without decimal places (by mouse over the direction field).
@@ -151,10 +158,6 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 						local hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3 .. '\n' .. hintLine4
 						local messageTable = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 						LrDialogs.messageWithDoNotShow(messageTable)
-					else
-						-- This shouldn't happen, because LR has a good direction field check, accepting only valid values.
-						-- It might be impossible, to test this case. However, shit happens.
-						LrDialogs.message(LOC '$$$/LrMediaWiki/Interface/InvalidDirectionValue=“Direction” has an invalid value.', subText, 'critical')
 					end
 				else -- LrMajorVersion < 6
 					if LrMajorVersion == 5 then 
@@ -168,8 +171,8 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 						LrDialogs.messageWithDoNotShow(table)
 					end
 				end
-				location = location .. '}}\n' -- close Location template
-				templates = location .. templates
+				location = location .. '}}' -- close Location template
+				templates = location .. '\n' .. templates
 			end
 
 			local fileDescription = MediaWikiInterface.buildFileDescription(description, source, timestamp, author, license, templates, other, categories, additionalCategories, permission)
