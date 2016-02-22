@@ -154,36 +154,37 @@ end
 MediaWikiInterface.buildFileDescription = function(exportFields)
 	local categoriesString = ''
 	-- The following 2 calls of the Lua function "string.gmatch()" iterate the given strings
-	-- "categories" and "additionalCategories" by the pattern "[^;]+".
+	-- "categories" and "info_categories" by the pattern "[^;]+".
 	-- It separates all occurrences of categories (by using "+") without the character ";".
 	-- The ";" preceding character "^" means NOT.
 	-- In other words: The strings are separated by the character ";" and the calls
-	-- of gmatch() separate multiple occurrences of the categories.
 	-- Lua uses a specific set of patterns; it doesn't use regular expressions.
+	-- of gmatch() separate multiple occurrences of the categories.
 	-- According Lua patterns reference: <http://www.lua.org/manual/5.3/manual.html#6.4.1>
 	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
-	for category in string.gmatch(exportFields.additionalCategories, '[^;]+') do
+	for category in string.gmatch(exportFields.info_categories, '[^;]+') do
 		if category then
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
 
 	local arguments = {
-		description = exportFields.description,
-		source = exportFields.source,
-		timestamp = exportFields.timestamp,
-		author = exportFields.author,
-		permission = exportFields.permission,
-		other_fields = exportFields.other_fields,
-		location = exportFields.location,
-		templates = exportFields.templates,
-		license = exportFields.license,
+		source = exportFields.info_source,
+		author = exportFields.info_author,
+		license = exportFields.info_license,
+		permission = exportFields.info_permission,
+		templates = exportFields.info_templates,
+		other_fields = exportFields.info_other,
 		categories = categoriesString,	-- The string concatenation of "categories" and "additionalCategories" is 
 		-- done prior in this function. The need of this list "arguments" is caused by this concatenation.
+		description = exportFields.description,
+		location = exportFields.location,
+		templates = exportFields.templates,
+		timestamp = exportFields.timestamp,
 	}
 	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 end
