@@ -532,6 +532,26 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 			timestamp = dateCreated
 		end
 	end
+
+	local dateTimeOriginal = photo:getFormattedMetadata('dateTimeOriginal') -- LR EXIF field "Date Time Original"
+	-- The return value has to be checked, not to be "nil" (different to parameter 'dateCreated')
+	if dateTimeOriginal ~= nil then -- The source device supports Exif.
+		-- If LR EXIF field "Date Created" is set too, the "timestamp" value will be overwritten.
+		-- This follows the logic, how LR gives the "Date Time Original" priority over "Date Created",
+		-- if the user sets at LR section "Metadata" the "Metadata Set" to "Default".
+		-- In this case, fields "Capture Time" and "Capture Date" are shown, based on "Date Time Original",
+		-- and changes are restricted to valid values at dialog "Edit Capture Time".
+		-- The format of "dateTimeOriginal" is "DD.MM.YYYY HH:MM:SS".
+		--                       Index helper: "1234567890123456789"
+		Day   = string.sub(dateTimeOriginal, 1, 2) -- "DD"
+		Month = string.sub(dateTimeOriginal, 4, 5) -- "MM"
+		Year  = string.sub(dateTimeOriginal, 7, 10) -- "YYYY"
+		Time  = string.sub(dateTimeOriginal, 12, 19) -- "HH:MM:SS"
+		if Day and Month and Year and Time then
+			-- result format: "YYYY-MM-DD HH:MM:SS"
+			timestamp = Year .. '-' .. Month .. '-' .. Day .. ' ' .. Time
+		end
+	end
 	exportFields.timestamp = timestamp
 
 	return exportFields
