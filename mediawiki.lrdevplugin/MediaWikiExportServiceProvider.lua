@@ -515,14 +515,6 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	exportFields.categories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''
 
 	-- Field "timestamp"
-	local timestampSeconds = photo:getRawMetadata('dateTimeOriginal')
-		local timestamp = ''
-		if timestampSeconds then
-			timestamp = os.date("!%Y-%m-%d %H:%M:%S", timestampSeconds + 978307200)
-		exportFields.timestamp = timestamp
-	end
-
---[[
 	local timestamp, Day, Month, Year, Time = ''
 	local dateCreated = photo:getFormattedMetadata('dateCreated') -- LR IPTC field "Date Created"
 	-- The return value has to be checked, not to be an empty string (different to parameter 'dateTimeOriginal')
@@ -561,7 +553,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		end
 	end
 	exportFields.timestamp = timestamp
-]]	
+
 	return exportFields
 end
 
