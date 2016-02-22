@@ -470,7 +470,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local LrMajorVersion = LrApplication.versionTable().major -- number type
 	local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
 	local subText = LOC '$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom'
-	exportFields.location = ''
+	exportFields.location = '' 
 	if gps and gps.latitude and gps.longitude then
 		local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
 		if LrMajorVersion >= 6 then
