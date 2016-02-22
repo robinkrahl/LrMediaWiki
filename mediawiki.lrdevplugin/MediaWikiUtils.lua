@@ -13,13 +13,12 @@
 -- doc:   missing
 -- i18n:  complete
 
+local LrApplication = import 'LrApplication'
 local LrLogger = import 'LrLogger'
 local Info = require 'Info'
 
 local MediaWikiUtils = {}
 local myLogger		= LrLogger('LrMediaWikiLogger')
-local myLoggerDebug	= LrLogger('LrMediaWikiLoggerDebug')
-local myLoggerDebugOn = true -- should be set to "false" before delivery
 
 local prefs = import 'LrPrefs'.prefsForPlugin()
 if prefs.logging then
@@ -35,6 +34,7 @@ end
 
 MediaWikiUtils.isStringEmpty = function(str)
 	return str == nil or string.match(str, '^%s*$') ~= nil
+	-- see e.g. http://stackoverflow.com/questions/10328211/how-to-check-if-a-value-is-empty-in-lua
 end
 
 MediaWikiUtils.getFirstKey = function(table)
@@ -47,7 +47,16 @@ end
 MediaWikiUtils.getVersionString = function()
     local str = Info.VERSION.major .. '.' .. Info.VERSION.minor
     if Info.VERSION.revision > 0 then
-        str = str .. '.' .. Info.VERSION.revision
+		local platform = '?'
+		-- Boolean global variables WIN_ENV and MAC_ENV are documented at LR SDK programmers guide
+		if WIN_ENV == true then
+			platform = 'Win'
+		elseif MAC_ENV == true then
+			platform = 'OSX'
+		else
+			error 'Unknown operating system' -- no need of i18n the message text, due to the unlikely use case
+		end
+        str = str .. '.' .. Info.VERSION.revision .. ', LR ' .. LrApplication.versionString() .. ' ' .. platform
     end
     return str
 end
@@ -93,12 +102,6 @@ end
 
 MediaWikiUtils.trace = function(message)
 	myLogger:trace(message)
-end
-
-MediaWikiUtils.traceDebug = function(message)
-	if myLoggerDebugOn then
-		myLoggerDebug:trace(message)
-	end
 end
 
 return MediaWikiUtils
