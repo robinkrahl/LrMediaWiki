@@ -11,18 +11,18 @@ Wikimedia Commons.
 
 ## Developer information
 
-LrMediaWiki is developed in Lua using the [Lightroom SDK][lrsdk].  It is
-released under the MIT/X11 license.  LrMediaWiki should work with all
-Lightroom 5 and 6 installations both on Windows and on Mac OS.
+LrMediaWiki is developed in Lua using the [Lightroom SDK][lrsdk]. It is
+released under the MIT/X11 license. LrMediaWiki works with
+Lightroom 4, 5 and 6/CC installations – both on Windows and on OS X.
 
 ### Code structure
 
 The plugin code is located in the `mediawiki.lrdevplugin` directory.
 `Info.lua` defines the plugin metadata to be read by Lightroom.
 `MediaWikiExportServiceProvider.lua` defines the user interfaces and passes
-all necessary information to `MediaWikiInterface.lua`.  This file evaluates
+all necessary information to `MediaWikiInterface.lua`. This file evaluates
 the user input and prepares the file description and the file itself for the
-MediaWiki upload.  The upload is done in `MediaWikiApi.lua`.
+MediaWiki upload. The upload is done in `MediaWikiApi.lua`.
 `MediaWikiUtils.lua` provides common utility functions, and
 `MediaWikiMetadataProvider.lua` defines the custom metadata containing e. g.
 the file description and additional categories and templates.
