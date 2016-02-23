@@ -157,10 +157,10 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 	-- "categories" and "info_categories" by the pattern "[^;]+".
 	-- It separates all occurrences of categories (by using "+") without the character ";".
 	-- The ";" preceding character "^" means NOT.
-	-- In other words: The strings are separated by the character ";" and the calls
-	-- Lua uses a specific set of patterns; it doesn't use regular expressions.
+	-- In other words: The strings are separated by the character ";" and the Lua calls
 	-- of gmatch() separate multiple occurrences of the categories.
-	-- According Lua patterns reference: <http://www.lua.org/manual/5.3/manual.html#6.4.1>
+	-- Lua uses a specific set of patterns, no regular expressions.
+	-- Lua patterns reference: <http://www.lua.org/manual/5.3/manual.html#6.4.1>
 	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
