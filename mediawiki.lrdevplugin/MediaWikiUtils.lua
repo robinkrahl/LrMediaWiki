@@ -18,14 +18,14 @@ local LrLogger = import 'LrLogger'
 local Info = require 'Info'
 
 local MediaWikiUtils = {}
-local myLogger		= LrLogger('LrMediaWikiLogger')
+local myLogger = LrLogger('LrMediaWikiLogger')
 
 local prefs = import 'LrPrefs'.prefsForPlugin()
 if prefs.logging then
 	myLogger:enable('logfile')
 end
 
--- Allows formatting of strings like "${test} eins zwei drei ${test2}"
+-- Allows formatting of strings like "${test} one two three ${test2}"
 -- Based on a solution by http://lua-users.org/wiki/RiciLake shown here:
 -- http://lua-users.org/wiki/StringInterpolation
 MediaWikiUtils.formatString = function(str, arguments)
@@ -37,6 +37,10 @@ MediaWikiUtils.isStringEmpty = function(str)
 	-- see e.g. http://stackoverflow.com/questions/10328211/how-to-check-if-a-value-is-empty-in-lua
 end
 
+MediaWikiUtils.isStringFilled = function(str)
+	return not MediaWikiUtils.isStringEmpty(str)
+end
+
 MediaWikiUtils.getFirstKey = function(table)
   for key, value in pairs(table) do
 		return key
@@ -45,20 +49,17 @@ MediaWikiUtils.getFirstKey = function(table)
 end
 
 MediaWikiUtils.getVersionString = function()
-    local str = Info.VERSION.major .. '.' .. Info.VERSION.minor
-    if Info.VERSION.revision > 0 then
-		local platform = '?'
-		-- Boolean global variables WIN_ENV and MAC_ENV are documented at LR SDK programmers guide
-		if WIN_ENV == true then
-			platform = 'Win'
-		elseif MAC_ENV == true then
-			platform = 'OSX'
-		else
-			error 'Unknown operating system' -- no need of i18n the message text, due to the unlikely use case
-		end
-        str = str .. '.' .. Info.VERSION.revision .. ', LR ' .. LrApplication.versionString() .. ' ' .. platform
-    end
-    return str
+	local str = Info.VERSION.major .. '.' .. Info.VERSION.minor .. '.' .. Info.VERSION.revision
+	local platform = '?'
+	-- Boolean global variables WIN_ENV and MAC_ENV are documented at LR SDK programmers guide
+	if WIN_ENV == true then
+		platform = 'Win'
+	elseif MAC_ENV == true then
+		platform = 'Mac' -- OS name has been changed in 2016 from "OS X" to "macOS"
+	else
+		error 'Unsupported platform – neither Windows nor macOS' -- unlikely case
+	end
+	return str .. ', LR ' .. LrApplication.versionString() .. ' ' .. platform
 end
 
 -- configuration

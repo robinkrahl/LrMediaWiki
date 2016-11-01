@@ -30,9 +30,16 @@ local MediaWikiInterface = {
 	fileDescriptionPattern = nil,
 }
 
-MediaWikiInterface.loadFileDescriptionTemplate = function()
+MediaWikiInterface.loadFileDescriptionTemplate = function(templateName)
+	local fileName
+	if templateName == 'Information' then -- default, see MediaWikiExportServiceProvider.exportPresetFields
+		fileName = '/descriptionInformation.txt'
+	elseif templateName == 'Artwork' then
+		fileName = '/descriptionArtwork.txt'
+	end
+
 	local result, errorMessage = false
-	local file, message = io.open(_PLUGIN.path .. '/description.txt', 'r')
+	local file, message = io.open(_PLUGIN.path .. fileName, 'r')
 	if file then
 		MediaWikiInterface.fileDescriptionPattern = file:read('*all')
 		if not MediaWikiInterface.fileDescriptionPattern then
@@ -47,7 +54,7 @@ MediaWikiInterface.loadFileDescriptionTemplate = function()
 	return result, errorMessage
 end
 
-MediaWikiInterface.prepareUpload = function(username, password, apiPath)
+MediaWikiInterface.prepareUpload = function(username, password, apiPath, templateName)
 	-- MediaWiki login
 	if username and password then
 		MediaWikiInterface.username = username
@@ -62,7 +69,7 @@ MediaWikiInterface.prepareUpload = function(username, password, apiPath)
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Interface/UsernameOrPasswordMissing=Username or password missing')
 	end
 	-- file description
-	local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
+	local result, message = MediaWikiInterface.loadFileDescriptionTemplate(templateName)
 	if not result then
 		LrErrors.throwUserError(message)
 	end
@@ -126,13 +133,13 @@ MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, 
 		local continue = LrDialogs.confirm(LOC '$$$/LrMediaWiki/Interface/InUse=File name already in use', LOC('$$$/LrMediaWiki/Interface/InUse/Details=There already is a file with the name ^1.  Overwrite?  (File description won\'t be changed.)', targetFileName), LOC '$$$/LrMediaWiki/Interface/InUse/OK=Overwrite', LOC '$$$/LrMediaWiki/Interface/InUse/Cancel=Cancel', LOC '$$$/LrMediaWiki/Interface/InUse/Rename=Rename')
 		if continue == 'ok' then
 			local newComment = MediaWikiInterface.prompt(LOC '$$$/LrMediaWiki/Interface/VersionComment=Version comment', LOC '$$$/LrMediaWiki/Interface/VersionComment=Version comment')
-			if not MediaWikiUtils.isStringEmpty(newComment) then
+			if MediaWikiUtils.isStringFilled(newComment) then
 				comment = newComment .. ' (LrMediaWiki ' .. MediaWikiUtils.getVersionString() .. ')'
 			end
 			ignorewarnings = true
 		elseif continue == 'other' then
 			local newFileName = MediaWikiInterface.prompt(LOC '$$$/LrMediaWiki/Interface/Rename=Rename file', LOC '$$$/LrMediaWiki/Interface/Rename/NewName=New file name', targetFileName)
-			if not MediaWikiUtils.isStringEmpty(newFileName) and newFileName ~= targetFileName then
+			if MediaWikiUtils.isStringFilled(newFileName) and newFileName ~= targetFileName then
 				MediaWikiInterface.uploadFile(filePath, description, hasDescription, newFileName)
 			end
 			return
@@ -173,6 +180,7 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 	end
 
 	local arguments = {
+		template = exportFields.info_template,
 		source = exportFields.info_source,
 		author = exportFields.info_author,
 		license = exportFields.info_license,
@@ -185,6 +193,28 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 		location = exportFields.location,
 		templates = exportFields.templates,
 		timestamp = exportFields.timestamp,
+		-- Parameter of infobox template "Artwork":
+		artArtist = exportFields.art.artist,
+		artAuthor = exportFields.art.author,
+		artTitle = exportFields.art.title,
+		artDate = exportFields.art.date,
+		artMedium = exportFields.art.medium,
+		artDimensions = exportFields.art.dimensions,
+		artInstitution = exportFields.art.institution,
+		artDepartment = exportFields.art.department,
+		artAccessionNumber = exportFields.art.accessionNumber,
+		artPlaceOfCreation = exportFields.art.placeOfCreation,
+		artPlaceOfDiscovery = exportFields.art.placeOfDiscovery,
+		artObjectHistory = exportFields.art.objectHistory,
+		artExhibitionHistory = exportFields.art.exhibitionHistory,
+		artCreditLine = exportFields.art.creditLine,
+		artInscriptions = exportFields.art.inscriptions,
+		artNotes = exportFields.art.notes,
+		artReferences = exportFields.art.references,
+		artSource = exportFields.art.source,
+		artOtherVersions = exportFields.art.otherVersions,
+		artOtherFields = exportFields.art.otherFields,
+		artWikidata = exportFields.art.wikidata,
 	}
 	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 end
