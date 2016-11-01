@@ -185,7 +185,6 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 		author = exportFields.info_author,
 		license = exportFields.info_license,
 		permission = exportFields.info_permission,
-		templates = exportFields.info_templates,
 		other_fields = exportFields.info_other,
 		categories = categoriesString,	-- The string concatenation of "categories" and "additionalCategories" is 
 		-- done prior in this function. The need of this list "arguments" is caused by this concatenation.
