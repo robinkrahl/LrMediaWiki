@@ -44,7 +44,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 
 	local exportSettings = assert(exportContext.propertyTable)
 
-	-- require username, password, apipath, license, author, source
+	-- require username, password, apipath, source, author, license
 	if MediaWikiUtils.isStringEmpty(exportSettings.username) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoUsername=No username given!')
 	end
@@ -54,17 +54,17 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	if MediaWikiUtils.isStringEmpty(exportSettings.api_path) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoApiPath=No API path given!')
 	end
-	if MediaWikiUtils.isStringEmpty(exportSettings.info_license) then
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoLicense=No license given!')
-	end
-	if MediaWikiUtils.isStringEmpty(exportSettings.info_author) then
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoAuthor=No author given!')
-	end
-	if MediaWikiUtils.isStringEmpty(exportSettings.info_source) then
+	if exportSettings.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportSettings.info_source) then 
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoSource=No source given!')
 	end
+	if exportSettings.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportSettings.info_author) then
+		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoAuthor=No author given!')
+	end
+	if MediaWikiUtils.isStringEmpty(exportSettings.info_license) and MediaWikiUtils.isStringEmpty(exportSettings.info_permission) then
+		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoLicense=No license given!')
+	end
 
-	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path)
+	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path, exportSettings.info_template)
 
 	-- file names for gallery creation
 	local fileNames = {}
@@ -76,10 +76,32 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 		if success then
 			local photo = rendition.photo
 			local catalog = photo.catalog
-
 			-- do upload to MediaWiki
-			local exportFields = {
-				-- fields set at export dialogue, order by UI
+			local artworkParameters = { -- Parameters of infobox template "Artwork" without "description" and "permission"
+				artist = '',
+				author = '',
+				title = '',
+				date = '',
+				medium = '',
+				dimensions = '',
+				institution = '',
+				department = '',
+				accessionNumber = '',
+				placeOfCreation = '',
+				placeOfDiscovery = '',
+				objectHistory = '',
+				exhibitionHistory = '',
+				creditLine = '',
+				inscriptions = '',
+				notes = '',
+				references = '',
+				source = '',
+				otherVersions = '',
+				otherFields = '',
+				wikidata = '',
+			}
+			local exportFields = { -- Fields set at export dialog, ordered by UI
+				info_template = exportSettings.info_template,
 				info_source = exportSettings.info_source,
 				info_author = exportSettings.info_author,
 				info_license = exportSettings.info_license,
@@ -93,6 +115,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				templates = '',
 				categories = '',
 				timestamp = '',
+				art = artworkParameters, -- Parameters of infobox template "Artwork"
 			}
 
 			local filledExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(exportFields, photo)
@@ -102,7 +125,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			-- underscores (as this would cause the upload to fail without a proper
 			-- error message)
 			local fileName = string.gsub(LrPathUtils.leafName(pathOrMessage), '[ _]+', '_')
-			local hasDescription = not MediaWikiUtils.isStringEmpty(filledExportFields.description)
+			local hasDescription = MediaWikiUtils.isStringFilled(filledExportFields.description)
 			local message = MediaWikiInterface.uploadFile(pathOrMessage, fileDescription, hasDescription, fileName)
 			if message then
 				rendition:uploadFailed(message)
@@ -120,7 +143,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 
 				-- add configured export keyword
 				local keyword = MediaWikiUtils.getExportKeyword()
-				if not MediaWikiUtils.isStringEmpty(keyword) then
+				if MediaWikiUtils.isStringFilled(keyword) then
 					catalog:withWriteAccessDo('AddExportKeyword', function(context)
 						photo:addKeyword(catalog:createKeyword(keyword, {}, false, nil, true))
 					end)
@@ -136,7 +159,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 		end
 	end
 
-	if (not MediaWikiUtils.isStringEmpty(exportSettings.gallery)) and fileNames then
+	if MediaWikiUtils.isStringFilled(exportSettings.gallery) and fileNames then
 		MediaWikiInterface.addToGallery(fileNames, exportSettings.gallery)
 	end
 end
@@ -190,7 +213,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:static_text {
 						title = LOC '$$$/LrMediaWiki/Section/User/ApiPath=API path',
 						alignment = labelAlignment,
-						width = LrView.share "label_width",
+						width = LrView.share 'label_width',
 					},
 
 					viewFactory:edit_field {
@@ -210,7 +233,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:static_text {
 						title = LOC '$$$/LrMediaWiki/Section/User/Gallery=Gallery',
 						alignment = labelAlignment,
-						width = LrView.share "label_width",
+						width = LrView.share 'label_width',
 					},
 
 					viewFactory:edit_field {
@@ -222,147 +245,136 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 			},
 		},
 		{
-			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=Upload Information",
-			synopsis = bind 'info_license',
+			title = LOC '$$$/LrMediaWiki/Section/Licensing/Title=Upload Information',
+			synopsis = bind 'info_template',
 
 			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
-
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
 
 					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/Source=Source',
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox template',
 						alignment = labelAlignment,
-						width = LrView.share "label_width",
+						width = LrView.share 'label_width',
 					},
-
-					viewFactory:edit_field {
-						value = bind 'info_source',
-						immediate = true,
-						width_in_chars = widthLong,
-					},
-				},
-
-				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/Author=Author',
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
-
-					viewFactory:edit_field {
-						value = bind 'info_author',
-						immediate = true,
-						width_in_chars = widthLong,
-					},
-				},
-
-				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/License=License',
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
-
-					viewFactory:combo_box {
-						value = bind 'info_license',
-						immediate = true,
-						width_in_chars = widthLong - 2,
+					viewFactory:popup_menu {
+						value = bind 'info_template',
 						items = {
-							'{{Cc-by-sa-4.0}}',
-							'{{Cc-by-4.0}}',
-							'{{Cc-zero}}',
+							'Information',
+							'Artwork',
 						},
 					},
-				},
-
-				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/Permission=Permission',
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
-
-					viewFactory:edit_field {
-						value = bind 'info_permission',
-						immediate = true,
-						width_in_chars = widthLong,
-					},
-				},
-
-				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates',
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
-
-					viewFactory:edit_field {
-						value = bind 'info_templates',
-						immediate = true,
-						width_in_chars = widthLong,
-					},
-				},
-
-				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/Other=Other fields',
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
-
-					viewFactory:edit_field {
-						value = bind 'info_other',
-						immediate = true,
-						width_in_chars = widthLong,
-					},
-				},
-
-				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories=Categories',
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
-
-					viewFactory:edit_field {
-						value = bind 'info_categories',
-						immediate = true,
-						width_in_chars = widthLong,
-						height_in_lines = 3,
-					},
-
-					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories/Details=separate with ;',
-					},
-				},
-
-				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
-					viewFactory:static_text {
-						alignment = labelAlignment,
-						width = LrView.share "label_width",
-					},
-
+					-- spacing = viewFactory:label_spacing(),
 					viewFactory:push_button {
 						title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
 							action = function(button)
 								MediaWikiExportServiceProvider.showPreview(propertyTable)
 							end,
+					},
+				},
+				viewFactory:group_box {
+					title = LOC '$$$/LrMediaWiki/Section/Licensing/InformationAndArtwork=Information and Artwork',
+					viewFactory:row {
+						spacing = viewFactory:label_spacing(),
+						viewFactory:static_text {
+							title = LOC '$$$/LrMediaWiki/Section/Licensing/License=License',
+							alignment = labelAlignment,
+							width = LrView.share "label_width",
+						},
+						viewFactory:combo_box {
+							value = bind 'info_license',
+							immediate = true,
+							width_in_chars = widthLong - 2,
+							items = {
+								'{{Cc-by-sa-4.0}}',
+								'{{Cc-by-4.0}}',
+								'{{Cc-zero}}',
+							},
+						},
+					},
+					viewFactory:row {
+						spacing = viewFactory:label_spacing(),
+						viewFactory:static_text {
+							title = LOC '$$$/LrMediaWiki/Section/Licensing/Permission=Permission',
+							alignment = labelAlignment,
+							width = LrView.share "label_width",
+						},
+						viewFactory:edit_field {
+							value = bind 'info_permission',
+							immediate = true,
+							width_in_chars = widthLong,
+						},
+					},
+					viewFactory:row {
+						spacing = viewFactory:label_spacing(),
+						viewFactory:static_text {
+							title = LOC '$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates',
+							alignment = labelAlignment,
+							width = LrView.share "label_width",
+						},
+						viewFactory:edit_field {
+							value = bind 'info_templates',
+							immediate = true,
+							width_in_chars = widthLong,
+						},
+					},
+					viewFactory:row {
+						spacing = viewFactory:label_spacing(),
+						viewFactory:static_text {
+							title = LOC '$$$/LrMediaWiki/Section/Licensing/Other=Other fields',
+							alignment = labelAlignment,
+							width = LrView.share "label_width",
+						},
+						viewFactory:edit_field {
+							value = bind 'info_other',
+							immediate = true,
+							width_in_chars = widthLong,
+						},
+					},
+					viewFactory:row {
+						spacing = viewFactory:label_spacing(),
+						viewFactory:static_text {
+							title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories=Categories^nseparated by ;',
+							alignment = labelAlignment,
+							width = LrView.share "label_width",
+						},
+						viewFactory:edit_field {
+							value = bind 'info_categories',
+							immediate = true,
+							width_in_chars = widthLong,
+							height_in_lines = 3,
+						},
+					},
+				},
+				viewFactory:group_box {
+					title = LOC '$$$/LrMediaWiki/Section/Licensing/Information=Information',
+					viewFactory:row {
+						spacing = viewFactory:label_spacing(),
+						viewFactory:static_text {
+							title = LOC '$$$/LrMediaWiki/Section/Licensing/Source=Source',
+							alignment = labelAlignment,
+							width = LrView.share 'label_width',
+						},
+						viewFactory:edit_field {
+							value = bind 'info_source',
+							immediate = true,
+							width_in_chars = widthLong,
+						},
+					},
+					viewFactory:row {
+						spacing = viewFactory:label_spacing(),
+
+						viewFactory:static_text {
+							title = LOC '$$$/LrMediaWiki/Section/Licensing/Author=Author',
+							alignment = labelAlignment,
+							width = LrView.share "label_width",
+						},
+						viewFactory:edit_field {
+							value = bind 'info_author',
+							immediate = true,
+							width_in_chars = widthLong,
+						},
 					},
 				},
 			},
@@ -379,17 +391,15 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 			local listOfTargetPhotos = activeCatalog:getTargetPhotos()
 			local photo = listOfTargetPhotos[1] -- first photo of the selection
 			local fileName = photo:getFormattedMetadata('fileName')
-			local header
-			-- t = string.format('# of selected photos: %d, first photo: %s', #listOfTargetPhotos, fileName) ; MediaWikiUtils.trace(t)
-			local result, message = MediaWikiInterface.loadFileDescriptionTemplate()
+			local result, message = MediaWikiInterface.loadFileDescriptionTemplate(propertyTable.info_template)
 			if result then
 				local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
 				local wikitext = MediaWikiInterface.buildFileDescription(ExportFields)
+				local messageTitle = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext'
 				if #listOfTargetPhotos > 1 then
-				header = LOC ('$$$/LrMediaWiki/Section/Licensing/PreviewHeader=The first photo ^1 has been used to create this preview text:', fileName)
-					wikitext = header .. '\n\n' .. wikitext -- to let the additional text be shown prior of the wikitext
+					messageTitle = messageTitle .. LOC ('$$$/LrMediaWiki/Section/Licensing/PreviewTitleAddition=, using first file “^1”', fileName)
 				end
-				LrDialogs.message(LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext', wikitext, 'info')
+				LrDialogs.message(messageTitle, wikitext, 'info')
 			else
 				LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
 			end
@@ -398,8 +408,32 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 end
 
 MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
-	local exportFields = {
-		-- fields set at export dialogue, copied to return object, order by UI
+	-- All decisions done by this function should be documented at user's guide.
+	local artworkParameters = { -- Parameters of infobox template "Artwork"
+		artist = '', -- '<!-- Artist -->',
+		author = '', -- '<!-- Author -->',
+		title = '', -- '<!-- Title -->',
+		date = '', -- '<!-- Date -->',
+		medium = '', -- '<!-- Medium -->',
+		dimensions = '', -- '<!-- Dimensions -->',
+		institution = '', -- '<!-- Institution -->',
+		department = '', -- '<!-- Department -->',
+		accessionNumber = '', -- '<!-- Accession number -->',
+		placeOfCreation = '', -- '<!-- Place of creation -->',
+		placeOfDiscovery = '', -- '<!-- Place of discovery -->',
+		objectHistory = '', -- '<!-- Object history -->',
+		exhibitionHistory = '', -- '<!-- Exhibition history -->',
+		creditLine = '', -- '<!-- Credit line -->',
+		inscriptions = '', -- '<!-- Inscriptions -->',
+		notes = '', -- '<!-- Notes -->',
+		references = '', -- '<!-- References -->',
+		source = '', -- '<!-- Source -->',
+		otherVersions = '', -- '<!-- Other versions -->',
+		otherFields = '', -- '<!-- Other fields -->',
+		wikidata = '', -- '<!-- Wikidata -->',
+	}
+	local exportFields = { -- Fields set at export dialog, copied to return object, order by UI
+		info_template = propertyTable.info_template,
 		info_source = propertyTable.info_source,
 		info_author = propertyTable.info_author,
 		info_license = propertyTable.info_license,
@@ -407,13 +441,39 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		info_templates = propertyTable.info_templates,
 		info_other = propertyTable.info_other,
 		info_categories = propertyTable.info_categories,
-		-- fields by file, to be filled by this function, order by UI
-		description = '<!-- description -->',
-		location = '<!-- {{Location}} if GPS metadata is available -->',
-		templates = '<!-- templates -->',
-		categories = '<!-- per-file categories -->',
-		timestamp = '<!-- date -->', -- meta data, no LrMediaWiki field
+		-- Fields by file, to be filled by this function, ordered by UI:
+		description = '', -- '<!-- Description -->',
+		location = '', -- '<!-- {{Location}} if GPS metadata is available -->',
+		templates = '', -- '<!-- Templates -->',
+		categories = '', -- '<!-- Per-file categories -->',
+		timestamp = '', -- '<!-- Date -->', -- Meta data, no LrMediaWiki field
+		art = artworkParameters, -- Parameters of infobox template "Artwork"
 	}
+
+	-- Required "Information" template parameters:
+	-- * Description
+	-- * Source
+	-- * Author
+	-- Required "Artwork" template parameters:
+	-- * Source
+	
+	-- Field "source"
+	if exportFields.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportFields.info_source) then 
+		exportFields.info_source = '<!-- A source is required. -->'
+	elseif exportFields.info_template == 'Artwork' and MediaWikiUtils.isStringEmpty(exportFields.art.source) then 
+		exportFields.art.source = '<!-- A source is required. -->'
+	end
+
+	-- Field "author"
+	if exportFields.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportFields.info_author) then
+		exportFields.info_author = '<!-- An author is required. -->'
+	end
+
+	-- Field "license"
+	-- "== {{int:license-header}} ==" is only used, if followed by a filled license line
+	if MediaWikiUtils.isStringFilled(exportFields.info_license)  then
+		exportFields.info_license = '== {{int:license-header}} ==\n' .. exportFields.info_license .. '\n'
+	end
 	
 	-- Field "description"
 	local descriptionEn = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
@@ -421,26 +481,30 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local descriptionAdditional = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_additional')
 	local description = ''
 	local existDescription = false
-	if not MediaWikiUtils.isStringEmpty(descriptionEn) then
+	-- If multiple description fields are set, priorities are considered. The sequence of detections
+	-- handles low priorities first, higher priorities are handled later and override prior handlings.
+	-- If multiple LrMediaWiki fields are set, they are concatenated, by avoiding empty lines.
+	-- Appending a newline character depends on the context.
+	if MediaWikiUtils.isStringFilled(descriptionEn) then
 		description = '{{en|1=' .. descriptionEn .. '}}'
 		existDescription = true
 	end
-	if not MediaWikiUtils.isStringEmpty(descriptionDe) then
+	if MediaWikiUtils.isStringFilled(descriptionDe) then
 		if existDescription then
-			description = description .. '\n'
+			description = description .. '\n   ' -- Newline and 3 leading spaces
 		end
 		description = description .. '{{de|1=' .. descriptionDe .. '}}'
 		existDescription = true
 	end
-	if not MediaWikiUtils.isStringEmpty(descriptionAdditional) then
+	if MediaWikiUtils.isStringFilled(descriptionAdditional) then
 		if existDescription then
-			description = description .. '\n'
+			description = description .. '\n   ' -- Newline and 3 leading spaces
 		end
 		description = description .. descriptionAdditional
 		existDescription = true
 	end
-	if existDescription == false then
-		description = LOC '$$$/LrMediaWiki/Section/Licensing/MandatoryDescription=A description is mandatory!'
+	if existDescription == false and exportFields.info_template == 'Information' then
+		description = '<!-- A description is required. -->'
 	end
 	exportFields.description = description
 
@@ -449,23 +513,22 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	exportFields.templates = ''
 	local templates = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'templates') or ''
 	local additionalTemplates = propertyTable.info_templates
-	if not MediaWikiUtils.isStringEmpty(templates) then
+	if MediaWikiUtils.isStringFilled(templates) then
 		if MediaWikiUtils.isStringEmpty(additionalTemplates) then
 			exportFields.templates = templates
 		else
 			exportFields.templates = templates .. '\n' .. additionalTemplates
 		end
 	else
-		if not MediaWikiUtils.isStringEmpty(additionalTemplates) then
+		if MediaWikiUtils.isStringFilled(additionalTemplates) then
 			exportFields.templates = additionalTemplates
 		-- else
 			-- "templates" and "additionalTemplates" are empty, an empty line ('\n') replaces "${templates}".
 		end
 	end
-	-- local tpl = string.format('exportFields.templates: <%s>', exportFields.templates) ; MediaWikiUtils.trace(tpl)
 
 	-- Field "location"
-	-- Needs to be handled after field "templates"
+	-- Needs to be handled after field "templates" because it will precede templates
 	local gps = photo:getRawMetadata('gps')
 	local LrMajorVersion = LrApplication.versionTable().major -- number type
 	local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
@@ -480,7 +543,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 				location = location .. '|heading:' .. heading -- append heading at location
 				local headingRounded = string.format("%.0f", heading) -- rounding, e.g. 359.9876 -> 360
 				-- Newlines could be inserted in ZStrings by "^n". Whereas, splitting the message text into multiple lines, improves code readability.
-				local hintLine1 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingTrueL1=Hint: The Lightroom field ^[Direction^] has a value of ^1^D.', headingRounded) -- "^D" is a degree symbol
+				local hintLine1 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingTrueL1=Hint: The Lightroom field ^[Direction^] has a value of ^1^D.', headingRounded) -- ^D is a degree symbol
 				local hintLine2 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingTrueL2=This value has been used to set the ^[heading^] parameter at {{Location}} template.')
 				local hintLine3 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingTrueL3=This feature requires a Lightroom version 6/CC or higher.')
 				local hintLine4 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingTrueL4=This Lightroom version is ^1, therefore this feature works.', LrVersionString)
@@ -504,7 +567,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 			-- LrMediaWiki supports LR versions >= 4.
 			-- The following error message is a sample usage of it, with module name and line number, an example is
 			-- here: <http://wwwimages.adobe.com/content/dam/Adobe/en/devnet/photoshoplightroom/pdfs/lr6/lightroom-sdk-guide.pdf#page=19>
-			error 'Unsupported Lightroom version' -- no need of i18n the message text, due to the unlikely use case
+			error 'Unsupported Lightroom version' -- unlikely use case
 		end
 		location = location .. '}}' -- close Location template
 		exportFields.location = location
@@ -518,13 +581,14 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local timestamp, Day, Month, Year, Time = ''
 	local dateCreated = photo:getFormattedMetadata('dateCreated') -- LR IPTC field "Date Created"
 	-- The return value has to be checked, not to be an empty string (different to parameter 'dateTimeOriginal')
-	if dateCreated ~= '' then
+	-- if dateCreated ~= '' then
+	if MediaWikiUtils.isStringFilled(dateCreated) then
 		-- If "Metadata Set" is set to "EXIF and IPTC", "IPTC" or "Location", the field "Date Created"
 		-- is freely editable. At some cases field checks work, at other cases not.
 		-- The format of "dateCreated" might be "YYYY-MM-DDTHH:MM:SS" ("T" delimits date/time).
 		--                        Index helper: "1234567890123456789"
-		Day   = string.sub(dateCreated, 1, 10) -- "YYYY-MM-DD"
-		Time  = string.sub(dateCreated, 12, 19) -- "HH:MM:SS"
+		Day  = string.sub(dateCreated, 1, 10) -- "YYYY-MM-DD"
+		Time = string.sub(dateCreated, 12, 19) -- "HH:MM:SS"
 		if Day and Time then
 			-- result format: "YYYY-MM-DD HH:MM:SS"
 			timestamp = Day .. ' ' .. Time
@@ -536,6 +600,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local dateTimeOriginal = photo:getFormattedMetadata('dateTimeOriginal') -- LR EXIF field "Date Time Original"
 	-- The return value has to be checked, not to be "nil" (different to parameter 'dateCreated')
 	if dateTimeOriginal ~= nil then -- The source device supports Exif.
+	-- if MediaWikiUtils.isStringFilled(dateTimeOriginal) then -- The source device supports Exif.
 		-- If LR EXIF field "Date Created" is set too, the "timestamp" value will be overwritten.
 		-- This follows the logic, how LR gives the "Date Time Original" priority over "Date Created",
 		-- if the user sets at LR section "Metadata" the "Metadata Set" to "Default".
@@ -553,6 +618,92 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		end
 	end
 	exportFields.timestamp = timestamp
+
+	-- Fields of infobox template "Artwork":
+	local artist = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'artist')
+	if MediaWikiUtils.isStringFilled(artist) then 
+		exportFields.art.artist = artist
+	end
+	local author = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'author')
+	if MediaWikiUtils.isStringFilled(author) then 
+		exportFields.art.author = author
+	end
+	local title = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'title')
+	if MediaWikiUtils.isStringFilled(title) then 
+		exportFields.art.title = title
+	end
+	local date = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'date')
+	if MediaWikiUtils.isStringFilled(date) then 
+		exportFields.art.date = date
+	end
+	local medium = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'medium')
+	if MediaWikiUtils.isStringFilled(medium) then 
+		exportFields.art.medium = medium
+	end
+	local dimensions = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'dimensions')
+	if MediaWikiUtils.isStringFilled(dimensions) then 
+		exportFields.art.dimensions = dimensions
+	end
+	local institution = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'institution')
+	if MediaWikiUtils.isStringFilled(institution) then 
+		exportFields.art.institution = institution
+	end
+	local department = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'department')
+	if MediaWikiUtils.isStringFilled(department) then 
+		exportFields.art.department = department
+	end
+	local accessionNumber = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'accessionNumber')
+	if MediaWikiUtils.isStringFilled(accessionNumber) then 
+		exportFields.art.accessionNumber = accessionNumber
+	end
+	local placeOfCreation = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'placeOfCreation')
+	if MediaWikiUtils.isStringFilled(placeOfCreation) then 
+		exportFields.art.placeOfCreation = placeOfCreation
+	end
+	local placeOfDiscovery = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'placeOfDiscovery')
+	if MediaWikiUtils.isStringFilled(placeOfDiscovery) then 
+		exportFields.art.placeOfDiscovery = placeOfDiscovery
+	end
+	local objectHistory = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'objectHistory')
+	if MediaWikiUtils.isStringFilled(objectHistory) then 
+		exportFields.art.objectHistory = objectHistory
+	end
+	local exhibitionHistory = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'exhibitionHistory')
+	if MediaWikiUtils.isStringFilled(exhibitionHistory) then 
+		exportFields.art.exhibitionHistory = exhibitionHistory
+	end
+	local creditLine = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'creditLine')
+	if MediaWikiUtils.isStringFilled(creditLine) then 
+		exportFields.art.creditLine = creditLine
+	end
+	local inscriptions = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'inscriptions')
+	if MediaWikiUtils.isStringFilled(inscriptions) then 
+		exportFields.art.inscriptions = inscriptions
+	end
+	local notes = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'notes')
+	if MediaWikiUtils.isStringFilled(notes) then 
+		exportFields.art.notes = notes
+	end
+	local references = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'references')
+	if MediaWikiUtils.isStringFilled(references) then 
+		exportFields.art.references = references
+	end
+	local source = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'source')
+	if MediaWikiUtils.isStringFilled(source) then 
+		exportFields.art.source = source
+	end
+	local otherVersions = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'otherVersions')
+	if MediaWikiUtils.isStringFilled(otherVersions) then 
+		exportFields.art.otherVersions = otherVersions
+	end
+	local otherFields = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'otherFields')
+	if MediaWikiUtils.isStringFilled(otherFields) then 
+		exportFields.art.otherFields = otherFields
+	end
+	local wikidata = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'wikidata')
+	if MediaWikiUtils.isStringFilled(wikidata) then 
+		exportFields.art.wikidata = wikidata
+	end
 
 	return exportFields
 end
@@ -572,6 +723,7 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'password', default = '' },
 	{ key = 'api_path', default = 'https://commons.wikimedia.org/w/api.php' },
 	{ key = 'gallery', default = '' },
+	{ key = 'info_template', default = 'Information' },
 	{ key = 'info_source', default = '{{own}}' },
 	{ key = 'info_author', default = '' },
 	{ key = 'info_license', default = '{{Cc-by-sa-4.0}}' },

@@ -1,0 +1,29 @@
+== {{int:filedesc}} ==
+{{Artwork
+ | Artist = ${artArtist}
+ | Author = ${artAuthor}
+ | Title = ${artTitle}
+ | Description = ${description}
+ | Date = ${artDate}
+ | Medium = ${artMedium}
+ | Dimensions = ${artDimensions}
+ | Institution = ${artInstitution}
+ | Department = ${artDepartment}
+ | Accession number = ${artAccessionNumber}
+ | Place of creation = ${artPlaceOfCreation}
+ | Place of discovery = ${artPlaceOfDiscovery}
+ | Object history = ${artObjectHistory}
+ | Exhibition history = ${artExhibitionHistory}
+ | Credit line = ${artCreditLine}
+ | Inscriptions =  ${artInscriptions}
+ | Notes = ${artNotes}
+ | References = ${artReferences}
+ | Source = ${artSource}
+ | Permission = ${permission}
+ | Other versions = ${artOtherVersions}
+ | Other fields = ${artOtherFields}
+ | Wikidata = ${artWikidata}
+}}
+${templates}
+${license}
+${categories}[[Category:Uploaded with LrMediaWiki]]

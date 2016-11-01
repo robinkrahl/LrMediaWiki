@@ -11,7 +11,7 @@
 
 return {
 	LrSdkVersion = 6.0,
-	LrSdkMinimumVersion = 4.0,
+	LrSdkMinimumVersion = 5.0,
 	LrToolkitIdentifier = 'org.ireas.lightroom.mediawiki',
 	LrPluginName = LOC '$$$/LrMediaWiki/PluginName=MediaWiki for Lightroom',
 
@@ -26,10 +26,14 @@ return {
 		title = LOC '$$$/LrMediaWiki/MediaWiki=MediaWiki',
 		file = 'MediaWikiExportServiceProvider.lua',
 	},
+
+	LrMetadataTagsetFactory = { 'MediaWikiTagset.lua' },
 	
 	LrMetadataProvider = 'MediaWikiMetadataProvider.lua',
 
 	LrPluginInfoProvider = 'MediaWikiPluginInfoProvider.lua',
+
+	LrPluginInfoUrl = 'https://commons.wikimedia.org/wiki/Commons:LrMediaWiki',
 
 	VERSION = {
 		major = 0,

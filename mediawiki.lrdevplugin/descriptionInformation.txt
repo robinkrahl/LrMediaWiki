@@ -1,0 +1,13 @@
+== {{int:filedesc}} ==
+{{Information
+ | Description = ${description}
+ | Source = ${source}
+ | Date = ${timestamp}
+ | Author = ${author}
+ | Permission = ${permission}
+ | Other versions =
+ | Other fields = ${other_fields}
+}}
+${templates}
+${license}
+${categories}[[Category:Uploaded with LrMediaWiki]]
