@@ -15,7 +15,7 @@
  | Object history = ${artObjectHistory}
  | Exhibition history = ${artExhibitionHistory}
  | Credit line = ${artCreditLine}
- | Inscriptions =  ${artInscriptions}
+ | Inscriptions = ${artInscriptions}
  | Notes = ${artNotes}
  | References = ${artReferences}
  | Source = ${artSource}
