@@ -1,6 +1,6 @@
 # LrMediaWiki changelog
 
-## v0.4.2: 8 issues (2016-11-19)
+## v0.5: 8 issues (2016-11-19)
 
 ### Fixed issues
 
