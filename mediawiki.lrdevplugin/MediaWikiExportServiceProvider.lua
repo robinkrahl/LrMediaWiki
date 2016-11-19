@@ -54,7 +54,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	if MediaWikiUtils.isStringEmpty(exportSettings.api_path) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoApiPath=No API path given!')
 	end
-	if exportSettings.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportSettings.info_source) then 
+	if exportSettings.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportSettings.info_source) then
 		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoSource=No source given!')
 	end
 	if exportSettings.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportSettings.info_author) then
@@ -456,11 +456,11 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	-- * Author
 	-- Required "Artwork" template parameters:
 	-- * Source
-	
+
 	-- Field "source"
-	if exportFields.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportFields.info_source) then 
+	if exportFields.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportFields.info_source) then
 		exportFields.info_source = '<!-- A source is required. -->'
-	elseif exportFields.info_template == 'Artwork' and MediaWikiUtils.isStringEmpty(exportFields.art.source) then 
+	elseif exportFields.info_template == 'Artwork' and MediaWikiUtils.isStringEmpty(exportFields.art.source) then
 		exportFields.art.source = '<!-- A source is required. -->'
 	end
 
@@ -474,7 +474,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	if MediaWikiUtils.isStringFilled(exportFields.info_license)  then
 		exportFields.info_license = '== {{int:license-header}} ==\n' .. exportFields.info_license .. '\n'
 	end
-	
+
 	-- Field "description"
 	local descriptionEn = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
 	local descriptionDe = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_de')
@@ -533,7 +533,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local LrMajorVersion = LrApplication.versionTable().major -- number type
 	local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
 	local subText = LOC '$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom'
-	exportFields.location = '' 
+	exportFields.location = ''
 	if gps and gps.latitude and gps.longitude then
 		local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
 		if LrMajorVersion >= 6 then
@@ -551,7 +551,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 				local messageTable = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 				LrDialogs.messageWithDoNotShow(messageTable)
 			end
-		elseif LrMajorVersion == 5 then 
+		elseif LrMajorVersion == 5 then
 			-- Newlines could be inserted in ZStrings by "^n". Whereas, splitting the message text into multiple lines, improves code readability.
 			local hintLine1 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hint: If the Lightroom field ^[Direction^] has a value, this can not be used to set a ^[heading^] parameter at {{Location}} template.')
 			local hintLine2 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingFalseL2=This feature requires a Lightroom version 6/CC or higher.')
@@ -559,7 +559,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 			local hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3
 			local table = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 			LrDialogs.messageWithDoNotShow(table)
-		elseif LrMajorVersion == 4 then 
+		elseif LrMajorVersion == 4 then
 			-- LR version 4 has no "Direction" field; setting of "location" works, without setting "heading"
 			-- To avoid this if branch to be empty, add a "no change" statement
 			location = location .. '' -- add empty string
@@ -621,87 +621,87 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 
 	-- Fields of infobox template "Artwork":
 	local artist = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'artist')
-	if MediaWikiUtils.isStringFilled(artist) then 
+	if MediaWikiUtils.isStringFilled(artist) then
 		exportFields.art.artist = artist
 	end
 	local author = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'author')
-	if MediaWikiUtils.isStringFilled(author) then 
+	if MediaWikiUtils.isStringFilled(author) then
 		exportFields.art.author = author
 	end
 	local title = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'title')
-	if MediaWikiUtils.isStringFilled(title) then 
+	if MediaWikiUtils.isStringFilled(title) then
 		exportFields.art.title = title
 	end
 	local date = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'date')
-	if MediaWikiUtils.isStringFilled(date) then 
+	if MediaWikiUtils.isStringFilled(date) then
 		exportFields.art.date = date
 	end
 	local medium = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'medium')
-	if MediaWikiUtils.isStringFilled(medium) then 
+	if MediaWikiUtils.isStringFilled(medium) then
 		exportFields.art.medium = medium
 	end
 	local dimensions = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'dimensions')
-	if MediaWikiUtils.isStringFilled(dimensions) then 
+	if MediaWikiUtils.isStringFilled(dimensions) then
 		exportFields.art.dimensions = dimensions
 	end
 	local institution = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'institution')
-	if MediaWikiUtils.isStringFilled(institution) then 
+	if MediaWikiUtils.isStringFilled(institution) then
 		exportFields.art.institution = institution
 	end
 	local department = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'department')
-	if MediaWikiUtils.isStringFilled(department) then 
+	if MediaWikiUtils.isStringFilled(department) then
 		exportFields.art.department = department
 	end
 	local accessionNumber = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'accessionNumber')
-	if MediaWikiUtils.isStringFilled(accessionNumber) then 
+	if MediaWikiUtils.isStringFilled(accessionNumber) then
 		exportFields.art.accessionNumber = accessionNumber
 	end
 	local placeOfCreation = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'placeOfCreation')
-	if MediaWikiUtils.isStringFilled(placeOfCreation) then 
+	if MediaWikiUtils.isStringFilled(placeOfCreation) then
 		exportFields.art.placeOfCreation = placeOfCreation
 	end
 	local placeOfDiscovery = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'placeOfDiscovery')
-	if MediaWikiUtils.isStringFilled(placeOfDiscovery) then 
+	if MediaWikiUtils.isStringFilled(placeOfDiscovery) then
 		exportFields.art.placeOfDiscovery = placeOfDiscovery
 	end
 	local objectHistory = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'objectHistory')
-	if MediaWikiUtils.isStringFilled(objectHistory) then 
+	if MediaWikiUtils.isStringFilled(objectHistory) then
 		exportFields.art.objectHistory = objectHistory
 	end
 	local exhibitionHistory = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'exhibitionHistory')
-	if MediaWikiUtils.isStringFilled(exhibitionHistory) then 
+	if MediaWikiUtils.isStringFilled(exhibitionHistory) then
 		exportFields.art.exhibitionHistory = exhibitionHistory
 	end
 	local creditLine = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'creditLine')
-	if MediaWikiUtils.isStringFilled(creditLine) then 
+	if MediaWikiUtils.isStringFilled(creditLine) then
 		exportFields.art.creditLine = creditLine
 	end
 	local inscriptions = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'inscriptions')
-	if MediaWikiUtils.isStringFilled(inscriptions) then 
+	if MediaWikiUtils.isStringFilled(inscriptions) then
 		exportFields.art.inscriptions = inscriptions
 	end
 	local notes = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'notes')
-	if MediaWikiUtils.isStringFilled(notes) then 
+	if MediaWikiUtils.isStringFilled(notes) then
 		exportFields.art.notes = notes
 	end
 	local references = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'references')
-	if MediaWikiUtils.isStringFilled(references) then 
+	if MediaWikiUtils.isStringFilled(references) then
 		exportFields.art.references = references
 	end
 	local source = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'source')
-	if MediaWikiUtils.isStringFilled(source) then 
+	if MediaWikiUtils.isStringFilled(source) then
 		exportFields.art.source = source
 	end
 	local otherVersions = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'otherVersions')
-	if MediaWikiUtils.isStringFilled(otherVersions) then 
+	if MediaWikiUtils.isStringFilled(otherVersions) then
 		exportFields.art.otherVersions = otherVersions
 	end
 	local otherFields = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'otherFields')
-	if MediaWikiUtils.isStringFilled(otherFields) then 
+	if MediaWikiUtils.isStringFilled(otherFields) then
 		exportFields.art.otherFields = otherFields
 	end
 	local wikidata = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'wikidata')
-	if MediaWikiUtils.isStringFilled(wikidata) then 
+	if MediaWikiUtils.isStringFilled(wikidata) then
 		exportFields.art.wikidata = wikidata
 	end
 

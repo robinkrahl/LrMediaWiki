@@ -28,7 +28,7 @@ return {
 	},
 
 	LrMetadataTagsetFactory = { 'MediaWikiTagset.lua' },
-	
+
 	LrMetadataProvider = 'MediaWikiMetadataProvider.lua',
 
 	LrPluginInfoProvider = 'MediaWikiPluginInfoProvider.lua',
