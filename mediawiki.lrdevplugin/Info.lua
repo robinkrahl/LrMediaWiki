@@ -11,7 +11,7 @@
 
 return {
 	LrSdkVersion = 6.0,
-	LrSdkMinimumVersion = 5.0,
+	LrSdkMinimumVersion = 4.0,
 	LrToolkitIdentifier = 'org.ireas.lightroom.mediawiki',
 	LrPluginName = LOC '$$$/LrMediaWiki/PluginName=MediaWiki for Lightroom',
 
