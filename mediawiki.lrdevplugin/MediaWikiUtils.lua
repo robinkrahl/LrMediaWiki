@@ -48,8 +48,13 @@ MediaWikiUtils.getFirstKey = function(table)
   return nil
 end
 
-MediaWikiUtils.getVersionString = function()
+MediaWikiUtils.getInstalledVersion = function()
 	local str = Info.VERSION.major .. '.' .. Info.VERSION.minor .. '.' .. Info.VERSION.revision
+	return str
+end
+
+MediaWikiUtils.getVersionString = function()
+	local installedVersion = Info.VERSION.major .. '.' .. Info.VERSION.minor .. '.' .. Info.VERSION.revision
 	local platform = '?'
 	-- Boolean global variables WIN_ENV and MAC_ENV are documented at LR SDK programmers guide
 	if WIN_ENV == true then
@@ -59,7 +64,7 @@ MediaWikiUtils.getVersionString = function()
 	else
 		error 'Unsupported platform – neither Windows nor macOS' -- unlikely case
 	end
-	return str .. ', LR ' .. LrApplication.versionString() .. ' ' .. platform
+	return installedVersion .. ', LR ' .. LrApplication.versionString() .. ' ' .. platform
 end
 
 -- configuration

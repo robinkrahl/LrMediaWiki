@@ -25,7 +25,7 @@ local MediaWikiUtils = require 'MediaWikiUtils'
 local MediaWikiApi = {
 	userAgent = string.format('LrMediaWiki %d.%d', Info.VERSION.major, Info.VERSION.minor),
 	apiPath = nil,
-	githubApiVersion = 'https://api.github.com/repos/robinkrahl/LrMediaWiki/releases',
+	githubApiVersion = 'https://api.github.com/repos/Hasenlaeufer/LrMediaWiki/releases',
 }
 
 --- URL-encode a string according to RFC 3986.
