@@ -94,7 +94,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					spacing = viewFactory:label_spacing(),
 
 					viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Description=If you enable logging, all API requests are logged. The log file is located in your "My Documents" directory.',
+					title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Description=If you enable logging, all API requests are logged. The log file is located in the directory “Documents”.',
 					wrap = true,
 					},
 				},
@@ -108,7 +108,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					},
 
 					viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Password=The log file contains your password!:',
+					title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Password=The log file contains your password!',
 					},
 				},
 			},
