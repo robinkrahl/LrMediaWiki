@@ -146,33 +146,64 @@ function MediaWikiApi.getCurrentPluginVersion()
 	return nil
 end
 
-function MediaWikiApi.login(username, password, token)
+function MediaWikiApi.login(username, password)
+-- See https://www.mediawiki.org/wiki/API:Login
+	-- Check if user is logged in:
 	local arguments = {
-		action = 'login',
-		lgname = username,
-		lgpassword = password,
+		action = 'query',
+		meta = 'userinfo',
+		format = 'xml',
 	}
-	if token then
-		arguments.lgtoken = token
-	end
 	local xml = MediaWikiApi.performRequest(arguments)
-
-	local loginResult = xml.login.result
-	if loginResult == 'Success' then
+	local id = xml.query.userinfo.id
+	local name = xml.query.userinfo.name
+	local msg
+	if id == '0' then -- not logged in, name is the IP address
+		MediaWikiUtils.trace('Not logged in.')
+		-- A login token needs to be retrieved prior of an action "clientlogin":
+		arguments = {
+			action = 'query',
+			meta = 'tokens',
+			type = 'login',
+			format = 'xml',
+		}
+		xml = MediaWikiApi.performRequest(arguments)
+		local token = xml.query.tokens.logintoken
+		-- Perform login:
+		arguments = {
+			action = 'clientlogin',
+			loginreturnurl = 'https://www.mediawiki.org', -- dummy; required parameter
+			username = username,
+			password = password,
+			logintoken = token,
+			-- rememberMe = '1',
+		}
+		xml = MediaWikiApi.performRequest(arguments)
+		local loginResult = xml.clientlogin.status
+		if loginResult == 'PASS' then
+			return true
+		else
+			return loginResult
+		end
+	else -- id ~= '0' – no new login
+		msg = 'Logged in as user ' .. name .. ' (ID: ' .. id .. ')'
+		if name ~= username then
+			msg = 'WARNING: Logged in user name ' .. name .. ' does not fit to new user name ' .. username .. '.'
+		end
+		MediaWikiUtils.trace(msg)
 		return true
-	elseif not token and loginResult == 'NeedToken' then
-		return MediaWikiApi.login(username, password, xml.login.token)
 	end
-
-	return loginResult
 end
 
 function MediaWikiApi.getEditToken()
 	local arguments = {
-		action = 'tokens',
+		action = 'query',
+		meta = 'tokens',
+		type = 'csrf'; -- default, see https://www.mediawiki.org/wiki/API:Tokens
+		format = 'xml',
 	}
 	local xml = MediaWikiApi.performRequest(arguments)
-	return xml.tokens.edittoken
+	return xml.query.tokens.csrftoken
 end
 
 function MediaWikiApi.appendToPage(page, section, text, comment)
@@ -254,7 +285,7 @@ function MediaWikiApi.upload(fileName, sourceFilePath, text, comment, ignoreWarn
 			end
 			warnings = warnings .. warning
 		end
-    return warnings
+		return warnings
 	else
 		return uploadResult
 	end

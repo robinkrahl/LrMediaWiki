@@ -21,13 +21,14 @@ local MediaWikiUtils = require 'MediaWikiUtils'
 
 if MediaWikiUtils.getCheckVersion() then
 	LrTasks.startAsyncTask(function()
-	local installedFullVersion = MediaWikiUtils.getVersionString()
+	-- local installedFullVersion = MediaWikiUtils.getVersionString()
 	local installedVersion = 'v' .. MediaWikiUtils.getInstalledVersion()
 	local availableVersion = MediaWikiApi.getCurrentPluginVersion()
 		if availableVersion ~= nil then
-			MediaWikiUtils.trace('Installed LrMediaWiki version (with LR version and OS): ' .. installedFullVersion)
-			MediaWikiUtils.trace('Installed LrMediaWiki version: ' .. installedVersion)
-			MediaWikiUtils.trace('Available LrMediaWiki version: ' .. availableVersion)
+			-- MediaWikiUtils.trace('Installed LrMediaWiki version (with LR version and OS): ' .. installedFullVersion)
+			-- MediaWikiUtils.trace('Installed LrMediaWiki version: ' .. installedVersion)
+			-- MediaWikiUtils.trace('Available LrMediaWiki version: ' .. availableVersion)
+
 			-- The following string comparison works with operator ">".
 			-- If the operator would be "~=" the string comparison would deliver a false positive result e.g.
 			-- if the versions are identical, because availableVersion might be "0.5" and installedVersion is "0.5.0".
