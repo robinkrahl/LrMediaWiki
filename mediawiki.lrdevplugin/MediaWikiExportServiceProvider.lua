@@ -166,7 +166,8 @@ end
 
 MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right';
-	local widthLong = 50;
+	local widthLong = 57;
+	local widthLoginEditField = widthLong + 2;
 
 	return {
 		{
@@ -188,7 +189,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'username',
 						immediate = true,
-						width_in_chars = widthLong,
+						width_in_chars = widthLoginEditField,
 					},
 				},
 
@@ -203,7 +204,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 					viewFactory:password_field {
 						value = bind 'password',
-						width_in_chars = widthLong,
+						width_in_chars = widthLoginEditField,
 					},
 				},
 
@@ -219,11 +220,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'api_path',
 						immediate = true,
-						width_in_chars = widthLong,
-					},
-
-					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/User/ApiPath/Details=Path to the api.php file',
+						width_in_chars = widthLoginEditField,
 					},
 				},
 
@@ -239,7 +236,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'gallery',
 						immediate = true,
-						width_in_chars = widthLong,
+						width_in_chars = widthLoginEditField,
 					},
 				},
 			},

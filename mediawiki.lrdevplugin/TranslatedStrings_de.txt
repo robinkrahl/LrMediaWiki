@@ -89,7 +89,6 @@
 "$$$/LrMediaWiki/Section/Licensing/PreviewTitleAddition=, unter Nutzung der ersten Datei „^1“"
 "$$$/LrMediaWiki/Section/Licensing/Source=Quelle"
 "$$$/LrMediaWiki/Section/Licensing/Title=Upload-Informationen"
-"$$$/LrMediaWiki/Section/User/ApiPath/Details=Pfad zur api.php-Datei"
 "$$$/LrMediaWiki/Section/User/ApiPath=API-Pfad"
 "$$$/LrMediaWiki/Section/User/Gallery=Galerie"
 "$$$/LrMediaWiki/Section/User/Password=Passwort"
