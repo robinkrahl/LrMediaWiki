@@ -183,7 +183,8 @@ function MediaWikiApi.login(username, password)
 		if loginResult == 'PASS' then
 			return true
 		else
-			return loginResult
+			-- return loginResult
+			return xml.clientlogin.message
 		end
 	else -- id ~= '0' – no new login
 		msg = 'Logged in as user ' .. name .. ' (ID: ' .. id .. ')'

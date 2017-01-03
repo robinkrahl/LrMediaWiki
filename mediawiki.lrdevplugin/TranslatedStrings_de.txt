@@ -30,7 +30,7 @@
 "$$$/LrMediaWiki/Interface/InUse/Rename=Umbenennen"
 "$$$/LrMediaWiki/Interface/InUse=Dateiname schon verwendet"
 "$$$/LrMediaWiki/Interface/LoadingDescriptionFailed=Die Datei mit der Vorlage für die Bildbeschreibung konnte nicht geöffnet werden: ^1"
-"$$$/LrMediaWiki/Interface/LoginFailed=Login fehlgeschlagen: ^1."
+"$$$/LrMediaWiki/Interface/LoginFailed=Login fehlgeschlagen: ^1"
 "$$$/LrMediaWiki/Interface/MessageByMediaWiki=Mitteilung von MediaWiki für Lightroom"
 "$$$/LrMediaWiki/Interface/ReadingDescriptionFailed=Die Datei mit der Vorlage für die Bildbeschreibung konnte nicht gelesen werden."
 "$$$/LrMediaWiki/Interface/Rename/NewName=Neuer Dateiname"

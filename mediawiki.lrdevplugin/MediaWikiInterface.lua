@@ -62,7 +62,7 @@ MediaWikiInterface.prepareUpload = function(username, password, apiPath, templat
 		MediaWikiApi.apiPath = apiPath
 		local loginResult = MediaWikiApi.login(username, password)
 		if loginResult ~= true then
-			LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Interface/LoginFailed=Login failed: ^1.', loginResult))
+			LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Interface/LoginFailed=Login failed: ^1', loginResult))
 		end
 		MediaWikiInterface.loggedIn = true
 	else
