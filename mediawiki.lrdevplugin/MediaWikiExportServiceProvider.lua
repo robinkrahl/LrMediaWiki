@@ -179,13 +179,11 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
-
 					viewFactory:static_text {
 						title = LOC '$$$/LrMediaWiki/Section/User/Username=Username',
 						alignment = labelAlignment,
-						width = LrView.share "label_width",
+						width = LrView.share 'label_width',
 					},
-
 					viewFactory:edit_field {
 						value = bind 'username',
 						immediate = true,
@@ -195,13 +193,11 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
-
 					viewFactory:static_text {
 						title = LOC '$$$/LrMediaWiki/Section/User/Password=Password',
 						alignment = labelAlignment,
-						width = LrView.share "label_width",
+						width = LrView.share 'label_width',
 					},
-
 					viewFactory:password_field {
 						value = bind 'password',
 						width_in_chars = widthLoginEditField,
@@ -210,13 +206,11 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
-
 					viewFactory:static_text {
 						title = LOC '$$$/LrMediaWiki/Section/User/ApiPath=API path',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
-
 					viewFactory:edit_field {
 						value = bind 'api_path',
 						immediate = true,
@@ -226,13 +220,11 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
-
 					viewFactory:static_text {
 						title = LOC '$$$/LrMediaWiki/Section/User/Gallery=Gallery',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
-
 					viewFactory:edit_field {
 						value = bind 'gallery',
 						immediate = true,
@@ -249,7 +241,6 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				spacing = viewFactory:control_spacing(),
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
-
 					viewFactory:static_text {
 						title = LOC '$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox template',
 						alignment = labelAlignment,
@@ -277,7 +268,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						viewFactory:static_text {
 							title = LOC '$$$/LrMediaWiki/Section/Licensing/License=License',
 							alignment = labelAlignment,
-							width = LrView.share "label_width",
+							width = LrView.share 'label_width',
 						},
 						viewFactory:combo_box {
 							value = bind 'info_license',
@@ -295,7 +286,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						viewFactory:static_text {
 							title = LOC '$$$/LrMediaWiki/Section/Licensing/Permission=Permission',
 							alignment = labelAlignment,
-							width = LrView.share "label_width",
+							width = LrView.share 'label_width',
 						},
 						viewFactory:edit_field {
 							value = bind 'info_permission',
@@ -308,7 +299,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						viewFactory:static_text {
 							title = LOC '$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates',
 							alignment = labelAlignment,
-							width = LrView.share "label_width",
+							width = LrView.share 'label_width',
 						},
 						viewFactory:edit_field {
 							value = bind 'info_templates',
@@ -321,7 +312,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						viewFactory:static_text {
 							title = LOC '$$$/LrMediaWiki/Section/Licensing/Other=Other fields',
 							alignment = labelAlignment,
-							width = LrView.share "label_width",
+							width = LrView.share 'label_width',
 						},
 						viewFactory:edit_field {
 							value = bind 'info_other',
@@ -334,7 +325,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						viewFactory:static_text {
 							title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories=Categories^nseparated by ;',
 							alignment = labelAlignment,
-							width = LrView.share "label_width",
+							width = LrView.share 'label_width',
 						},
 						viewFactory:edit_field {
 							value = bind 'info_categories',
@@ -361,11 +352,10 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
-
 						viewFactory:static_text {
 							title = LOC '$$$/LrMediaWiki/Section/Licensing/Author=Author',
 							alignment = labelAlignment,
-							width = LrView.share "label_width",
+							width = LrView.share 'label_width',
 						},
 						viewFactory:edit_field {
 							value = bind 'info_author',

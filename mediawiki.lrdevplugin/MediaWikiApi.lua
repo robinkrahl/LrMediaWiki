@@ -148,7 +148,20 @@ end
 
 function MediaWikiApi.login(username, password)
 -- See https://www.mediawiki.org/wiki/API:Login
-	-- Check if user is logged in:
+	-- Check if the credentials are a main-account or a bot-account.
+	-- The different credentials need different login arguments.
+	-- The existance of the character "@" inside of an username is an
+	-- identicator if the credentials are a bot-account or a main-account.
+	local credentials
+	if string.find(username, '@') then
+		credentials = 'bot-account'
+	else
+		credentials = 'main-account'
+	end
+	local msg = 'Credentials: ' .. credentials
+	MediaWikiUtils.trace(msg)
+
+	-- Check if a user is logged in:
 	local arguments = {
 		action = 'query',
 		meta = 'userinfo',
@@ -157,46 +170,83 @@ function MediaWikiApi.login(username, password)
 	local xml = MediaWikiApi.performRequest(arguments)
 	local id = xml.query.userinfo.id
 	local name = xml.query.userinfo.name
-	local msg
 	if id == '0' then -- not logged in, name is the IP address
-		MediaWikiUtils.trace('Not logged in.')
-		-- A login token needs to be retrieved prior of an action "clientlogin":
-		arguments = {
-			action = 'query',
-			meta = 'tokens',
-			type = 'login',
-			format = 'xml',
-		}
-		xml = MediaWikiApi.performRequest(arguments)
-		local token = xml.query.tokens.logintoken
-		-- Perform login:
+		MediaWikiUtils.trace('Not logged in, need to login')
+	else -- id ~= '0' – logged in
+		msg = 'Logged in as user \"' .. name .. '\" (ID: ' .. id .. ')'
+		MediaWikiUtils.trace(msg)
+		if name == username then -- user is already logged in
+			MediaWikiUtils.trace('No new login needed (1)')
+			return true
+		else -- name ~= username
+			-- Check if name is main-account name of bot-username
+			if credentials == 'bot-account' then
+				local pattern = '(.*)@' -- all characters up to "@"
+				if name == string.match(username, pattern) then
+					MediaWikiUtils.trace('No new login needed (2)')
+					return true
+				end
+			end
+			msg = 'Logout and new login needed with username \"' .. username .. '\".'
+			MediaWikiUtils.trace(msg)
+			MediaWikiApi.logout() -- without this logout a new login MIGHT fail
+		end
+	end
+
+	-- A login token needs to be retrieved prior of a login action:
+	arguments = {
+		action = 'query',
+		meta = 'tokens',
+		type = 'login',
+		format = 'xml',
+	}
+	xml = MediaWikiApi.performRequest(arguments)
+	local logintoken = xml.query.tokens.logintoken
+
+	-- Perform login:
+	if credentials == 'main-account' then
 		arguments = {
 			action = 'clientlogin',
 			loginreturnurl = 'https://www.mediawiki.org', -- dummy; required parameter
 			username = username,
 			password = password,
-			logintoken = token,
-			-- rememberMe = '1',
+			logintoken = logintoken,
 		}
 		xml = MediaWikiApi.performRequest(arguments)
 		local loginResult = xml.clientlogin.status
 		if loginResult == 'PASS' then
 			return true
 		else
-			-- return loginResult
 			return xml.clientlogin.message
 		end
-	else -- id ~= '0' – no new login
-		msg = 'Logged in as user ' .. name .. ' (ID: ' .. id .. ')'
-		if name ~= username then
-			msg = 'WARNING: Logged in user name ' .. name .. ' does not fit to new user name ' .. username .. '.'
+	else -- credentials == bot-account
+		assert(credentials == 'bot-account')
+		arguments = {
+			action = 'login',
+			lgname = username,
+			lgpassword = password,
+			lgtoken = logintoken,
+		}
+		xml = MediaWikiApi.performRequest(arguments)
+		local loginResult = xml.login.result
+		if loginResult == 'Success' then
+			return true
+		else
+			return xml.login.reason
 		end
-		MediaWikiUtils.trace(msg)
-		return true
 	end
 end
 
+function MediaWikiApi.logout()
+-- See https://www.mediawiki.org/wiki/API:Logout
+	local arguments = {
+		action = 'logout',
+	}
+	MediaWikiApi.performRequest(arguments)
+end
+
 function MediaWikiApi.getEditToken()
+-- See https://www.mediawiki.org/wiki/API:Tokens
 	local arguments = {
 		action = 'query',
 		meta = 'tokens',

@@ -75,7 +75,7 @@
 "$$$/LrMediaWiki/Section/Config/Logging/Warning=Achtung:"
 "$$$/LrMediaWiki/Section/Config/Snapshots=Beim Export einen Schnappschuss anlegen"
 "$$$/LrMediaWiki/Section/Config/Title=Einstellungen"
-"$$$/LrMediaWiki/Section/Config/Version=Suche nach neuen Plugin-Versionen, wenn Lightroom startet"
+"$$$/LrMediaWiki/Section/Config/Version=Suche nach neuer Zusatzmodul-Version, wenn Lightroom startet"
 "$$$/LrMediaWiki/Section/Licensing/Author=Urheber"
 "$$$/LrMediaWiki/Section/Licensing/Categories=Kategorien^nmit ; getrennt"
 "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox-Vorlage"

@@ -52,7 +52,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 					viewFactory:checkbox {
 						value = bind 'create_snapshots',
-					title = LOC '$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export',
+						title = LOC '$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export',
 					},
 				},
 
@@ -62,7 +62,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					viewFactory:static_text {
 						alignment = labelAlignment,
 						width = LrView.share "label_width",
-					title = LOC '$$$/LrMediaWiki/Section/Config/ExportKeyword=Export keyword',
+						title = LOC '$$$/LrMediaWiki/Section/Config/ExportKeyword=Export keyword',
 					},
 
 					viewFactory:edit_field {
@@ -77,7 +77,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 					viewFactory:checkbox {
 						value = bind 'check_version',
-					title = LOC '$$$/LrMediaWiki/Section/Config/Version=Check for new plugin versions after Lightroom starts',
+						title = LOC '$$$/LrMediaWiki/Section/Config/Version=Check for new plug-in version after Lightroom starts',
 					},
 				},
 
@@ -86,7 +86,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 					viewFactory:checkbox {
 						value = bind 'logging',
-					title = LOC '$$$/LrMediaWiki/Section/Config/Logging=Enable logging',
+						title = LOC '$$$/LrMediaWiki/Section/Config/Logging=Enable logging',
 					},
 				},
 
@@ -94,8 +94,8 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					spacing = viewFactory:label_spacing(),
 
 					viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Description=If you enable logging, all API requests are logged. The log file is located in the directory “Documents”.',
-					wrap = true,
+						title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Description=If you enable logging, all API requests are logged. The log file is located in the directory “Documents”.',
+						wrap = true,
 					},
 				},
 
@@ -103,12 +103,12 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					spacing = viewFactory:label_spacing(),
 
 					viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Warning=Warning:',
-					font = '<system/bold>',
+						title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Warning=Warning:',
+						font = '<system/bold>',
 					},
 
 					viewFactory:static_text {
-					title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Password=The log file contains your password!',
+						title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Password=The log file contains your password!',
 					},
 				},
 			},
