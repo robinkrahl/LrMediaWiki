@@ -1,13 +1,23 @@
 # LrMediaWiki changelog
 
+## v0.5.1: 8 issues (2017-01-09)
+
+### Fixed issues
+- #62: Improvements of UI messages (enhancement)
+- #63: Missing compliance with Lightroom version 4 (bug)
+- #64: Version check fails (bug)
+- #65: Warnings: Deprecated MediaWiki API calls (login, token) (enhancement)
+- #66: Enable search of metadata fields (enhancement)
+- #67: Login: Support both, main-accounts and bot-accounts (enhancement)
+- #68: Malformed date field (bug)
+- #69: Delete invisible control characters (enhancement)
+
 ## v0.5: 8 issues (2016-11-19)
 
 ### Fixed issues
 
- - Issue [#17] (https://github.com/robinkrahl/LrMediaWiki/issues/17):
-   Add Template:Artwork as additional base template (enhancement)
- - Issue [#35] (https://github.com/robinkrahl/LrMediaWiki/issues/35):
-   Extract direction/heading of the location out of EXIF/metadata (enhancement)
+ - #17: Add Template:Artwork as additional base template (enhancement)
+ - #35: Extract direction/heading of the location out of EXIF/metadata (enhancement)
 
 This enhancement is available by users of a Lightroom (LR) version 6 or higher.
 The function to retrieve the direction has been introduced by Adobe with
@@ -45,18 +55,12 @@ template parameter `heading` is filled by the stored value of LR.
 Sample: A direction input of 359.987654321 is stored as 359.9876, shown as 360°.
 At `{{Location}}` template the LR stored value of 359.9876 is set.
 
- - Issue [#50] (https://github.com/robinkrahl/LrMediaWiki/issues/50):
-   Support of LR 4
- - Issue [#51] (https://github.com/robinkrahl/LrMediaWiki/issues/51):
-   Tests of Windows 10 and OS X
- - Issue [#52] (https://github.com/robinkrahl/LrMediaWiki/issues/52):
-   Replace the placeholders in the wikitext preview with actual data
- - Issue [#55] (https://github.com/robinkrahl/LrMediaWiki/issues/55):
-   Provide version of Lightroom and used operating system to upload comments
- - Issue [#56] (https://github.com/robinkrahl/LrMediaWiki/issues/56):
-   Time differences of creation dates
- - Issue [#59] (https://github.com/robinkrahl/LrMediaWiki/issues/59):
-   Add a plugin specific metadata preset
+ - #50: Support of LR 4
+ - #51: Tests of Windows 10 and OS X
+ - #52: Replace the placeholders in the wikitext preview with actual data
+ - #55: Provide version of Lightroom and used operating system to upload comments
+ - #56: Time differences of creation dates
+ - #59: Add a plugin specific metadata preset
 
 ## v0.4.1: Bugfix for Lightroom 6.2 (2015-10-06)
 
@@ -75,7 +79,6 @@ Lightroom starts (new feature) and logging (before: manual activation in a
 Lua file). Hopefully, the next version will be the first stable release v1.0!
 
 ### Fixed issues
-
  - #24: Add gallery option (enhancement)
  - #31: Add configuration section in the export dialog (enhancement)
  - #34: Add custom tag when exporting (enhancement)
@@ -102,7 +105,6 @@ permission field is added to the export dialog and a development snapshot is
 created after the export.
 
 ### Fixed issues
-
  - #26: Add snapshot on export (enhancement)
  - #27: Add permission field to export dialog (enhancement)
  - #28: Check error message when there is no internet connection (enhancement)
@@ -111,7 +113,7 @@ created after the export.
  - #30: Overwrite existing files without adding a description (enhancement)
  - #36: Improve error messages for API errors (enhancement)
  - #37: Ensure the image title does not contain consecutive spaces or
-  underscores (enhancement)
+   underscores (enhancement)
  - #38: Date format (enhancement)
 
 ## v0.2.3: Bugfix (2014-10-06)
