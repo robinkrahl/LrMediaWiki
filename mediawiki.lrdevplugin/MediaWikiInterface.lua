@@ -167,7 +167,8 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 	-- In other words: The strings are separated by the character ";" and the Lua calls
 	-- of gmatch() separate multiple occurrences of the categories.
 	-- Lua uses a specific set of patterns, no regular expressions.
-	-- Lua patterns reference: <http://www.lua.org/manual/5.3/manual.html#6.4.1>
+	-- Lua patterns reference: <http://www.lua.org/manual/5.1/manual.html#5.4.1>
+	-- (LR 6 uses Lua 5.1.4)
 	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
@@ -215,7 +216,18 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 		artOtherFields = exportFields.art.otherFields,
 		artWikidata = exportFields.art.wikidata,
 	}
-	return MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
+	local wikitext = MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
+
+	-- Delete left-to-right marks <https://en.wikipedia.org/wiki/Left-to-right_mark>
+	-- local pattern = '‎' -- invisble character, inserted by copy & paste
+	local pattern = '\226\128\142' -- 3 bytes, decimal notation of 0xE2 0x80 0x8E
+	-- See <http://www.fileformat.info/info/unicode/char/200e/index.htm>
+	local count
+	wikitext, count = string.gsub(wikitext, pattern, '')
+	local message = LOC('$$$/LrMediaWiki/Interface/DeletedControlCharacters=Number of deleted control characters: ^1', count)
+	MediaWikiUtils.trace(message)
+	LrDialogs.showBezel(message, 5) -- 5: fade delay in seconds
+	return wikitext
 end
 
 return MediaWikiInterface

@@ -16,6 +16,7 @@
 "$$$/LrMediaWiki/Init/Version/InfoAvailableVersion=Verfügbare LrMediaWiki-Version: ^1^n"
 "$$$/LrMediaWiki/Init/Version/InfoSummary=Bitte aktualisiere LrMediaWiki auf die neu verfügbare Version."
 "$$$/LrMediaWiki/Init/Version/Message=Neue Version verfügbar"
+"$$$/LrMediaWiki/Interface/DeletedControlCharacters=Anzahl gelöschter Steuerzeichen: ^1"
 "$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hinweis: Falls das Lightroom-Feld „Richtung“ einen Wert hat, kann dieser nicht als Parameter „heading“ in der {{Location}}-Vorlage gesetzt werden."
 "$$$/LrMediaWiki/Interface/HintHeadingFalseL2=Dieses Feature erfordert eine Lightroom-Version 6/CC oder höher."
 "$$$/LrMediaWiki/Interface/HintHeadingFalseL3=Diese Lightroom-Version ist ^1, daher funktioniert das Feature nicht."
