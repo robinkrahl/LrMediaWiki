@@ -565,44 +565,15 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	exportFields.categories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''
 
 	-- Field "timestamp"
-	local timestamp, Day, Month, Year, Time = ''
-	local dateCreated = photo:getFormattedMetadata('dateCreated') -- LR IPTC field "Date Created"
-	-- The return value has to be checked, not to be an empty string (different to parameter 'dateTimeOriginal')
-	-- if dateCreated ~= '' then
+	local timestamp = ''
+	local dateCreated = photo:getFormattedMetadata('dateCreated')
 	if MediaWikiUtils.isStringFilled(dateCreated) then
-		-- If "Metadata Set" is set to "EXIF and IPTC", "IPTC" or "Location", the field "Date Created"
-		-- is freely editable. At some cases field checks work, at other cases not.
-		-- The format of "dateCreated" might be "YYYY-MM-DDTHH:MM:SS" ("T" delimits date/time).
-		--                        Index helper: "1234567890123456789"
-		Day  = string.sub(dateCreated, 1, 10) -- "YYYY-MM-DD"
-		Time = string.sub(dateCreated, 12, 19) -- "HH:MM:SS"
-		if Day and Time then
-			-- result format: "YYYY-MM-DD HH:MM:SS"
-			timestamp = Day .. ' ' .. Time
-		else -- use the user defined value of "Date Created"
-			timestamp = dateCreated
-		end
-	end
-
-	local dateTimeOriginal = photo:getFormattedMetadata('dateTimeOriginal') -- LR EXIF field "Date Time Original"
-	-- The return value has to be checked, not to be "nil" (different to parameter 'dateCreated')
-	if dateTimeOriginal ~= nil then -- The source device supports Exif.
-	-- if MediaWikiUtils.isStringFilled(dateTimeOriginal) then -- The source device supports Exif.
-		-- If LR EXIF field "Date Created" is set too, the "timestamp" value will be overwritten.
-		-- This follows the logic, how LR gives the "Date Time Original" priority over "Date Created",
-		-- if the user sets at LR section "Metadata" the "Metadata Set" to "Default".
-		-- In this case, fields "Capture Time" and "Capture Date" are shown, based on "Date Time Original",
-		-- and changes are restricted to valid values at dialog "Edit Capture Time".
-		-- The format of "dateTimeOriginal" is "DD.MM.YYYY HH:MM:SS".
-		--                       Index helper: "1234567890123456789"
-		Day   = string.sub(dateTimeOriginal, 1, 2) -- "DD"
-		Month = string.sub(dateTimeOriginal, 4, 5) -- "MM"
-		Year  = string.sub(dateTimeOriginal, 7, 10) -- "YYYY"
-		Time  = string.sub(dateTimeOriginal, 12, 19) -- "HH:MM:SS"
-		if Day and Month and Year and Time then
-			-- result format: "YYYY-MM-DD HH:MM:SS"
-			timestamp = Year .. '-' .. Month .. '-' .. Day .. ' ' .. Time
-		end
+		-- If metadata tagset is set to "EXIF and IPTC", "IPTC" or "Location", the field
+		-- "Date Created" is editable. At some cases field checks work, at other cases not.
+		-- The format is "YYYY-MM-DDThh:mm:ss", according to ISO 8601.
+		-- To improve human readability, "T" is replaced with a blank sign:
+		dateCreated = string.gsub(dateCreated, 'T', ' ')
+		timestamp = dateCreated
 	end
 	exportFields.timestamp = timestamp
 
