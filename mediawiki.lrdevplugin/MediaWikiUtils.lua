@@ -32,6 +32,11 @@ MediaWikiUtils.formatString = function(str, arguments)
 	return (str:gsub('($%b{})', function(w) return arguments[w:sub(3, -2)] or w end))
 end
 
+-- Substitue variables of format "<var>" – similar to function "formatString"
+MediaWikiUtils.substituteVariables = function(str, arguments)
+	return (str:gsub('(%b<>)', function(w) return arguments[w:sub(2, -2)] or w end))
+end
+
 MediaWikiUtils.isStringEmpty = function(str)
 	return str == nil or string.match(str, '^%s*$') ~= nil
 	-- see e.g. http://stackoverflow.com/questions/10328211/how-to-check-if-a-value-is-empty-in-lua

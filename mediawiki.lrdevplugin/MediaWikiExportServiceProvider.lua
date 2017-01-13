@@ -119,7 +119,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			}
 
 			local filledExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(exportFields, photo)
-			local fileDescription = MediaWikiInterface.buildFileDescription(filledExportFields)
+			local fileDescription = MediaWikiInterface.buildFileDescription(filledExportFields, photo)
 
 			-- ensure that the target file name does not contain a series of spaces or
 			-- underscores (as this would cause the upload to fail without a proper
@@ -381,7 +381,7 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 			local result, message = MediaWikiInterface.loadFileDescriptionTemplate(propertyTable.info_template)
 			if result then
 				local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
-				local wikitext = MediaWikiInterface.buildFileDescription(ExportFields)
+				local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
 				local messageTitle = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext'
 				if #listOfTargetPhotos > 1 then
 					messageTitle = messageTitle .. LOC ('$$$/LrMediaWiki/Section/Licensing/PreviewTitleAddition=, using first file “^1”', fileName)

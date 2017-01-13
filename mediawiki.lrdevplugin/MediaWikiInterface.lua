@@ -158,7 +158,7 @@ MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, 
 	return nil
 end
 
-MediaWikiInterface.buildFileDescription = function(exportFields)
+MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	local categoriesString = ''
 	-- The following 2 calls of the Lua function "string.gmatch()" iterate the given strings
 	-- "categories" and "info_categories" by the pattern "[^;]+".
@@ -227,6 +227,17 @@ MediaWikiInterface.buildFileDescription = function(exportFields)
 	local message = LOC('$$$/LrMediaWiki/Interface/DeletedControlCharacters=Number of deleted control characters: ^1', count)
 	MediaWikiUtils.trace(message)
 	LrDialogs.showBezel(message, 5) -- 5: fade delay in seconds
+
+	-- Substitution of variables
+	arguments = {
+		fileName = photo:getFormattedMetadata('fileName'),
+		title = photo:getFormattedMetadata('title'),
+		caption = photo:getFormattedMetadata('caption'),
+		label = photo:getFormattedMetadata('label'),
+		headline = photo:getFormattedMetadata('headline'),
+	}
+	wikitext = MediaWikiUtils.substituteVariables(wikitext, arguments)
+
 	return wikitext
 end
 
