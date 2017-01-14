@@ -238,6 +238,14 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		caption = photo:getFormattedMetadata('caption'),
 		label = photo:getFormattedMetadata('label'),
 		headline = photo:getFormattedMetadata('headline'),
+		jobIdentifier = photo:getFormattedMetadata('jobIdentifier'),
+		instructions = photo:getFormattedMetadata('instructions'),
+		provider = photo:getFormattedMetadata('provider'),
+		source = photo:getFormattedMetadata('source'),
+		copyright = photo:getFormattedMetadata('copyright'),
+		copyrightState = photo:getFormattedMetadata('copyrightState'),
+		rightsUsageTerms = photo:getFormattedMetadata('rightsUsageTerms'),
+		copyrightInfoUrl = photo:getFormattedMetadata('copyrightInfoUrl'),
 	}
 	wikitext = MediaWikiUtils.substituteVariables(wikitext, arguments)
 
