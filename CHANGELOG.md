@@ -1,5 +1,21 @@
 # LrMediaWiki changelog
 
+## v0.6: Introduction of variables (2017-01-14)
+
+This version introduces variables.
+
+### Issues
+- #72: Variables (enhancement)
+- #73: Number of deleted control characters (bug)
+
+## v0.5.3: Version number update (2017-01-11)
+### Fixed issues
+- #71: Version 0.5.2 didn't include an updated version number
+
+## v0.5.2: Withdrawal of "Enable search of metadata fields #66" (2017-01-10)
+- Withdrawal of #66: "Enable search of metadata fields (enhancement)" –
+  this feature can cause an error by updating a catalog
+
 ## v0.5.1: 8 issues (2017-01-09)
 
 ### Fixed issues
@@ -15,7 +31,6 @@
 ## v0.5: 8 issues (2016-11-19)
 
 ### Fixed issues
-
  - #17: Add Template:Artwork as additional base template (enhancement)
  - #35: Extract direction/heading of the location out of EXIF/metadata (enhancement)
 
