@@ -32,9 +32,10 @@ MediaWikiUtils.formatString = function(str, arguments)
 	return (str:gsub('($%b{})', function(w) return arguments[w:sub(3, -2)] or w end))
 end
 
--- Substitue variables of format "<var>" – similar to function "formatString"
-MediaWikiUtils.substituteVariables = function(str, arguments)
-	return (str:gsub('(%b<>)', function(w) return arguments[w:sub(2, -2)] or w end))
+-- Substitute placeholders of format "<var>" – similar to function "formatString"
+MediaWikiUtils.substitutePlaceholders = function(str, arguments)
+	-- If the substitution doesn't work, an empty string will be returned.
+	return (str:gsub('(%b<>)', function(w) return arguments[w:sub(2, -2)] or '' end))
 end
 
 MediaWikiUtils.isStringEmpty = function(str)
@@ -47,10 +48,10 @@ MediaWikiUtils.isStringFilled = function(str)
 end
 
 MediaWikiUtils.getFirstKey = function(table)
-  for key, value in pairs(table) do
+	for key, value in pairs(table) do -- luacheck: ignore ("loop is executed at most once")
 		return key
 	end
-  return nil
+	return nil
 end
 
 MediaWikiUtils.getInstalledVersion = function()

@@ -34,7 +34,7 @@ local MediaWikiUtils = require 'MediaWikiUtils'
 
 local MediaWikiExportServiceProvider = {}
 
-MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext)
+MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext) -- luacheck: ignore functionContext
 	-- configure progress display
 	local exportSession = exportContext.exportSession
 	local photoCount = exportSession:countRenditions()
@@ -70,7 +70,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	local fileNames = {}
 
 	-- iterate over photos
-	for i, rendition in exportContext:renditions() do
+	for i, rendition in exportContext:renditions() do -- luacheck: ignore i
 		-- render photo
 		local success, pathOrMessage = rendition:waitForRender()
 		if success then
@@ -136,7 +136,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 					local currentDate = LrDate.formatShortDate(currentTimeStamp)
 					local currentTime = LrDate.formatShortTime(currentTimeStamp)
 					local snapshotTitle = LOC('$$$/LrMediaWiki/Export/Snapshot=MediaWiki export, ^1 ^2, ^3', currentDate, currentTime, exportSettings.api_path)
-					catalog:withWriteAccessDo('CreateDevelopSnapshot', function(context)
+					catalog:withWriteAccessDo('CreateDevelopSnapshot', function(context) -- luacheck: ignore context
 						photo:createDevelopSnapshot(snapshotTitle, true)
 					end)
 				end
@@ -144,7 +144,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				-- add configured export keyword
 				local keyword = MediaWikiUtils.getExportKeyword()
 				if MediaWikiUtils.isStringFilled(keyword) then
-					catalog:withWriteAccessDo('AddExportKeyword', function(context)
+					catalog:withWriteAccessDo('AddExportKeyword', function(context) -- luacheck: ignore context
 						photo:addKeyword(catalog:createKeyword(keyword, {}, false, nil, true))
 					end)
 				end
@@ -256,7 +256,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					-- spacing = viewFactory:label_spacing(),
 					viewFactory:push_button {
 						title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
-							action = function(button)
+							action = function(button) -- luacheck: ignore button
 								MediaWikiExportServiceProvider.showPreview(propertyTable)
 							end,
 					},
@@ -373,7 +373,7 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 	-- This function to provide a preview message box needs to run as a separate task,
 	-- according to this discussion post: <https://forums.adobe.com/message/8493589#8493589>
 	LrTasks.startAsyncTask( function ()
-			LrFunctionContext.callWithContext ('LrMediaWiki', function(context)
+			LrFunctionContext.callWithContext ('LrMediaWiki', function(context) -- luacheck: ignore context
 			local activeCatalog = LrApplication.activeCatalog()
 			local listOfTargetPhotos = activeCatalog:getTargetPhotos()
 			local photo = listOfTargetPhotos[1] -- first photo of the selection

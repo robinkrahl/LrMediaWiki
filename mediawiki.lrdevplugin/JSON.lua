@@ -293,11 +293,11 @@ local isArray  = { __tostring = function() return "JSON array"  end }    isArray
 local isObject = { __tostring = function() return "JSON object" end }    isObject.__index = isObject
 
 
-function OBJDEF:newArray(tbl)
+function OBJDEF:newArray(tbl) -- luacheck: ignore self
    return setmetatable(tbl or {}, isArray)
 end
 
-function OBJDEF:newObject(tbl)
+function OBJDEF:newObject(tbl) -- luacheck: ignore self
    return setmetatable(tbl or {}, isObject)
 end
 
@@ -956,7 +956,7 @@ end
 
 OBJDEF.__index = OBJDEF
 
-function OBJDEF:new(args)
+function OBJDEF:new(args) -- luacheck: ignore self
    local new = { }
 
    if args then

@@ -114,7 +114,7 @@ MediaWikiInterface.addToGallery = function(fileNames, galleryName)
 	local currentTime = LrDate.formatShortTime(currentTimeStamp)
 	local section = '== ' .. currentDate .. ' ' .. currentTime .. ' ==';
 	local text = '<gallery>\n';
-	for i, fileName in pairs(fileNames) do
+	for i, fileName in pairs(fileNames) do -- luacheck: ignore i
 		text = text .. fileName .. '\n'
 	end
 	text = text .. '</gallery>'
@@ -231,23 +231,130 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		MediaWikiUtils.trace(message)
 	end
 
-	-- Substitution of variables
+	-- Substitution of placeholders
 	arguments = {
 		fileName = photo:getFormattedMetadata('fileName'),
+		copyName = photo:getFormattedMetadata('copyName'),
+		folderName = photo:getFormattedMetadata('folderName'),
+		path = photo:getRawMetadata('path'),
+		fileSize = photo:getFormattedMetadata('fileSize'),
+		fileType = photo:getFormattedMetadata('fileType'),
+		rating = photo:getFormattedMetadata('rating'),
+		label = photo:getFormattedMetadata('label'),
+		colorNameForLabel = photo:getRawMetadata('colorNameForLabel'),
 		title = photo:getFormattedMetadata('title'),
 		caption = photo:getFormattedMetadata('caption'),
-		label = photo:getFormattedMetadata('label'),
+		-- EXIF
+		dimensions = photo:getFormattedMetadata('dimensions'),
+		width = photo:getRawMetadata('dimensions').width,
+		height = photo:getRawMetadata('dimensions').height,
+		aspectRatio = photo:getRawMetadata('aspectRatio'),
+		croppedWidth = photo:getRawMetadata('croppedDimensions').width,
+		croppedHeight = photo:getRawMetadata('croppedDimensions').height,
+		croppedDimensions = photo:getFormattedMetadata('croppedDimensions'),
+		exposure = photo:getFormattedMetadata('exposure'),
+		shutterSpeed = photo:getFormattedMetadata('shutterSpeed'),
+		shutterSpeedRaw = photo:getRawMetadata('shutterSpeed'),
+		aperture = photo:getFormattedMetadata('aperture'),
+		apertureRaw = photo:getRawMetadata('aperture'),
+		brightnessValue = photo:getFormattedMetadata('brightnessValue'),
+		exposureBias = photo:getFormattedMetadata('exposureBias'),
+		flash = photo:getFormattedMetadata('flash'),
+		exposureProgram = photo:getFormattedMetadata('exposureProgram'),
+		meteringMode = photo:getFormattedMetadata('meteringMode'),
+		isoSpeedRating = photo:getFormattedMetadata('isoSpeedRating'),
+		focalLength = photo:getFormattedMetadata('focalLength'),
+		focalLength35mm = photo:getFormattedMetadata('focalLength35mm'),
+		lens = photo:getFormattedMetadata('lens'),
+		subjectDistance = photo:getFormattedMetadata('subjectDistance'),
+		dateTimeOriginal = photo:getFormattedMetadata('dateTimeOriginal'),
+		dateTimeDigitized = photo:getFormattedMetadata('dateTimeDigitized'),
+		dateTime = photo:getFormattedMetadata('dateTime'),
+		cameraMake = photo:getFormattedMetadata('cameraMake'),
+		cameraModel = photo:getFormattedMetadata('cameraModel'),
+		cameraSerialNumber = photo:getFormattedMetadata('cameraSerialNumber'),
+		artist = photo:getFormattedMetadata('artist'),
+		software = photo:getFormattedMetadata('software'),
+		gps = photo:getFormattedMetadata('gps'),
+		gpsAltitude = photo:getFormattedMetadata('gpsAltitude'),
+		gpsAltitudeRaw = photo:getRawMetadata('gpsAltitude'),
+		-- IPTC – Contact
+		creator = photo:getFormattedMetadata('creator'),
+		creatorJobTitle = photo:getFormattedMetadata('creatorJobTitle'),
+		creatorAddress = photo:getFormattedMetadata('creatorAddress'),
+		creatorCity = photo:getFormattedMetadata('creatorCity'),
+		creatorStateProvince = photo:getFormattedMetadata('creatorStateProvince'),
+		creatorPostalCode = photo:getFormattedMetadata('creatorPostalCode'),
+		creatorCountry = photo:getFormattedMetadata('creatorCountry'),
+		creatorPhone = photo:getFormattedMetadata('creatorPhone'),
+		creatorEmail = photo:getFormattedMetadata('creatorEmail'),
+		creatorUrl = photo:getFormattedMetadata('creatorUrl'),
+		-- IPTC – Content
 		headline = photo:getFormattedMetadata('headline'),
+		-- description = caption, see first section
+		iptcSubjectCode = photo:getFormattedMetadata('iptcSubjectCode'),
+		descriptionWriter = photo:getFormattedMetadata('descriptionWriter'),
+		iptcCategory = photo:getFormattedMetadata('iptcCategory'),
+		iptcOtherCategories = photo:getFormattedMetadata('iptcOtherCategories'),
+		-- IPTC – Image
+		dateCreated = photo:getFormattedMetadata('dateCreated'),
+		intellectualGenre = photo:getFormattedMetadata('intellectualGenre'),
+		scene = photo:getFormattedMetadata('scene'),
+		location = photo:getFormattedMetadata('location'),
+		city = photo:getFormattedMetadata('city'),
+		stateProvince = photo:getFormattedMetadata('stateProvince'),
+		country = photo:getFormattedMetadata('country'),
+		isoCountryCode = photo:getFormattedMetadata('isoCountryCode'),
+		-- IPTC – Status/Workflow
+		-- title see first section
 		jobIdentifier = photo:getFormattedMetadata('jobIdentifier'),
 		instructions = photo:getFormattedMetadata('instructions'),
 		provider = photo:getFormattedMetadata('provider'),
 		source = photo:getFormattedMetadata('source'),
-		copyright = photo:getFormattedMetadata('copyright'),
+		-- IPTC – Copyright
 		copyrightState = photo:getFormattedMetadata('copyrightState'),
+		copyright = photo:getFormattedMetadata('copyright'),
 		rightsUsageTerms = photo:getFormattedMetadata('rightsUsageTerms'),
 		copyrightInfoUrl = photo:getFormattedMetadata('copyrightInfoUrl'),
+		-- IPTC Extension – Description
+		personShown = photo:getFormattedMetadata('personShown'),
+		nameOfOrgShown = photo:getFormattedMetadata('nameOfOrgShown'),
+		codeOfOrgShown = photo:getFormattedMetadata('codeOfOrgShown'),
+		event = photo:getFormattedMetadata('event'),
+		-- Keyword Tags
+		keywordTags = photo:getFormattedMetadata('keywordTags'),
+		keywordTagsForExport = photo:getFormattedMetadata('keywordTagsForExport'),
 	}
-	wikitext = MediaWikiUtils.substituteVariables(wikitext, arguments)
+
+	if arguments.dateCreated ~= '' then
+		-- assumed format: "YYYY-MM-DDThh:mm:ss"
+		local dateTime = string.gsub(arguments.dateCreated, '-', ':')
+		-- now the format of dateTime should be "YYYY:MM:DDThh:mm:ss"
+		arguments.creationDate = string.sub(dateTime, 1, 10) -- "YYYY:MM:DD"
+		arguments.creationTime = string.sub(dateTime, 12, 20) -- "hh:mm:ss"
+	else
+		arguments.creationDate = ''
+		arguments.creationTime = ''
+	end
+
+	local gpsRaw = photo:getRawMetadata('gps')
+	if gpsRaw ~= nil then
+		arguments.gpsLat = gpsRaw.latitude
+		arguments.gpsLon = gpsRaw.longitude
+	end
+
+	-- "gpsImgDirection" is supported since LR 6.0
+	-- LR versions < 6 may not use this parameter
+	local LrApplication = import 'LrApplication'
+	local LrMajorVersion = LrApplication.versionTable().major -- number type
+	if LrMajorVersion >= 6 then
+		arguments.gpsImgDirection = photo:getFormattedMetadata('gpsImgDirection')
+		arguments.gpsImgDirectionRaw = photo:getRawMetadata('gpsImgDirection')
+	end
+
+	wikitext = MediaWikiUtils.substitutePlaceholders(wikitext, arguments)
+	-- local msg = 'Wikitext: <' .. wikitext .. '>'
+	-- MediaWikiUtils.trace(msg)
 
 	return wikitext
 end
