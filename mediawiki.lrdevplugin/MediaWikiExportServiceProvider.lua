@@ -96,8 +96,6 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				notes = '',
 				references = '',
 				source = '',
-				otherVersions = '',
-				otherFields = '',
 				wikidata = '',
 			}
 			local exportFields = { -- Fields set at export dialog, ordered by UI
@@ -107,13 +105,14 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				info_license = exportSettings.info_license,
 				info_permission = exportSettings.info_permission,
 				info_templates = exportSettings.info_templates,
-				info_other = exportSettings.info_other,
 				info_categories = exportSettings.info_categories,
 				-- fields by file, to be filled by fillExportFields(), order by UI
 				description = '',
 				location = '',
 				templates = '',
 				categories = '',
+				otherVersions = '',
+				otherFields = '',
 				timestamp = '',
 				art = artworkParameters, -- Parameters of infobox template "Artwork"
 			}
@@ -310,19 +309,6 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
 						viewFactory:static_text {
-							title = LOC '$$$/LrMediaWiki/Section/Licensing/Other=Other fields',
-							alignment = labelAlignment,
-							width = LrView.share 'label_width',
-						},
-						viewFactory:edit_field {
-							value = bind 'info_other',
-							immediate = true,
-							width_in_chars = widthLong,
-						},
-					},
-					viewFactory:row {
-						spacing = viewFactory:label_spacing(),
-						viewFactory:static_text {
 							title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories=Categories^nseparated by ;',
 							alignment = labelAlignment,
 							width = LrView.share 'label_width',
@@ -415,8 +401,6 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		notes = '', -- '<!-- Notes -->',
 		references = '', -- '<!-- References -->',
 		source = '', -- '<!-- Source -->',
-		otherVersions = '', -- '<!-- Other versions -->',
-		otherFields = '', -- '<!-- Other fields -->',
 		wikidata = '', -- '<!-- Wikidata -->',
 	}
 	local exportFields = { -- Fields set at export dialog, copied to return object, order by UI
@@ -426,13 +410,14 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		info_license = propertyTable.info_license,
 		info_permission = propertyTable.info_permission,
 		info_templates = propertyTable.info_templates,
-		info_other = propertyTable.info_other,
 		info_categories = propertyTable.info_categories,
 		-- Fields by file, to be filled by this function, ordered by UI:
 		description = '', -- '<!-- Description -->',
 		location = '', -- '<!-- {{Location}} if GPS metadata is available -->',
 		templates = '', -- '<!-- Templates -->',
 		categories = '', -- '<!-- Per-file categories -->',
+		otherVersions = '', -- '<!-- Other versions -->',
+		otherFields = '', -- '<!-- Other fields -->',
 		timestamp = '', -- '<!-- Date -->', -- Meta data, no LrMediaWiki field
 		art = artworkParameters, -- Parameters of infobox template "Artwork"
 	}
@@ -564,6 +549,18 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	-- Field "categories"
 	exportFields.categories = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'categories') or ''
 
+	-- Field "otherVersions"
+	local otherVersions = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'otherVersions')
+	if MediaWikiUtils.isStringFilled(otherVersions) then
+		exportFields.otherVersions = otherVersions
+	end
+
+	-- Field "otherFields"
+	local otherFields = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'otherFields')
+	if MediaWikiUtils.isStringFilled(otherFields) then
+		exportFields.otherFields = otherFields
+	end
+
 	-- Field "timestamp"
 	local timestamp = ''
 	local dateCreated = photo:getFormattedMetadata('dateCreated')
@@ -650,14 +647,6 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	if MediaWikiUtils.isStringFilled(source) then
 		exportFields.art.source = source
 	end
-	local otherVersions = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'otherVersions')
-	if MediaWikiUtils.isStringFilled(otherVersions) then
-		exportFields.art.otherVersions = otherVersions
-	end
-	local otherFields = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'otherFields')
-	if MediaWikiUtils.isStringFilled(otherFields) then
-		exportFields.art.otherFields = otherFields
-	end
 	local wikidata = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'wikidata')
 	if MediaWikiUtils.isStringFilled(wikidata) then
 		exportFields.art.wikidata = wikidata
@@ -687,7 +676,6 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'info_license', default = '{{Cc-by-sa-4.0}}' },
 	{ key = 'info_permission', default = '' },
 	{ key = 'info_templates', default = '' },
-	{ key = 'info_other', default = '' },
 	{ key = 'info_categories', default = '' },
 }
 

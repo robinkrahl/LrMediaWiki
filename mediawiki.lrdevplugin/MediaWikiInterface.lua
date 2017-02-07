@@ -186,12 +186,13 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		author = exportFields.info_author,
 		license = exportFields.info_license,
 		permission = exportFields.info_permission,
-		other_fields = exportFields.info_other,
 		categories = categoriesString,	-- The string concatenation of "categories" and "additionalCategories" is
 		-- done prior in this function. The need of this list "arguments" is caused by this concatenation.
 		description = exportFields.description,
 		location = exportFields.location,
 		templates = exportFields.templates,
+		otherVersions = exportFields.otherVersions,
+		otherFields = exportFields.otherFields,
 		timestamp = exportFields.timestamp,
 		-- Parameter of infobox template "Artwork":
 		artArtist = exportFields.art.artist,
@@ -212,8 +213,6 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		artNotes = exportFields.art.notes,
 		artReferences = exportFields.art.references,
 		artSource = exportFields.art.source,
-		artOtherVersions = exportFields.art.otherVersions,
-		artOtherFields = exportFields.art.otherFields,
 		artWikidata = exportFields.art.wikidata,
 	}
 	local wikitext = MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)

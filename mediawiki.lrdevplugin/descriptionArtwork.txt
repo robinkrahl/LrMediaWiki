@@ -20,8 +20,8 @@
  | References = ${artReferences}
  | Source = ${artSource}
  | Permission = ${permission}
- | Other versions = ${artOtherVersions}
- | Other fields = ${artOtherFields}
+ | Other versions = ${otherVersions}
+ | Other fields = ${otherFields}
  | Wikidata = ${artWikidata}
 }}
 ${templates}

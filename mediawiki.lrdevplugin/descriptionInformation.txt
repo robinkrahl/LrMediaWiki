@@ -5,8 +5,8 @@
  | Date = ${timestamp}
  | Author = ${author}
  | Permission = ${permission}
- | Other versions =
- | Other fields = ${other_fields}
+ | Other versions = ${otherVersions}
+ | Other fields = ${otherFields}
 }}
 ${templates}
 ${license}

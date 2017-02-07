@@ -31,6 +31,8 @@ return {
 		{ pf .. 'description_additional', LOC '$$$/LrMediaWiki/Metadata/DescriptionAdditional=Description (other)' },
 		{ pf .. 'templates', LOC '$$$/LrMediaWiki/Metadata/Templates=Templates' },
 		{ pf .. 'categories', LOC '$$$/LrMediaWiki/Metadata/Categories=Categories' },
+		{ pf .. 'otherVersions', LOC '$$$/LrMediaWiki/Metadata/OtherVersions=Other versions' },
+		{ pf .. 'otherFields', LOC '$$$/LrMediaWiki/Metadata/OtherFields=Other fields' },
 		'com.adobe.separator',
 		{ 'com.adobe.label', label = 'Artwork' }, -- second group
 		{ pf .. 'artist', LOC '$$$/LrMediaWiki/Metadata/Artist=Artist' },
@@ -51,8 +53,6 @@ return {
 		{ pf .. 'notes', LOC '$$$/LrMediaWiki/Metadata/Notes=Notes' },
 		{ pf .. 'references', LOC '$$$/LrMediaWiki/Metadata/References=References' },
 		{ pf .. 'source', LOC '$$$/LrMediaWiki/Metadata/Source=Source' },
-		{ pf .. 'otherVersions', LOC '$$$/LrMediaWiki/Metadata/OtherVersions=Other versions' },
-		{ pf .. 'otherFields', LOC '$$$/LrMediaWiki/Metadata/OtherFields=Other fields' },
 		{ pf .. 'wikidata', LOC '$$$/LrMediaWiki/Metadata/Wikidata=Wikidata' },
 	},
 }
