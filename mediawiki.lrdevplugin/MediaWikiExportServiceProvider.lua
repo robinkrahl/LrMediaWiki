@@ -98,6 +98,11 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				source = '',
 				wikidata = '',
 			}
+			local objectPhotoParameters = { -- Parameters of infobox template "Object photo" without "description" and "permission"
+				object = '',
+				detail = '',
+				detailPosition = '',
+			}
 			local exportFields = { -- Fields set at export dialog, ordered by UI
 				info_template = exportSettings.info_template,
 				info_source = exportSettings.info_source,
@@ -115,6 +120,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				otherFields = '',
 				timestamp = '',
 				art = artworkParameters, -- Parameters of infobox template "Artwork"
+				objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 			}
 
 			local filledExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(exportFields, photo)
@@ -250,6 +256,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						items = {
 							'Information',
 							'Artwork',
+							'Object photo',
 						},
 					},
 					-- spacing = viewFactory:label_spacing(),
@@ -261,7 +268,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 				},
 				viewFactory:group_box {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/InformationAndArtwork=Information and Artwork',
+					title = LOC '$$$/LrMediaWiki/Section/Licensing/AllInfoboxTemplates=All infobox templates',
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
 						viewFactory:static_text {
@@ -322,7 +329,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 				},
 				viewFactory:group_box {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/Information=Information',
+					title = LOC '$$$/LrMediaWiki/Section/Licensing/InfoboxTemplatesInformationAndObjectPhoto=Infobox templates “Information” and “Object photo”',
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
 						viewFactory:static_text {
@@ -403,6 +410,11 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		source = '', -- '<!-- Source -->',
 		wikidata = '', -- '<!-- Wikidata -->',
 	}
+	local objectPhotoParameters = { -- Parameters of infobox template "Object photo" without "description" and "permission"
+		object = '',
+		detail = '',
+		detailPosition = '',
+	}
 	local exportFields = { -- Fields set at export dialog, copied to return object, order by UI
 		info_template = propertyTable.info_template,
 		info_source = propertyTable.info_source,
@@ -420,6 +432,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		otherFields = '', -- '<!-- Other fields -->',
 		timestamp = '', -- '<!-- Date -->', -- Meta data, no LrMediaWiki field
 		art = artworkParameters, -- Parameters of infobox template "Artwork"
+		objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 	}
 
 	-- Required "Information" template parameters:
@@ -463,14 +476,14 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	end
 	if MediaWikiUtils.isStringFilled(descriptionDe) then
 		if existDescription then
-			description = description .. '\n   ' -- Newline and 3 leading spaces
+			description = description .. '\n' -- Newline
 		end
 		description = description .. '{{de|1=' .. descriptionDe .. '}}'
 		existDescription = true
 	end
 	if MediaWikiUtils.isStringFilled(descriptionAdditional) then
 		if existDescription then
-			description = description .. '\n   ' -- Newline and 3 leading spaces
+			description = description .. '\n' -- Newline
 		end
 		description = description .. descriptionAdditional
 		existDescription = true
@@ -650,6 +663,18 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local wikidata = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'wikidata')
 	if MediaWikiUtils.isStringFilled(wikidata) then
 		exportFields.art.wikidata = wikidata
+	end
+	local object = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'object')
+	if MediaWikiUtils.isStringFilled(object) then
+		exportFields.objectPhoto.object = object
+	end
+	local detail = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'detail')
+	if MediaWikiUtils.isStringFilled(detail) then
+		exportFields.objectPhoto.detail = detail
+	end
+	local detailPosition = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'detailPosition')
+	if MediaWikiUtils.isStringFilled(detailPosition) then
+		exportFields.objectPhoto.detailPosition = detailPosition
 	end
 
 	return exportFields

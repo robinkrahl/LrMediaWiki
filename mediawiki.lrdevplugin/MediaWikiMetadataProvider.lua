@@ -227,6 +227,31 @@ return {
 			searchable = false,
 			browsable = false,
 		},
+		-- Additional fields of template "Object photo":
+		{
+			id = 'object',
+			version = 1,
+			title = LOC '$$$/LrMediaWiki/Metadata/Object=Object',
+			dataType = 'string',
+			searchable = false,
+			browsable = false,
+		},
+		{
+			id = 'detail',
+			version = 1,
+			title = LOC '$$$/LrMediaWiki/Metadata/Detail=Detail',
+			dataType = 'string',
+			searchable = false,
+			browsable = false,
+		},
+		{
+			id = 'detailPosition',
+			version = 1,
+			title = LOC '$$$/LrMediaWiki/Metadata/DetailPosition=Detail position',
+			dataType = 'string',
+			searchable = false,
+			browsable = false,
+		},
 	},
-	schemaVersion = 6,
+	schemaVersion = 7,
 }

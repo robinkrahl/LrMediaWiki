@@ -25,7 +25,8 @@ return {
 	title = LOC "$$$/LrMediaWiki/PluginName=MediaWiki for Lightroom",
 	items = {
 		-- 'com.adobe.allPluginMetadata', -- supports not groups/clusters
-		{ 'com.adobe.label', label = 'Information & Artwork' }, -- first group
+		-- { 'com.adobe.label', label = 'Information & Artwork & Object photo' }, -- first group
+		-- Now, first group is without label. An alternative could be the term "General".
 		{ pf .. 'description_en', LOC '$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)' },
 		{ pf .. 'description_de', LOC '$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)' },
 		{ pf .. 'description_additional', LOC '$$$/LrMediaWiki/Metadata/DescriptionAdditional=Description (other)' },
@@ -54,5 +55,10 @@ return {
 		{ pf .. 'references', LOC '$$$/LrMediaWiki/Metadata/References=References' },
 		{ pf .. 'source', LOC '$$$/LrMediaWiki/Metadata/Source=Source' },
 		{ pf .. 'wikidata', LOC '$$$/LrMediaWiki/Metadata/Wikidata=Wikidata' },
+		'com.adobe.separator',
+		{ 'com.adobe.label', label = 'Object photo' }, -- third group
+		{ pf .. 'object', LOC '$$$/LrMediaWiki/Metadata/Object=Object' },
+		{ pf .. 'detail', LOC '$$$/LrMediaWiki/Metadata/Detail=Detail' },
+		{ pf .. 'detailPosition', LOC '$$$/LrMediaWiki/Metadata/DetailPosition=Detail position' },
 	},
 }

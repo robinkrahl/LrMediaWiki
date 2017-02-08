@@ -36,6 +36,10 @@ MediaWikiInterface.loadFileDescriptionTemplate = function(templateName)
 		fileName = '/descriptionInformation.txt'
 	elseif templateName == 'Artwork' then
 		fileName = '/descriptionArtwork.txt'
+	elseif templateName == 'Object photo' then
+		fileName = '/descriptionObjectPhoto.txt'
+	else
+		fileName = '/unknown'
 	end
 
 	local result, errorMessage = false
@@ -214,6 +218,10 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		artReferences = exportFields.art.references,
 		artSource = exportFields.art.source,
 		artWikidata = exportFields.art.wikidata,
+		-- Parameter of infobox template "Object photo":
+		object = exportFields.objectPhoto.object,
+		detail = exportFields.objectPhoto.detail,
+		detailPosition = exportFields.objectPhoto.detailPosition,
 	}
 	local wikitext = MediaWikiUtils.formatString(MediaWikiInterface.fileDescriptionPattern, arguments)
 

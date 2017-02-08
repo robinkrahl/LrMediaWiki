@@ -1,0 +1,16 @@
+== {{int:filedesc}} ==
+{{Object photo
+ | object = ${object}
+ | detail = ${detail}
+ | detail position = ${detailPosition}
+ | description = ${description}
+ | source = ${source}
+ | author = ${author}
+ | permission = ${permission}
+ | date = ${timestamp}
+ | other_versions = ${otherVersions}
+ | other_fields = ${otherFields}
+}}
+${templates}
+${license}
+${categories}[[Category:Uploaded with LrMediaWiki]]
