@@ -17,11 +17,6 @@ return {
 
 	LrInitPlugin = 'MediaWikiInit.lua',
 
-	LrLibraryMenuItems = {
-		title = LOC '$$$/LrMediaWiki/Menu/Mapping=Keyword/category mapping',
-		file = 'MediaWikiMappingMenuItem.lua',
-	},
-
 	LrExportServiceProvider = {
 		title = LOC '$$$/LrMediaWiki/MediaWiki=MediaWiki',
 		file = 'MediaWikiExportServiceProvider.lua',

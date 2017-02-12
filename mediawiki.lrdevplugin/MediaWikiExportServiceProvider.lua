@@ -261,7 +261,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 					-- spacing = viewFactory:label_spacing(),
 					viewFactory:push_button {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext',
+						title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext',
 							action = function(button) -- luacheck: ignore button
 								MediaWikiExportServiceProvider.showPreview(propertyTable)
 							end,
@@ -366,23 +366,139 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 	-- This function to provide a preview message box needs to run as a separate task,
 	-- according to this discussion post: <https://forums.adobe.com/message/8493589#8493589>
 	LrTasks.startAsyncTask( function ()
-			LrFunctionContext.callWithContext ('LrMediaWiki', function(context) -- luacheck: ignore context
+			LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
+			local LrBinding = import 'LrBinding'
+			local properties = LrBinding.makePropertyTable(context)
 			local activeCatalog = LrApplication.activeCatalog()
-			local listOfTargetPhotos = activeCatalog:getTargetPhotos()
-			local photo = listOfTargetPhotos[1] -- first photo of the selection
-			local fileName = photo:getFormattedMetadata('fileName')
-			local result, message = MediaWikiInterface.loadFileDescriptionTemplate(propertyTable.info_template)
-			if result then
-				local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
-				local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
-				local messageTitle = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview generated wikitext'
-				if #listOfTargetPhotos > 1 then
-					messageTitle = messageTitle .. LOC ('$$$/LrMediaWiki/Section/Licensing/PreviewTitleAddition=, using first file “^1”', fileName)
-				end
-				LrDialogs.message(messageTitle, wikitext, 'info')
-			else
-				LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
+			properties.photoList = activeCatalog:getTargetPhotos()
+			local photo = properties.photoList[1] -- first photo of the selection
+			properties.fileName = photo:getFormattedMetadata('fileName')
+			properties.index = 1
+
+			local setCurrentOfAll = function(current)
+				properties.currentOfAll = current .. '/' .. #properties.photoList
 			end
+
+			local setPhoto = function(pos)
+				local max = #properties.photoList
+				if pos == 'first' then
+					properties.index = 1
+				elseif pos == 'previous' then
+					if properties.index > 1 then
+						properties.index = properties.index - 1
+					else -- we are at first position
+						return
+					end
+				elseif pos == 'next' then
+					if properties.index < max then
+						properties.index = properties.index + 1
+					else -- we are at last position
+						return
+					end
+				elseif pos == 'last' then
+					properties.index = max
+				else -- invalid parameter "pos"
+					return
+				end
+				LrTasks.startAsyncTask( function ()
+					-- LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
+						setCurrentOfAll(properties.index)
+						photo = properties.photoList[properties.index]
+						properties.fileName = photo:getFormattedMetadata('fileName')
+						local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
+						local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
+						properties.dialogValue = wikitext
+					-- end)
+				end)
+			end
+
+			setCurrentOfAll(1)
+			local wikitext
+			local result, message = MediaWikiInterface.loadFileDescriptionTemplate(propertyTable.info_template)
+			if not result then
+				LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
+				return
+			end
+
+			local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
+			wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
+			local messageTitle = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext'
+			local factory = LrView.osFactory()
+			properties.dialogValue = wikitext
+
+			local contents = factory:column {
+				factory:row {
+					-- spacing = factory:label_spacing(),
+					bind_to_object = properties,
+					factory:static_text {
+						font = { -- see [1]
+							name = MediaWikiUtils.getPreviewWikitextFontName(),
+							size = MediaWikiUtils.getPreviewWikitextFontSize(),
+						},
+						title = LrView.bind('dialogValue'),
+						height_in_lines = MediaWikiUtils.getPreviewWikitextHeight(),
+						width_in_chars = MediaWikiUtils.getPreviewWikitextWidth(),
+						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipWikitext=Font name, font size, width and height of the wikitext are customizable at the plug-in’s configuration.',
+					},
+				},
+				factory:row {
+					factory:separator {
+						fill_horizontal = 1, -- "1" means full width
+					},
+				},
+				factory:row {
+					factory:spacer {
+						height = 5,
+					},
+				},
+				factory:row {
+					factory:push_button {
+						-- 2 x U+25C0 = BLACK LEFT-POINTING TRIANGLE = ◀◀
+						title = '◀◀',
+						action = function() setPhoto('first') end,
+						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipButtonFirst=First file',
+					},
+					factory:push_button {
+						-- U+25C0 = BLACK LEFT-POINTING TRIANGLE = ◀
+						title = '◀',
+						action = function() setPhoto('previous') end,
+						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipButtonPrevious=Previous file',
+					},
+					factory:push_button {
+						-- U+25B6 = BLACK RIGHT-POINTING TRIANGLE = ▶
+						title = '▶',
+						action = function() setPhoto('next') end,
+						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipButtonNext=Next file',
+					},
+					factory:push_button {
+						-- 2 x U+25B6 = BLACK RIGHT-POINTING TRIANGLE = ▶▶
+						title = '▶▶',
+						action = function() setPhoto('last') end,
+						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipButtonLast=Last file',
+					},
+					factory:static_text {
+						bind_to_object = properties,
+						title = LrView.bind('currentOfAll'),
+						width_in_digits = 10,
+						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipCurrentOfAll=Current index in relation to the total number of selected files',
+					},
+					factory:static_text {
+						bind_to_object = properties,
+						title = LrView.bind('fileName'),
+						width_in_chars = MediaWikiUtils.getPreviewFileNameWidth(),
+						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipFileName=Current file name',
+					},
+				},
+			}
+
+			LrDialogs.presentModalDialog({
+				title = messageTitle,
+				contents = contents,
+				-- cancelVerb = '< exclude >', -- no cancel button
+				resizable = true, -- 'horizontally',
+				save_frame= 'PreviewDialogSaveFrame',
+			})
+
 		end)
 	end)
 end
@@ -705,3 +821,34 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 }
 
 return MediaWikiExportServiceProvider
+
+--[[
+
+[1]	According to the LR SDK 6 documentation, fonts can be specified by a table
+	with keys "name" and "size" – beside specifying the font by a simple string.
+	See LR 6 SDK documantaion PDF, page 95.
+
+	In fact, it has to be done this way – we have to avoid to specify a
+	a font by a simple string.
+
+	Setting a font name by a simple string works at macOS, not at Windows.
+	Therefore, this kind of naming a font has to be avoided.
+	Instead, the format with the both keys "name" and "size" should be used.
+
+	LR 6 SDK documentation mentions, the "size" property should be a string.
+	This can be done at macOS without causing an error.
+	But, this setting will be ignored.
+	Doing the same at Windows causes an internal error:
+	"bad argument #-1 to 'fontFromValue' (number expected, got string)"
+
+	Therefore, setting a font by a simple string should be avoided.
+	Instead, the font should be specified by a table with keys "name" and "size".
+	The value of "size" has to be a number, not a string (as mentioned by
+	the SDK documentaion).
+
+	Obviously, it's a bug of both: the SDK and it's documentation.
+
+	Rob Cole initiated a related thread at
+	https://forums.adobe.com/message/3110373
+
+--]]

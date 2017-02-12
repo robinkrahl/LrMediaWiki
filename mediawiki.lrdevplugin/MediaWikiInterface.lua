@@ -232,7 +232,7 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	local count
 	wikitext, count = string.gsub(wikitext, pattern, '')
 	local message = LOC('$$$/LrMediaWiki/Interface/DeletedControlCharacters=Number of deleted control characters: ^1', count)
-	MediaWikiUtils.trace(message)
+	-- MediaWikiUtils.trace(message)
 	if count > 0 then
 		LrDialogs.showBezel(message, 5) -- 5: fade delay in seconds
 		MediaWikiUtils.trace(message)
