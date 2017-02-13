@@ -1,4 +1,4 @@
-# LrMediaWiki [![Build Status](https://travis-ci.org/robinkrahl/LrMediaWiki.svg?branch=master)](https://travis-ci.org/robinkrahl/LrMediaWiki)
+# LrMediaWiki [![Build Status](https://travis-ci.org/Hasenlaeufer/LrMediaWiki.svg?branch=master)](https://travis-ci.org/Hasenlaeufer/LrMediaWiki)
 
 **LrMediaWiki** is a plugin for Adobe Photoshop Lightroom that allows users
 to upload images to Wikimedia Commons or any other MediaWiki installation
@@ -32,7 +32,15 @@ the file description and additional categories and templates.
 LrMediaWiki contains a copy of [`JSON.lua`][jsonlua] written by Jeffrey Friedl
 and released under [CC-by 3.0][ccby3].
 
+### APIs
+
+Beside [Lightroom SDK][lrsdk], LrMediawiki uses these APIs:
+* [MediaWiki API][mediawikiapi]
+* [GitHub API][githubapi]
+
 [comlrmw]: https://commons.wikimedia.org/wiki/Commons:LrMediaWiki
 [lrsdk]: http://www.adobe.com/devnet/photoshoplightroom.html
 [jsonlua]: http://regex.info/blog/lua/json
 [ccby3]: http://creativecommons.org/licenses/by/3.0/deed.en_US
+[mediawikiapi]: https://www.mediawiki.org/wiki/API:Main_page
+[githubapi]: https://developer.github.com

@@ -1,5 +1,15 @@
 # LrMediaWiki changelog
 
+## v0.7: 4 enhancements (2017-02-13)
+
+"Variables" have been renamed to "placeholders".
+
+### Issues
+- #74: Additional variables (enhancement)
+- #75: Support of template Object photo (enhancement)
+- #76: Improve handling of fields "Other versions" and "Other fields" (enhancement)
+- #77: Enhancement of "Preview of generated wikitext" (enhancement)
+
 ## v0.6: Introduction of variables (2017-01-14)
 
 This version introduces variables.
