@@ -40,8 +40,8 @@ ARCHIVE_NAME_TAR_GZ="$ARCHIVE_BASE_NAME.tar.gz"
 CHECKSUM_NAME="checksums.md5"
 
 # copy required files to the temporary directory
-cp -r "$LRDEVPLUGIN" "$TMPDIR/$LRPLUGIN"
-cp *.md *.txt "$TMPDIR/$LRPLUGIN"
+cp -p -r "$LRDEVPLUGIN" "$TMPDIR/$LRPLUGIN"
+cp -p *.md *.txt "$TMPDIR/$LRPLUGIN"
 
 cd $TMPDIR
 
