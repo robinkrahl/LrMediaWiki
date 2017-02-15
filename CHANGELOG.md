@@ -1,8 +1,6 @@
 # LrMediaWiki changelog
 
-## v0.7.1: 4 enhancements (2017-02-15)
-
-Improvement of preview resizing.
+## v0.7.1: Improvement of preview resizing (2017-02-15)
 
 ### Issues
 - #78: Improve resizing of preview (enhancement)
