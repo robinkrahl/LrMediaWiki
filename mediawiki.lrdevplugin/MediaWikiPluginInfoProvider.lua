@@ -28,9 +28,6 @@ MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
   propertyTable.export_keyword = MediaWikiUtils.getExportKeyword()
   propertyTable.preview_wikitext_font_name = MediaWikiUtils.getPreviewWikitextFontName()
   propertyTable.preview_wikitext_font_size = MediaWikiUtils.getPreviewWikitextFontSize()
-  propertyTable.preview_wikitext_width = MediaWikiUtils.getPreviewWikitextWidth()
-  propertyTable.preview_wikitext_height = MediaWikiUtils.getPreviewWikitextHeight()
-  propertyTable.preview_file_name_width = MediaWikiUtils.getPreviewFileNameWidth()
 end
 
 MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
@@ -40,14 +37,9 @@ MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
   MediaWikiUtils.setExportKeyword(propertyTable.export_keyword)
   MediaWikiUtils.setPreviewWikitextFontName(propertyTable.preview_wikitext_font_name)
   MediaWikiUtils.setPreviewWikitextFontSize(propertyTable.preview_wikitext_font_size)
-  MediaWikiUtils.setPreviewWikitextWidth(propertyTable.preview_wikitext_width)
-  MediaWikiUtils.setPreviewWikitextHeight(propertyTable.preview_wikitext_height)
-  MediaWikiUtils.setPreviewFileNameWidth(propertyTable.preview_file_name_width)
 end
 
-local widthTooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/WikitextWidthTooltip=Width of the generated wikitext'
-local heightTooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/WikitextHeightTooltip=Height of the generated wikitext'
-local fileNameWidthTooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/FileNameWidthTooltip=Width of the file name'
+local fontNameTooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/FontNameTooltip=Font name of generated wikitext'
 local fontSizeTooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/FontSizeTooltip=Font size of generated wikitext'
 
 MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
@@ -152,7 +144,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 								title = LOC '$$$/LrMediaWiki/Section/Config/Preview/FontName=Font Name',
 								alignment = labelAlignment,
 								width = labelWidth,
-								tooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/FontNameTooltip=Font name of generated wikitext',
+								tooltip = fontNameTooltip,
 							},
 							viewFactory:combo_box {
 								value = bind 'preview_wikitext_font_name',
@@ -168,7 +160,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 									'<system/bold>', -- LR SDK
 									'<system/small/bold>', -- LR SDK
 								},
-								tooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/FontComboBoxTooltip=Name of an installed font',
+								tooltip = fontNameTooltip,
 							},
 						-- Font size
 							viewFactory:static_text {
@@ -195,84 +187,6 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 									"20",
 								},
 								tooltip = fontSizeTooltip,
-							},
-						},
-						-- Width
-						viewFactory:row {
-							viewFactory:static_text {
-								title = LOC '$$$/LrMediaWiki/Section/Config/Preview/WikitextWidth=Wikitext Width',
-								alignment = labelAlignment,
-								width = labelWidth,
-								tooltip = widthTooltip,
-							},
-							viewFactory:slider {
-								value = bind 'preview_wikitext_width',
-								min = 10, -- arbitrary value
-								max = 500, -- arbitrary value
-								integral = true, -- only integer increments
-								tooltip = widthTooltip,
-							},
-							viewFactory:static_text {
-								title = bind {
-									key = 'preview_wikitext_width',
-									transform = function(value) -- see [2]
-										return tostring(value)
-									end,
-								},
-								width = LrView.share 'label_width',
-								tooltip = widthTooltip,
-							},
-						},
-						-- Height
-						viewFactory:row {
-							viewFactory:static_text {
-								title = LOC '$$$/LrMediaWiki/Section/Config/Preview/WikitextHeight=Wikitext Height',
-								alignment = labelAlignment,
-								width = labelWidth,
-								tooltip = heightTooltip,
-							},
-							viewFactory:slider {
-								value = bind 'preview_wikitext_height',
-								min = 10, -- arbitrary value
-								max = 500, -- arbitrary value
-								integral = true, -- only integer increments
-								tooltip = heightTooltip,
-							},
-							viewFactory:static_text {
-								title = bind {
-									key = 'preview_wikitext_height',
-									transform = function(value) -- see [2]
-										return tostring(value)
-									end,
-								},
-								width = LrView.share 'label_width',
-								tooltip = heightTooltip,
-							},
-						},
-						-- File Name Width
-						viewFactory:row {
-							viewFactory:static_text {
-								title = LOC '$$$/LrMediaWiki/Section/Config/Preview/FileNameWidth=File Name Width',
-								alignment = labelAlignment,
-								width = labelWidth,
-								tooltip = fileNameWidthTooltip,
-							},
-							viewFactory:slider {
-								value = bind 'preview_file_name_width',
-								min = 10, -- arbitrary value
-								max = 500, -- arbitrary value
-								integral = true, -- only integer increments
-								tooltip = fileNameWidthTooltip,
-							},
-							viewFactory:static_text {
-								title = bind {
-									key = 'preview_file_name_width',
-									transform = function(value) -- see [2]
-										return tostring(value)
-									end,
-								},
-								width = LrView.share 'label_width',
-								tooltip = fileNameWidthTooltip,
 							},
 						},
 					},

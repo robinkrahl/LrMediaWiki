@@ -1,5 +1,12 @@
 # LrMediaWiki changelog
 
+## v0.7.1: 4 enhancements (2017-02-15)
+
+Improvement of preview resizing.
+
+### Issues
+- #78: Improve resizing of preview (enhancement)
+
 ## v0.7: 4 enhancements (2017-02-13)
 
 "Variables" have been renamed to "placeholders".

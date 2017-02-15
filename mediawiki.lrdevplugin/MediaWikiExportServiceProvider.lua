@@ -422,33 +422,34 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 
 			local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
 			wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
-			local messageTitle = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext'
+			local dialogTitle = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext'
 			local factory = LrView.osFactory()
 			properties.dialogValue = wikitext
 
 			local contents = factory:column {
+				fill_horizontal = 1,
+				fill_vertical = 1,
+				spacing = factory:label_spacing(),
 				factory:row {
-					-- spacing = factory:label_spacing(),
+					fill_vertical = 1,
 					bind_to_object = properties,
 					factory:static_text {
+						title = LrView.bind('dialogValue'),
+						height_in_lines = -1, -- to let the text wrap
+						width_in_chars = 60, -- text wrap needs a value too
+						height = 200, -- initial value
+						fill_horizontal = 1,
+						fill_vertical = 1,
 						font = { -- see [1]
 							name = MediaWikiUtils.getPreviewWikitextFontName(),
 							size = MediaWikiUtils.getPreviewWikitextFontSize(),
 						},
-						title = LrView.bind('dialogValue'),
-						height_in_lines = MediaWikiUtils.getPreviewWikitextHeight(),
-						width_in_chars = MediaWikiUtils.getPreviewWikitextWidth(),
-						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipWikitext=Font name, font size, width and height of the wikitext are customizable at the plug-in’s configuration.',
+						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipWikitext=Font name and font size of the wikitext are customizable at the plug-in’s configuration.',
 					},
 				},
 				factory:row {
 					factory:separator {
 						fill_horizontal = 1, -- "1" means full width
-					},
-				},
-				factory:row {
-					factory:spacer {
-						height = 5,
 					},
 				},
 				factory:row {
@@ -479,23 +480,29 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 					factory:static_text {
 						bind_to_object = properties,
 						title = LrView.bind('currentOfAll'),
-						width_in_digits = 10,
+						width_in_chars = 30,
 						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipCurrentOfAll=Current index in relation to the total number of selected files',
+					},
+				},
+				factory:row {
+					factory:static_text {
+						title = LOC '$$$/LrMediaWiki/Preview/FileName=File Name:',
 					},
 					factory:static_text {
 						bind_to_object = properties,
 						title = LrView.bind('fileName'),
-						width_in_chars = MediaWikiUtils.getPreviewFileNameWidth(),
+						width_in_chars = 30,
+						fill_horizontal = 1,
 						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipFileName=Current file name',
 					},
 				},
 			}
 
 			LrDialogs.presentModalDialog({
-				title = messageTitle,
+				title = dialogTitle,
 				contents = contents,
 				-- cancelVerb = '< exclude >', -- no cancel button
-				resizable = true, -- 'horizontally',
+				resizable = true,
 				save_frame= 'PreviewDialogSaveFrame',
 			})
 

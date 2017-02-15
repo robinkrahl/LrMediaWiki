@@ -128,30 +128,6 @@ MediaWikiUtils.setPreviewWikitextFontSize = function(tag)
 	prefs.preview_wikitext_font_size = tonumber(tag)
 end
 
-MediaWikiUtils.getPreviewWikitextWidth = function()
-	return prefs.preview_wikitext_width or 120 -- 120 = default value
-end
-
-MediaWikiUtils.setPreviewWikitextWidth = function(tag)
-	prefs.preview_wikitext_width = tag
-end
-
-MediaWikiUtils.getPreviewWikitextHeight = function()
-	return prefs.preview_wikitext_height or 50 -- 50 = default value
-end
-
-MediaWikiUtils.setPreviewWikitextHeight = function(tag)
-	prefs.preview_wikitext_height = tag
-end
-
-MediaWikiUtils.getPreviewFileNameWidth = function()
-	return prefs.preview_file_name_width or 80 -- 80 = default value
-end
-
-MediaWikiUtils.setPreviewFileNameWidth = function(tag)
-	prefs.preview_file_name_width = tag
-end
-
 MediaWikiUtils.trace = function(message)
 	myLogger:trace(message)
 end
