@@ -47,13 +47,13 @@ MediaWikiInterface.loadFileDescriptionTemplate = function(templateName)
 	if file then
 		MediaWikiInterface.fileDescriptionPattern = file:read('*all')
 		if not MediaWikiInterface.fileDescriptionPattern then
-			errorMessage = LOC('$$$/LrMediaWiki/Interface/ReadingDescriptionFailed=Could not read the description template file.')
+			errorMessage = LOC("$$$/LrMediaWiki/Interface/ReadingDescriptionFailed=Could not read the description template file.")
 		else
 			result = true
 		end
 		file:close()
 	else
-		errorMessage = LOC('$$$/LrMediaWiki/Interface/LoadingDescriptionFailed=Could not load the description template file: ^1', message)
+		errorMessage = LOC("$$$/LrMediaWiki/Interface/LoadingDescriptionFailed=Could not load the description template file: ^1", message)
 	end
 	return result, errorMessage
 end
@@ -66,11 +66,11 @@ MediaWikiInterface.prepareUpload = function(username, password, apiPath, templat
 		MediaWikiApi.apiPath = apiPath
 		local loginResult = MediaWikiApi.login(username, password)
 		if loginResult ~= true then
-			LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Interface/LoginFailed=Login failed: ^1', loginResult))
+			LrErrors.throwUserError(LOC("$$$/LrMediaWiki/Interface/LoginFailed=Login failed: ^1", loginResult))
 		end
 		MediaWikiInterface.loggedIn = true
 	else
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Interface/UsernameOrPasswordMissing=Username or password missing')
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Interface/UsernameOrPasswordMissing=Username or password missing")
 	end
 	-- file description
 	local result, message = MediaWikiInterface.loadFileDescriptionTemplate(templateName)
@@ -128,21 +128,29 @@ end
 
 MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, targetFileName)
 	if not MediaWikiInterface.loggedIn then
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload.')
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload.")
 	end
 	local comment = 'Uploaded with LrMediaWiki ' .. MediaWikiUtils.getVersionString()
 
 	local ignorewarnings = false
 	if MediaWikiApi.existsFile(targetFileName) then
-		local continue = LrDialogs.confirm(LOC '$$$/LrMediaWiki/Interface/InUse=File name already in use', LOC('$$$/LrMediaWiki/Interface/InUse/Details=There already is a file with the name ^1.  Overwrite?  (File description won\'t be changed.)', targetFileName), LOC '$$$/LrMediaWiki/Interface/InUse/OK=Overwrite', LOC '$$$/LrMediaWiki/Interface/InUse/Cancel=Cancel', LOC '$$$/LrMediaWiki/Interface/InUse/Rename=Rename')
+		local message = LOC "$$$/LrMediaWiki/Interface/InUse=File name already in use"
+		local info = LOC("$$$/LrMediaWiki/Interface/InUse/Details=There already is a file with the name ^1. Overwrite? (File description won’t be changed.)", targetFileName)
+		local actionVerb = LOC "$$$/LrMediaWiki/Interface/InUse/OK=Overwrite"
+		local cancelVerb = LOC "$$$/LrMediaWiki/Interface/InUse/Cancel=Cancel"
+		local otherVerb = LOC "$$$/LrMediaWiki/Interface/InUse/Rename=Rename"
+		local continue = LrDialogs.confirm(message, info, actionVerb, cancelVerb, otherVerb)
 		if continue == 'ok' then
-			local newComment = MediaWikiInterface.prompt(LOC '$$$/LrMediaWiki/Interface/VersionComment=Version comment', LOC '$$$/LrMediaWiki/Interface/VersionComment=Version comment')
+			local versionComment = LOC "$$$/LrMediaWiki/Interface/VersionComment=Version comment"
+			local newComment = MediaWikiInterface.prompt(versionComment, versionComment)
 			if MediaWikiUtils.isStringFilled(newComment) then
 				comment = newComment .. ' (LrMediaWiki ' .. MediaWikiUtils.getVersionString() .. ')'
 			end
 			ignorewarnings = true
 		elseif continue == 'other' then
-			local newFileName = MediaWikiInterface.prompt(LOC '$$$/LrMediaWiki/Interface/Rename=Rename file', LOC '$$$/LrMediaWiki/Interface/Rename/NewName=New file name', targetFileName)
+			local renameFile = LOC "$$$/LrMediaWiki/Interface/Rename=Rename file"
+			local newName = LOC "$$$/LrMediaWiki/Interface/Rename/NewName=New file name"
+			local newFileName = MediaWikiInterface.prompt(renameFile, newName, targetFileName)
 			if MediaWikiUtils.isStringFilled(newFileName) and newFileName ~= targetFileName then
 				MediaWikiInterface.uploadFile(filePath, description, hasDescription, newFileName)
 			end
@@ -152,12 +160,12 @@ MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, 
 		end
 	else
 		if not hasDescription then
-			return LOC '$$$/LrMediaWiki/Export/NoDescription=No description given for this file!'
+			return LOC "$$$/LrMediaWiki/Export/NoDescription=No description given for this file!"
 		end
 	end
 	local uploadResult = MediaWikiApi.upload(targetFileName, filePath, description, comment, ignorewarnings)
 	if uploadResult ~= true then
-		return LOC('$$$/LrMediaWiki/Interface/UploadFailed=Upload failed: ^1', uploadResult)
+		return LOC("$$$/LrMediaWiki/Interface/UploadFailed=Upload failed: ^1", uploadResult)
 	end
 	return nil
 end
@@ -231,7 +239,7 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	-- See <http://www.fileformat.info/info/unicode/char/200e/index.htm>
 	local count
 	wikitext, count = string.gsub(wikitext, pattern, '')
-	local message = LOC('$$$/LrMediaWiki/Interface/DeletedControlCharacters=Number of deleted control characters: ^1', count)
+	local message = LOC("$$$/LrMediaWiki/Interface/DeletedControlCharacters=Number of deleted control characters: ^1", count)
 	-- MediaWikiUtils.trace(message)
 	if count > 0 then
 		LrDialogs.showBezel(message, 5) -- 5: fade delay in seconds

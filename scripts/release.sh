@@ -39,6 +39,9 @@ ARCHIVE_NAME_ZIP="$ARCHIVE_BASE_NAME.zip"
 ARCHIVE_NAME_TAR_GZ="$ARCHIVE_BASE_NAME.tar.gz"
 CHECKSUM_NAME="checksums.md5"
 
+# create translated strings master file
+./create-translated-strings-master.sh
+
 # copy required files to the temporary directory
 cp -p -r "$LRDEVPLUGIN" "$TMPDIR/$LRPLUGIN"
 cp -p *.md *.txt "$TMPDIR/$LRPLUGIN"

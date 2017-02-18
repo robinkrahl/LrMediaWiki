@@ -39,8 +39,8 @@ MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
   MediaWikiUtils.setPreviewWikitextFontSize(propertyTable.preview_wikitext_font_size)
 end
 
-local fontNameTooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/FontNameTooltip=Font name of generated wikitext'
-local fontSizeTooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/FontSizeTooltip=Font size of generated wikitext'
+local fontNameTooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontNameTooltip=Font name of generated wikitext"
+local fontSizeTooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSizeTooltip=Font size of generated wikitext"
 
 MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right'
@@ -49,7 +49,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 	return {
 		{
-			title = LOC '$$$/LrMediaWiki/Section/Config/Title=Configuration',
+			title = LOC "$$$/LrMediaWiki/Section/Config/Title=Configuration",
 			bind_to_object = propertyTable,
 
 			viewFactory:column {
@@ -60,7 +60,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 					viewFactory:checkbox {
 						value = bind 'create_snapshots',
-						title = LOC '$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export',
+						title = LOC "$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export",
 					},
 				},
 
@@ -70,7 +70,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					viewFactory:static_text {
 						alignment = labelAlignment,
 						width = LrView.share "label_width",
-						title = LOC '$$$/LrMediaWiki/Section/Config/ExportKeyword=Export keyword',
+						title = LOC "$$$/LrMediaWiki/Section/Config/ExportKeyword=Export keyword",
 					},
 
 					viewFactory:edit_field {
@@ -85,7 +85,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 					viewFactory:checkbox {
 						value = bind 'check_version',
-						title = LOC '$$$/LrMediaWiki/Section/Config/Version=Check for new plug-in version after Lightroom starts',
+						title = LOC "$$$/LrMediaWiki/Section/Config/Version=Check for new plug-in version after Lightroom starts",
 					},
 				},
 
@@ -94,7 +94,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 					viewFactory:checkbox {
 						value = bind 'logging',
-						title = LOC '$$$/LrMediaWiki/Section/Config/Logging=Enable logging',
+						title = LOC "$$$/LrMediaWiki/Section/Config/Logging=Enable logging",
 					},
 				},
 
@@ -102,7 +102,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					spacing = viewFactory:label_spacing(),
 
 					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Description=If you enable logging, all API requests are logged. The log file is located in the directory “Documents”.',
+						title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Description=If you enable logging, all API requests are logged. The log file is located in the directory “Documents”.",
 						wrap = true,
 					},
 				},
@@ -111,12 +111,12 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					spacing = viewFactory:label_spacing(),
 
 					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Warning=Warning:',
+						title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Warning=Warning:",
 						font = '<system/bold>',
 					},
 
 					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Config/Logging/Password=The log file contains your password!',
+						title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Password=The log file contains your password!",
 					},
 				},
 
@@ -129,11 +129,11 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 				viewFactory:row {
 					viewFactory:column {
 							viewFactory:static_text {
-								title = LOC '$$$/LrMediaWiki/Section/Config/Preview/Title=Preview',
+								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/Title=Preview",
 								alignment = labelAlignment,
 								width_in_chars = LrView.share 'label_width',
 								font = '<system/bold>',
-								tooltip = LOC '$$$/LrMediaWiki/Section/Config/Preview/TitleTooltip=Settings used at “Preview of generated wikitext”',
+								tooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/TitleTooltip=Settings used at “Preview of generated wikitext”",
 							},
 					},
 					viewFactory:column {
@@ -141,7 +141,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 						-- Font name
 						viewFactory:row {
 							viewFactory:static_text {
-								title = LOC '$$$/LrMediaWiki/Section/Config/Preview/FontName=Font Name',
+								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontName=Font Name",
 								alignment = labelAlignment,
 								width = labelWidth,
 								tooltip = fontNameTooltip,
@@ -164,7 +164,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 							},
 						-- Font size
 							viewFactory:static_text {
-								title = LOC '$$$/LrMediaWiki/Section/Config/Preview/FontSize=Font Size',
+								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSize=Font Size",
 								alignment = labelAlignment,
 								width = 68,
 								tooltip = fontSizeTooltip,
