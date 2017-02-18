@@ -70,6 +70,7 @@
 "$$$/LrMediaWiki/Metadata/Templates=Vorlagen"
 "$$$/LrMediaWiki/Metadata/Title=Titel"
 "$$$/LrMediaWiki/Metadata/Wikidata=Wikidata"
+"$$$/LrMediaWiki/MetadataSetAll=LrMediaWiki – Alle Felder"
 "$$$/LrMediaWiki/PluginName=MediaWiki für Lightroom"
 "$$$/LrMediaWiki/Preview/FileName=Dateiname:"
 "$$$/LrMediaWiki/Preview/TooltipButtonFirst=Erste Datei"

@@ -22,7 +22,12 @@ return {
 		file = 'MediaWikiExportServiceProvider.lua',
 	},
 
-	LrMetadataTagsetFactory = { 'MediaWikiTagset.lua' },
+	LrMetadataTagsetFactory = {
+		'MediaWikiMetadataSetAll.lua',
+		'MediaWikiMetadataSetInformation.lua',
+		'MediaWikiMetadataSetArtwork.lua',
+		'MediaWikiMetadataSetObjectPhoto.lua',
+	},
 
 	LrMetadataProvider = 'MediaWikiMetadataProvider.lua',
 
