@@ -21,7 +21,7 @@ return {
 		{
 			id = 'description_en',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)',
+			title = LOC "$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -29,7 +29,7 @@ return {
 		{
 			id = 'description_de',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)',
+			title = LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -37,7 +37,7 @@ return {
 		{
 			id = 'description_additional',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/DescriptionAdditional=Description (other)',
+			title = LOC "$$$/LrMediaWiki/Metadata/DescriptionAdditional=Description (other)",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -45,7 +45,7 @@ return {
 		{
 			id = 'templates',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Templates=Templates',
+			title = LOC "$$$/LrMediaWiki/Metadata/Templates=Templates",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -53,7 +53,7 @@ return {
 		{
 			id = 'categories',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Categories=Categories',
+			title = LOC "$$$/LrMediaWiki/Metadata/Categories=Categories",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -61,7 +61,7 @@ return {
 		{
 			id = 'otherVersions',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/OtherVersions=Other versions',
+			title = LOC "$$$/LrMediaWiki/Metadata/OtherVersions=Other versions",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -69,7 +69,7 @@ return {
 		{
 			id = 'otherFields',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/OtherFields=Other fields',
+			title = LOC "$$$/LrMediaWiki/Metadata/OtherFields=Other fields",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -78,7 +78,7 @@ return {
 		{
 			id = 'artist',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Artist=Artist',
+			title = LOC "$$$/LrMediaWiki/Metadata/Artist=Artist",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -86,7 +86,7 @@ return {
 		{
 			id = 'author',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Author=Author',
+			title = LOC "$$$/LrMediaWiki/Metadata/Author=Author",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -94,7 +94,7 @@ return {
 		{
 			id = 'title',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Title=Title',
+			title = LOC "$$$/LrMediaWiki/Metadata/Title=Title",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -102,7 +102,7 @@ return {
 		{
 			id = 'date',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Date=Date',
+			title = LOC "$$$/LrMediaWiki/Metadata/Date=Date",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -110,7 +110,7 @@ return {
 		{
 			id = 'medium',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Medium=Medium',
+			title = LOC "$$$/LrMediaWiki/Metadata/Medium=Medium",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -118,7 +118,7 @@ return {
 		{
 			id = 'dimensions',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Dimensions=Dimensions',
+			title = LOC "$$$/LrMediaWiki/Metadata/Dimensions=Dimensions",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -126,7 +126,7 @@ return {
 		{
 			id = 'institution',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Institution=Institution',
+			title = LOC "$$$/LrMediaWiki/Metadata/Institution=Institution",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -134,7 +134,7 @@ return {
 		{
 			id = 'department',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Department=Department',
+			title = LOC "$$$/LrMediaWiki/Metadata/Department=Department",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -142,7 +142,7 @@ return {
 		{
 			id = 'accessionNumber',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/AccessionNumber=Accession number',
+			title = LOC "$$$/LrMediaWiki/Metadata/AccessionNumber=Accession number",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -150,7 +150,7 @@ return {
 		{
 			id = 'placeOfCreation',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/PlaceOfCreation=Place of creation',
+			title = LOC "$$$/LrMediaWiki/Metadata/PlaceOfCreation=Place of creation",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -158,7 +158,7 @@ return {
 		{
 			id = 'placeOfDiscovery',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/PlaceOfDiscovery=Place of discovery',
+			title = LOC "$$$/LrMediaWiki/Metadata/PlaceOfDiscovery=Place of discovery",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -166,7 +166,7 @@ return {
 		{
 			id = 'objectHistory',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/ObjectHistory=Object history',
+			title = LOC "$$$/LrMediaWiki/Metadata/ObjectHistory=Object history",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -174,7 +174,7 @@ return {
 		{
 			id = 'exhibitionHistory',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/ExhibitionHistory=Exhibition history',
+			title = LOC "$$$/LrMediaWiki/Metadata/ExhibitionHistory=Exhibition history",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -182,7 +182,7 @@ return {
 		{
 			id = 'creditLine',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/CreditLine=Credit line',
+			title = LOC "$$$/LrMediaWiki/Metadata/CreditLine=Credit line",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -190,7 +190,7 @@ return {
 		{
 			id = 'inscriptions',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Inscriptions=Inscriptions',
+			title = LOC "$$$/LrMediaWiki/Metadata/Inscriptions=Inscriptions",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -198,7 +198,7 @@ return {
 		{
 			id = 'notes',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Notes=Notes',
+			title = LOC "$$$/LrMediaWiki/Metadata/Notes=Notes",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -206,7 +206,7 @@ return {
 		{
 			id = 'references',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/References=References',
+			title = LOC "$$$/LrMediaWiki/Metadata/References=References",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -214,7 +214,7 @@ return {
 		{
 			id = 'source',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Source=Source',
+			title = LOC "$$$/LrMediaWiki/Metadata/Source=Source",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -222,7 +222,7 @@ return {
 		{
 			id = 'wikidata',
 			version = 2,
-			title = LOC '$$$/LrMediaWiki/Metadata/Wikidata=Wikidata',
+			title = LOC "$$$/LrMediaWiki/Metadata/Wikidata=Wikidata",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -231,7 +231,7 @@ return {
 		{
 			id = 'object',
 			version = 1,
-			title = LOC '$$$/LrMediaWiki/Metadata/Object=Object',
+			title = LOC "$$$/LrMediaWiki/Metadata/Object=Object",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -239,7 +239,7 @@ return {
 		{
 			id = 'detail',
 			version = 1,
-			title = LOC '$$$/LrMediaWiki/Metadata/Detail=Detail',
+			title = LOC "$$$/LrMediaWiki/Metadata/Detail=Detail",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -247,7 +247,7 @@ return {
 		{
 			id = 'detailPosition',
 			version = 1,
-			title = LOC '$$$/LrMediaWiki/Metadata/DetailPosition=Detail position',
+			title = LOC "$$$/LrMediaWiki/Metadata/DetailPosition=Detail position",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,

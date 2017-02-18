@@ -34,10 +34,10 @@ if MediaWikiUtils.getCheckVersion() then
 			-- if the versions are identical, because availableVersion might be "0.5" and installedVersion is "0.5.0".
 			if availableVersion > installedVersion then -- string comparison
 				-- new version available!
-				local  msg = LOC('$$$/LrMediaWiki/Init/Version/InfoInstalledVersion=Installed LrMediaWiki version: ^1^n', installedVersion)
-				msg = msg .. LOC('$$$/LrMediaWiki/Init/Version/InfoAvailableVersion=Available LrMediaWiki version: ^1^n', availableVersion)
-				msg = msg .. LOC('$$$/LrMediaWiki/Init/Version/InfoSummary=Please update to new available version.')
-				LrDialogs.message(LOC '$$$/LrMediaWiki/Init/Version/Message=New version available', msg, 'info')
+				local  msg = LOC("$$$/LrMediaWiki/Init/Version/InfoInstalledVersion=Installed LrMediaWiki version: ^1^n", installedVersion)
+				msg = msg .. LOC("$$$/LrMediaWiki/Init/Version/InfoAvailableVersion=Available LrMediaWiki version: ^1^n", availableVersion)
+				msg = msg .. LOC("$$$/LrMediaWiki/Init/Version/InfoSummary=Please update to new available version.")
+				LrDialogs.message(LOC "$$$/LrMediaWiki/Init/Version/Message=New version available", msg, 'info')
 			end
 		end
 	end)

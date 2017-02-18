@@ -38,30 +38,32 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	-- configure progress display
 	local exportSession = exportContext.exportSession
 	local photoCount = exportSession:countRenditions()
+	local MessageSingle = LOC("$$$/LrMediaWiki/Export/Progress=Exporting ^1 photos to a MediaWiki", photoCount)
+	local MessageMultiple = LOC "$$$/LrMediaWiki/Export/Progress/One=Exporting one photo to a MediaWiki"
 	exportContext:configureProgress{
-		title = photoCount > 1 and LOC('$$$/LrMediaWiki/Export/Progress=Exporting ^1 photos to a MediaWiki', photoCount) or LOC '$$$/LrMediaWiki/Export/Progress/One=Exporting one photo to a MediaWiki',
+		title = photoCount > 1 and MessageSingle or MessageMultiple
 	}
 
 	local exportSettings = assert(exportContext.propertyTable)
 
 	-- require username, password, apipath, source, author, license
 	if MediaWikiUtils.isStringEmpty(exportSettings.username) then
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoUsername=No username given!')
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoUsername=No username given!")
 	end
 	if MediaWikiUtils.isStringEmpty(exportSettings.password) then
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoPassword=No password given!')
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPassword=No password given!")
 	end
 	if MediaWikiUtils.isStringEmpty(exportSettings.api_path) then
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoApiPath=No API path given!')
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoApiPath=No API path given!")
 	end
 	if exportSettings.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportSettings.info_source) then
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoSource=No source given!')
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoSource=No source given!")
 	end
 	if exportSettings.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportSettings.info_author) then
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoAuthor=No author given!')
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoAuthor=No author given!")
 	end
 	if MediaWikiUtils.isStringEmpty(exportSettings.info_license) and MediaWikiUtils.isStringEmpty(exportSettings.info_permission) then
-		LrErrors.throwUserError(LOC '$$$/LrMediaWiki/Export/NoLicense=No license given!')
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoLicense=No license given!")
 	end
 
 	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path, exportSettings.info_template)
@@ -140,7 +142,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 					local currentTimeStamp = LrDate.currentTime()
 					local currentDate = LrDate.formatShortDate(currentTimeStamp)
 					local currentTime = LrDate.formatShortTime(currentTimeStamp)
-					local snapshotTitle = LOC('$$$/LrMediaWiki/Export/Snapshot=MediaWiki export, ^1 ^2, ^3', currentDate, currentTime, exportSettings.api_path)
+					local snapshotTitle = LOC("$$$/LrMediaWiki/Export/Snapshot=MediaWiki export, ^1 ^2, ^3", currentDate, currentTime, exportSettings.api_path)
 					catalog:withWriteAccessDo('CreateDevelopSnapshot', function(context) -- luacheck: ignore context
 						photo:createDevelopSnapshot(snapshotTitle, true)
 					end)
@@ -176,7 +178,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 	return {
 		{
-			title = LOC '$$$/LrMediaWiki/Section/User/Title=Login Information',
+			title = LOC "$$$/LrMediaWiki/Section/User/Title=Login Information",
 			synopsis = bind 'username',
 
 			viewFactory:column {
@@ -185,7 +187,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/User/Username=Username',
+						title = LOC "$$$/LrMediaWiki/Section/User/Username=Username",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
@@ -199,7 +201,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/User/Password=Password',
+						title = LOC "$$$/LrMediaWiki/Section/User/Password=Password",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
@@ -212,7 +214,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/User/ApiPath=API path',
+						title = LOC "$$$/LrMediaWiki/Section/User/ApiPath=API path",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
@@ -226,7 +228,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/User/Gallery=Gallery',
+						title = LOC "$$$/LrMediaWiki/Section/User/Gallery=Gallery",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
@@ -239,7 +241,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 			},
 		},
 		{
-			title = LOC '$$$/LrMediaWiki/Section/Licensing/Title=Upload Information',
+			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=Upload Information",
 			synopsis = bind 'info_template',
 
 			viewFactory:column {
@@ -247,7 +249,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox template',
+						title = LOC "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox template",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
@@ -261,18 +263,18 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 					-- spacing = viewFactory:label_spacing(),
 					viewFactory:push_button {
-						title = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext',
+						title = LOC "$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext",
 							action = function(button) -- luacheck: ignore button
 								MediaWikiExportServiceProvider.showPreview(propertyTable)
 							end,
 					},
 				},
 				viewFactory:group_box {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/AllInfoboxTemplates=All infobox templates',
+					title = LOC "$$$/LrMediaWiki/Section/Licensing/AllInfoboxTemplates=All infobox templates",
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
 						viewFactory:static_text {
-							title = LOC '$$$/LrMediaWiki/Section/Licensing/License=License',
+							title = LOC "$$$/LrMediaWiki/Section/Licensing/License=License",
 							alignment = labelAlignment,
 							width = LrView.share 'label_width',
 						},
@@ -290,7 +292,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
 						viewFactory:static_text {
-							title = LOC '$$$/LrMediaWiki/Section/Licensing/Permission=Permission',
+							title = LOC "$$$/LrMediaWiki/Section/Licensing/Permission=Permission",
 							alignment = labelAlignment,
 							width = LrView.share 'label_width',
 						},
@@ -303,7 +305,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
 						viewFactory:static_text {
-							title = LOC '$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates',
+							title = LOC "$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates",
 							alignment = labelAlignment,
 							width = LrView.share 'label_width',
 						},
@@ -316,7 +318,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
 						viewFactory:static_text {
-							title = LOC '$$$/LrMediaWiki/Section/Licensing/Categories=Categories^nseparated by ;',
+							title = LOC "$$$/LrMediaWiki/Section/Licensing/Categories=Categories^nseparated by ;",
 							alignment = labelAlignment,
 							width = LrView.share 'label_width',
 						},
@@ -329,11 +331,11 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 				},
 				viewFactory:group_box {
-					title = LOC '$$$/LrMediaWiki/Section/Licensing/InfoboxTemplatesInformationAndObjectPhoto=Infobox templates “Information” and “Object photo”',
+					title = LOC "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplatesInformationAndObjectPhoto=Infobox templates “Information” and “Object photo”",
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
 						viewFactory:static_text {
-							title = LOC '$$$/LrMediaWiki/Section/Licensing/Source=Source',
+							title = LOC "$$$/LrMediaWiki/Section/Licensing/Source=Source",
 							alignment = labelAlignment,
 							width = LrView.share 'label_width',
 						},
@@ -346,7 +348,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:row {
 						spacing = viewFactory:label_spacing(),
 						viewFactory:static_text {
-							title = LOC '$$$/LrMediaWiki/Section/Licensing/Author=Author',
+							title = LOC "$$$/LrMediaWiki/Section/Licensing/Author=Author",
 							alignment = labelAlignment,
 							width = LrView.share 'label_width',
 						},
@@ -416,13 +418,13 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 			local wikitext
 			local result, message = MediaWikiInterface.loadFileDescriptionTemplate(propertyTable.info_template)
 			if not result then
-				LrDialogs.message(LOC '$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description', message, 'error')
+				LrDialogs.message(LOC "$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description", message, 'error')
 				return
 			end
 
 			local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
 			wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
-			local dialogTitle = LOC '$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext'
+			local dialogTitle = LOC "$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext"
 			local factory = LrView.osFactory()
 			properties.dialogValue = wikitext
 
@@ -444,7 +446,7 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 							name = MediaWikiUtils.getPreviewWikitextFontName(),
 							size = MediaWikiUtils.getPreviewWikitextFontSize(),
 						},
-						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipWikitext=Font name and font size of the wikitext are customizable at the plug-in’s configuration.',
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipWikitext=Font name and font size of the wikitext are customizable at the plug-in’s configuration.",
 					},
 				},
 				factory:row {
@@ -457,43 +459,43 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 						-- 2 x U+25C0 = BLACK LEFT-POINTING TRIANGLE = ◀◀
 						title = '◀◀',
 						action = function() setPhoto('first') end,
-						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipButtonFirst=First file',
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonFirst=First file",
 					},
 					factory:push_button {
 						-- U+25C0 = BLACK LEFT-POINTING TRIANGLE = ◀
 						title = '◀',
 						action = function() setPhoto('previous') end,
-						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipButtonPrevious=Previous file',
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonPrevious=Previous file",
 					},
 					factory:push_button {
 						-- U+25B6 = BLACK RIGHT-POINTING TRIANGLE = ▶
 						title = '▶',
 						action = function() setPhoto('next') end,
-						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipButtonNext=Next file',
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonNext=Next file",
 					},
 					factory:push_button {
 						-- 2 x U+25B6 = BLACK RIGHT-POINTING TRIANGLE = ▶▶
 						title = '▶▶',
 						action = function() setPhoto('last') end,
-						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipButtonLast=Last file',
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonLast=Last file",
 					},
 					factory:static_text {
 						bind_to_object = properties,
 						title = LrView.bind('currentOfAll'),
 						width_in_chars = 30,
-						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipCurrentOfAll=Current index in relation to the total number of selected files',
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipCurrentOfAll=Current index in relation to the total number of selected files",
 					},
 				},
 				factory:row {
 					factory:static_text {
-						title = LOC '$$$/LrMediaWiki/Preview/FileName=File Name:',
+						title = LOC "$$$/LrMediaWiki/Preview/FileName=File Name:",
 					},
 					factory:static_text {
 						bind_to_object = properties,
 						title = LrView.bind('fileName'),
 						width_in_chars = 30,
 						fill_horizontal = 1,
-						tooltip = LOC '$$$/LrMediaWiki/Preview/TooltipFileName=Current file name',
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipFileName=Current file name",
 					},
 				},
 			}
@@ -640,7 +642,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local gps = photo:getRawMetadata('gps')
 	local LrMajorVersion = LrApplication.versionTable().major -- number type
 	local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
-	local subText = LOC '$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom'
+	local subText = LOC "$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom"
 	exportFields.location = ''
 	if gps and gps.latitude and gps.longitude then
 		local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
@@ -651,19 +653,19 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 				location = location .. '|heading:' .. heading -- append heading at location
 				local headingRounded = string.format("%.0f", heading) -- rounding, e.g. 359.9876 -> 360
 				-- Newlines could be inserted in ZStrings by "^n". Whereas, splitting the message text into multiple lines, improves code readability.
-				local hintLine1 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingTrueL1=Hint: The Lightroom field ^[Direction^] has a value of ^1^D.', headingRounded) -- ^D is a degree symbol
-				local hintLine2 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingTrueL2=This value has been used to set the ^[heading^] parameter at {{Location}} template.')
-				local hintLine3 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingTrueL3=This feature requires a Lightroom version 6/CC or higher.')
-				local hintLine4 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingTrueL4=This Lightroom version is ^1, therefore this feature works.', LrVersionString)
+				local hintLine1 = LOC ("$$$/LrMediaWiki/Interface/HintHeadingTrueL1=Hint: The Lightroom field ^[Direction^] has a value of ^1^D.", headingRounded) -- ^D is a degree symbol
+				local hintLine2 = LOC ("$$$/LrMediaWiki/Interface/HintHeadingTrueL2=This value has been used to set the ^[heading^] parameter at {{Location}} template.")
+				local hintLine3 = LOC ("$$$/LrMediaWiki/Interface/HintHeadingTrueL3=This feature requires a Lightroom version 6/CC or higher.")
+				local hintLine4 = LOC ("$$$/LrMediaWiki/Interface/HintHeadingTrueL4=This Lightroom version is ^1, therefore this feature works.", LrVersionString)
 				local hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3 .. '\n' .. hintLine4
 				local messageTable = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 				LrDialogs.messageWithDoNotShow(messageTable)
 			end
 		elseif LrMajorVersion == 5 then
 			-- Newlines could be inserted in ZStrings by "^n". Whereas, splitting the message text into multiple lines, improves code readability.
-			local hintLine1 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hint: If the Lightroom field ^[Direction^] has a value, this can not be used to set a ^[heading^] parameter at {{Location}} template.')
-			local hintLine2 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingFalseL2=This feature requires a Lightroom version 6/CC or higher.')
-			local hintLine3 = LOC ('$$$/LrMediaWiki/Interface/HintHeadingFalseL3=This Lightroom version is ^1, therefore this feature works not.', LrVersionString)
+			local hintLine1 = LOC ("$$$/LrMediaWiki/Interface/HintHeadingFalseL1=Hint: If the Lightroom field ^[Direction^] has a value, this can not be used to set a ^[heading^] parameter at {{Location}} template.")
+			local hintLine2 = LOC ("$$$/LrMediaWiki/Interface/HintHeadingFalseL2=This feature requires a Lightroom version 6/CC or higher.")
+			local hintLine3 = LOC ("$$$/LrMediaWiki/Interface/HintHeadingFalseL3=This Lightroom version is ^1, therefore this feature works not.", LrVersionString)
 			local hintMessage = hintLine1 .. '\n' .. hintLine2 .. '\n' .. hintLine3
 			local table = {message = hintMessage, info = subText, actionPrefKey = 'Show hint message of used LR version'}
 			LrDialogs.messageWithDoNotShow(table)

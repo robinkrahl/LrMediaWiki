@@ -28,6 +28,14 @@ local MediaWikiApi = {
 	githubApiVersion = 'https://api.github.com/repos/Hasenlaeufer/LrMediaWiki/releases',
 }
 
+function MediaWikiApi.httpError(status)
+	LrErrors.throwUserError(LOC("$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.", status))
+end
+
+function MediaWikiApi.mediaWikiError(code, info)
+	LrErrors.throwUserError(LOC("$$$/LrMediaWiki/Api/MediaWikiError=The MediaWiki error ^1 occured: ^2", code, info))
+end
+
 --- URL-encode a string according to RFC 3986.
 -- Based on http://lua-users.org/wiki/StringRecipes
 -- @param str the string to encode
@@ -98,9 +106,9 @@ function MediaWikiApi.performHttpRequest(path, arguments, requestHeaders, post)
 	MediaWikiUtils.trace(resultHeaders.status);
 
 	if not resultHeaders.status then
-		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/NoConnection=No network connection.'))
+		LrErrors.throwUserError(LOC("$$$/LrMediaWiki/Api/NoConnection=No network connection."))
 	elseif resultHeaders.status ~= 200 then
-		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.', resultHeaders.status))
+		MediaWikiApi.httpError(resultHeaders.status)
 	end
 
 	MediaWikiUtils.trace('Result body:');
@@ -125,7 +133,7 @@ function MediaWikiApi.performRequest(arguments)
 	local resultBody = MediaWikiApi.performHttpRequest(MediaWikiApi.apiPath, arguments, requestHeaders, true)
 	local resultXml = MediaWikiApi.parseXmlDom(LrXml.parseXml(resultBody))
 	if resultXml.error then
-		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/MediaWikiError=The MediaWiki error ^1 occured: ^2', resultXml.error.code, resultXml.error.info))
+		MediaWikiApi.mediaWikiError(resultXml.error.code, resultXml.error.info)
 	end
 	return resultXml
 end
@@ -316,12 +324,12 @@ function MediaWikiApi.upload(fileName, sourceFilePath, text, comment, ignoreWarn
 	local resultBody, resultHeaders = LrHttp.postMultipart(MediaWikiApi.apiPath, requestBody, requestHeaders)
 
 	if resultHeaders.status ~= 200 then
-		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/HttpError=Received HTTP status ^1.', resultHeaders.status))
+		MediaWikiApi.httpError(resultHeaders.status)
 	end
 
 	local resultXml = MediaWikiApi.parseXmlDom(LrXml.parseXml(resultBody))
 	if resultXml.error then
-		LrErrors.throwUserError(LOC('$$$/LrMediaWiki/Api/MediaWikiError=The MediaWiki error ^1 occured: ^2', resultXml.error.code, resultXml.error.info))
+		MediaWikiApi.mediaWikiError(resultXml.error.code, resultXml.error.info)
 	end
 
 	local uploadResult = resultXml.upload.result
