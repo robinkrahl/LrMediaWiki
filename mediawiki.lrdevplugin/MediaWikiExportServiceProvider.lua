@@ -637,7 +637,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local gps = photo:getRawMetadata('gps')
 	local LrMajorVersion = LrApplication.versionTable().major -- number type
 	local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
-	local subText = LOC "$$$/LrMediaWiki/Interface/MessageByMediaWiki=Message by MediaWiki for Lightroom"
+	local subText = LOC "$$$/LrMediaWiki/Interface/MessageByLrMediaWiki=Message by LrMediaWiki"
 	exportFields.location = ''
 	if gps and gps.latitude and gps.longitude then
 		local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude

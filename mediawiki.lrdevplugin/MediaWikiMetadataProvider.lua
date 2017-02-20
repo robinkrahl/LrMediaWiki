@@ -14,7 +14,7 @@
 -- i18n:  complete
 
 return {
-	title = LOC "$$$/LrMediaWiki/PluginName=MediaWiki for Lightroom",
+	title = 'LrMediaWiki',
 	id = 'LrMediaWikiTagset',
 	metadataFieldsForPhotos = {
 		-- Fields of templates "Information" and "Artwork":
