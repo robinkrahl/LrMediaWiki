@@ -32,6 +32,8 @@ return {
 		{ pf .. 'description_en', LOC "$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)" },
 		{ pf .. 'description_de', LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)" },
 		{ pf .. 'description_additional', LOC "$$$/LrMediaWiki/Metadata/DescriptionAdditional=Description (other)" },
+		{ 'com.adobe.dateCreated', LOC "$$$/LrMediaWiki/Metadata/DateCreated=Date Created" },
+		{ pf .. 'date', LOC "$$$/LrMediaWiki/Metadata/Date=Date" },
 		{ pf .. 'otherVersions', LOC "$$$/LrMediaWiki/Metadata/OtherVersions=Other versions" },
 		{ pf .. 'otherFields', LOC "$$$/LrMediaWiki/Metadata/OtherFields=Other fields" },
 		{ pf .. 'templates', LOC "$$$/LrMediaWiki/Metadata/Templates=Templates" },

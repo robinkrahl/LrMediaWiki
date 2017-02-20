@@ -118,7 +118,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				categories = '',
 				otherVersions = '',
 				otherFields = '',
-				timestamp = '',
+				date = '',
 				art = artworkParameters, -- Parameters of infobox template "Artwork"
 				objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 			}
@@ -550,7 +550,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		categories = '', -- '<!-- Per-file categories -->',
 		otherVersions = '', -- '<!-- Other versions -->',
 		otherFields = '', -- '<!-- Other fields -->',
-		timestamp = '', -- '<!-- Date -->', -- Meta data, no LrMediaWiki field
+		date = '', -- '<!-- Date -->',
 		art = artworkParameters, -- Parameters of infobox template "Artwork"
 		objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 	}
@@ -694,18 +694,22 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		exportFields.otherFields = otherFields
 	end
 
-	-- Field "timestamp"
+	-- Field "date"
 	local timestamp = ''
 	local dateCreated = photo:getFormattedMetadata('dateCreated')
 	if MediaWikiUtils.isStringFilled(dateCreated) then
-		-- If metadata tagset is set to "EXIF and IPTC", "IPTC" or "Location", the field
+		-- If metadata set is set to "EXIF and IPTC", "IPTC" or "Location", the field
 		-- "Date Created" is editable. At some cases field checks work, at other cases not.
 		-- The format is "YYYY-MM-DDThh:mm:ss", according to ISO 8601.
 		-- To improve human readability, "T" is replaced with a blank sign:
 		dateCreated = string.gsub(dateCreated, 'T', ' ')
 		timestamp = dateCreated
 	end
-	exportFields.timestamp = timestamp
+	exportFields.date = timestamp
+	local date = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'date')
+	if MediaWikiUtils.isStringFilled(date) then
+		exportFields.date = date
+	end
 
 	-- Fields of infobox template "Artwork":
 	local artist = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'artist')
@@ -719,10 +723,6 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local title = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'title')
 	if MediaWikiUtils.isStringFilled(title) then
 		exportFields.art.title = title
-	end
-	local date = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'date')
-	if MediaWikiUtils.isStringFilled(date) then
-		exportFields.art.date = date
 	end
 	local medium = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'medium')
 	if MediaWikiUtils.isStringFilled(medium) then

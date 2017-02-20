@@ -205,12 +205,11 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		templates = exportFields.templates,
 		otherVersions = exportFields.otherVersions,
 		otherFields = exportFields.otherFields,
-		timestamp = exportFields.timestamp,
+		date = exportFields.date,
 		-- Parameter of infobox template "Artwork":
 		artArtist = exportFields.art.artist,
 		artAuthor = exportFields.art.author,
 		artTitle = exportFields.art.title,
-		artDate = exportFields.art.date,
 		artMedium = exportFields.art.medium,
 		artDimensions = exportFields.art.dimensions,
 		artInstitution = exportFields.art.institution,
@@ -368,7 +367,7 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	end
 
 	wikitext = MediaWikiUtils.substitutePlaceholders(wikitext, arguments)
-	-- local msg = 'Wikitext: <' .. wikitext .. '>'
+	-- local msg = 'Wikitext:\n' .. wikitext
 	-- MediaWikiUtils.trace(msg)
 
 	return wikitext

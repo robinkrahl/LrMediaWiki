@@ -4,7 +4,7 @@
  | Author = ${artAuthor}
  | Title = ${artTitle}
  | Description = ${description}
- | Date = ${artDate}
+ | Date = ${date}
  | Medium = ${artMedium}
  | Dimensions = ${artDimensions}
  | Institution = ${artInstitution}

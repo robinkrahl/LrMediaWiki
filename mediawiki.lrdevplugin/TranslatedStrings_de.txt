@@ -46,6 +46,7 @@
 "$$$/LrMediaWiki/Metadata/Categories=Kategorien"
 "$$$/LrMediaWiki/Metadata/CreditLine=Anerkennung"
 "$$$/LrMediaWiki/Metadata/Date=Datum"
+"$$$/LrMediaWiki/Metadata/DateCreated=Erstellt am"
 "$$$/LrMediaWiki/Metadata/Department=Standort"
 "$$$/LrMediaWiki/Metadata/DescriptionAdditional=Beschreibung (andere)"
 "$$$/LrMediaWiki/Metadata/DescriptionDe=Beschreibung (de)"
