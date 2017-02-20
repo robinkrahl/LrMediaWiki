@@ -1,8 +1,8 @@
 == {{int:filedesc}} ==
 {{Information
  | Description = ${description}
- | Source = ${source}
  | Date = ${timestamp}
+ | Source = ${source}
  | Author = ${author}
  | Permission = ${permission}
  | Other versions = ${otherVersions}

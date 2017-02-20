@@ -13,18 +13,16 @@
 -- doc:   missing
 -- i18n:  complete
 
+local LrApplication = import 'LrApplication'
+local LrBinding = import 'LrBinding'
 local LrDate = import 'LrDate'
 local LrDialogs = import 'LrDialogs'
 local LrErrors = import 'LrErrors'
 local LrFileUtils = import 'LrFileUtils'
-local LrPathUtils = import 'LrPathUtils'
-local LrView = import 'LrView'
-local LrApplication = import 'LrApplication'
-local LrTasks = import 'LrTasks'
 local LrFunctionContext = import 'LrFunctionContext'
--- local LrExportContext = import 'LrExportContext'
--- local LrExportSession = import 'LrExportSession'
--- local LrSystemInfo = import 'LrSystemInfo'
+local LrPathUtils = import 'LrPathUtils'
+local LrTasks = import 'LrTasks'
+local LrView = import 'LrView'
 
 local bind = LrView.bind
 
@@ -172,9 +170,8 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 end
 
 MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, propertyTable)
-	local labelAlignment = 'right';
-	local widthLong = 57;
-	local widthLoginEditField = widthLong + 2;
+	local labelAlignment = 'right'
+	local widthLong = 440
 
 	return {
 		{
@@ -185,57 +182,50 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				spacing = viewFactory:control_spacing(),
 
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/Username=Username",
+						title = LOC "$$$/LrMediaWiki/Section/User/Username=Username:",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
 					viewFactory:edit_field {
 						value = bind 'username',
 						immediate = true,
-						width_in_chars = widthLoginEditField,
+						width = widthLong,
 					},
 				},
-
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/Password=Password",
+						title = LOC "$$$/LrMediaWiki/Section/User/Password=Password:",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
 					viewFactory:password_field {
 						value = bind 'password',
-						width_in_chars = widthLoginEditField,
+						width = widthLong,
 					},
 				},
-
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/ApiPath=API path",
+						title = LOC "$$$/LrMediaWiki/Section/User/ApiPath=API Path:",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
 					viewFactory:edit_field {
 						value = bind 'api_path',
 						immediate = true,
-						width_in_chars = widthLoginEditField,
+						width = widthLong,
 					},
 				},
-
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/Gallery=Gallery",
+						title = LOC "$$$/LrMediaWiki/Section/User/Gallery=Gallery:",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
 					viewFactory:edit_field {
 						value = bind 'gallery',
 						immediate = true,
-						width_in_chars = widthLoginEditField,
+						width = widthLong,
 					},
 				},
 			},
@@ -247,9 +237,8 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox template",
+						title = LOC "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox Template:",
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
 					},
@@ -261,7 +250,6 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							'Object photo',
 						},
 					},
-					-- spacing = viewFactory:label_spacing(),
 					viewFactory:push_button {
 						title = LOC "$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext",
 							action = function(button) -- luacheck: ignore button
@@ -269,94 +257,102 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							end,
 					},
 				},
-				viewFactory:group_box {
-					title = LOC "$$$/LrMediaWiki/Section/Licensing/AllInfoboxTemplates=All infobox templates",
-					viewFactory:row {
-						spacing = viewFactory:label_spacing(),
-						viewFactory:static_text {
-							title = LOC "$$$/LrMediaWiki/Section/Licensing/License=License",
-							alignment = labelAlignment,
-							width = LrView.share 'label_width',
+				viewFactory:row {
+					place = "overlapping",
+					viewFactory:view {
+						spacing = viewFactory:control_spacing(),
+						visible = LrBinding.keyIsNot( 'info_template', 'Artwork' ),
+						viewFactory:row {
+							viewFactory:static_text {
+								title = LOC "$$$/LrMediaWiki/Section/Licensing/Source=Source:",
+								alignment = labelAlignment,
+								width = LrView.share 'label_width',
+							},
+							viewFactory:edit_field {
+								value = bind 'info_source',
+								immediate = true,
+								width = widthLong,
+							},
 						},
-						viewFactory:combo_box {
-							value = bind 'info_license',
-							immediate = true,
-							width_in_chars = widthLong - 2,
-							items = {
-								'{{Cc-by-sa-4.0}}',
-								'{{Cc-by-4.0}}',
-								'{{Cc-zero}}',
+						viewFactory:row {
+							viewFactory:static_text {
+								title = LOC "$$$/LrMediaWiki/Section/Licensing/Author=Author:",
+								alignment = labelAlignment,
+								width = LrView.share 'label_width',
+							},
+							viewFactory:edit_field {
+								value = bind 'info_author',
+								immediate = true,
+								width = widthLong,
 							},
 						},
 					},
-					viewFactory:row {
-						spacing = viewFactory:label_spacing(),
-						viewFactory:static_text {
-							title = LOC "$$$/LrMediaWiki/Section/Licensing/Permission=Permission",
-							alignment = labelAlignment,
-							width = LrView.share 'label_width',
-						},
-						viewFactory:edit_field {
-							value = bind 'info_permission',
-							immediate = true,
-							width_in_chars = widthLong,
-						},
-					},
-					viewFactory:row {
-						spacing = viewFactory:label_spacing(),
-						viewFactory:static_text {
-							title = LOC "$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other templates",
-							alignment = labelAlignment,
-							width = LrView.share 'label_width',
-						},
-						viewFactory:edit_field {
-							value = bind 'info_templates',
-							immediate = true,
-							width_in_chars = widthLong,
-						},
-					},
-					viewFactory:row {
-						spacing = viewFactory:label_spacing(),
-						viewFactory:static_text {
-							title = LOC "$$$/LrMediaWiki/Section/Licensing/Categories=Categories^nseparated by ;",
-							alignment = labelAlignment,
-							width = LrView.share 'label_width',
-						},
-						viewFactory:edit_field {
-							value = bind 'info_categories',
-							immediate = true,
-							width_in_chars = widthLong,
-							height_in_lines = 3,
+					viewFactory:view {
+						visible = LrBinding.keyEquals( 'info_template', 'Artwork' ),
+						viewFactory:row {
+							viewFactory:spacer {
+								width = LrView.share 'label_width',
+							},
+							viewFactory:static_text {
+								title = LOC "$$$/LrMediaWiki/Section/Licensing/HintArtwork=“Source” and “Author” of infobox template “Artwork” can not maintained here.^nThey are maintained per file.",
+								alignment = 'center',
+								width = widthLong,
+							},
 						},
 					},
 				},
-				viewFactory:group_box {
-					title = LOC "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplatesInformationAndObjectPhoto=Infobox templates “Information” and “Object photo”",
-					viewFactory:row {
-						spacing = viewFactory:label_spacing(),
-						viewFactory:static_text {
-							title = LOC "$$$/LrMediaWiki/Section/Licensing/Source=Source",
-							alignment = labelAlignment,
-							width = LrView.share 'label_width',
-						},
-						viewFactory:edit_field {
-							value = bind 'info_source',
-							immediate = true,
-							width_in_chars = widthLong,
+				viewFactory:row {
+					viewFactory:static_text {
+						title = LOC "$$$/LrMediaWiki/Section/Licensing/Permission=Permission:",
+						alignment = labelAlignment,
+						width = LrView.share 'label_width',
+					},
+					viewFactory:edit_field {
+						value = bind 'info_permission',
+						immediate = true,
+						width = widthLong,
+					},
+				},
+				viewFactory:row {
+					viewFactory:static_text {
+						title = LOC "$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other Templates:",
+						alignment = labelAlignment,
+						width = LrView.share 'label_width',
+					},
+					viewFactory:edit_field {
+						value = bind 'info_templates',
+						immediate = true,
+						width = widthLong,
+					},
+				},
+				viewFactory:row {
+					viewFactory:static_text {
+						title = LOC "$$$/LrMediaWiki/Section/Licensing/License=License:",
+						alignment = labelAlignment,
+						width = LrView.share 'label_width',
+					},
+					viewFactory:combo_box {
+						value = bind 'info_license',
+						immediate = true,
+						width = widthLong,
+						items = {
+							'{{Cc-by-sa-4.0}}',
+							'{{Cc-by-4.0}}',
+							'{{Cc-zero}}',
 						},
 					},
-					viewFactory:row {
-						spacing = viewFactory:label_spacing(),
-						viewFactory:static_text {
-							title = LOC "$$$/LrMediaWiki/Section/Licensing/Author=Author",
-							alignment = labelAlignment,
-							width = LrView.share 'label_width',
-						},
-						viewFactory:edit_field {
-							value = bind 'info_author',
-							immediate = true,
-							width_in_chars = widthLong,
-						},
+				},
+				viewFactory:row {
+					viewFactory:static_text {
+						title = LOC "$$$/LrMediaWiki/Section/Licensing/Categories=Categories:^nseparated by ;",
+						alignment = labelAlignment,
+						width = LrView.share 'label_width',
+					},
+					viewFactory:edit_field {
+						value = bind 'info_categories',
+						immediate = true,
+						width = widthLong,
+						height_in_lines = 3,
 					},
 				},
 			},
@@ -369,7 +365,6 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 	-- according to this discussion post: <https://forums.adobe.com/message/8493589#8493589>
 	LrTasks.startAsyncTask( function ()
 			LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
-			local LrBinding = import 'LrBinding'
 			local properties = LrBinding.makePropertyTable(context)
 			local activeCatalog = LrApplication.activeCatalog()
 			properties.photoList = activeCatalog:getTargetPhotos()

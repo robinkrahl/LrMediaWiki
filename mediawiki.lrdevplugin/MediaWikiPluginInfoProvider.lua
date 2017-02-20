@@ -45,7 +45,6 @@ local fontSizeTooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSizeTool
 MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right'
 	local widthLong = 50
-	local labelWidth = 96 -- LrView.share 'label_width'
 
 	return {
 		{
@@ -70,7 +69,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					viewFactory:static_text {
 						alignment = labelAlignment,
 						width = LrView.share "label_width",
-						title = LOC "$$$/LrMediaWiki/Section/Config/ExportKeyword=Export keyword",
+						title = LOC "$$$/LrMediaWiki/Section/Config/ExportKeyword=Export Keyword:",
 					},
 
 					viewFactory:edit_field {
@@ -141,9 +140,9 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 						-- Font name
 						viewFactory:row {
 							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontName=Font Name",
+								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontName=Font Name:",
 								alignment = labelAlignment,
-								width = labelWidth,
+								width = 96,
 								tooltip = fontNameTooltip,
 							},
 							viewFactory:combo_box {
@@ -164,7 +163,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 							},
 						-- Font size
 							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSize=Font Size",
+								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSize=Font Size:",
 								alignment = labelAlignment,
 								width = 68,
 								tooltip = fontSizeTooltip,

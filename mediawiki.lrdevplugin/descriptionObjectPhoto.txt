@@ -4,10 +4,10 @@
  | detail = ${detail}
  | detail position = ${detailPosition}
  | description = ${description}
- | source = ${source}
- | author = ${author}
- | permission = ${permission}
  | date = ${timestamp}
+ | author = ${author}
+ | source = ${source}
+ | permission = ${permission}
  | other_versions = ${otherVersions}
  | other_fields = ${otherFields}
 }}
