@@ -342,10 +342,8 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 
 	if arguments.dateCreated ~= '' then
 		-- assumed format: "YYYY-MM-DDThh:mm:ss"
-		local dateTime = string.gsub(arguments.dateCreated, '-', ':')
-		-- now the format of dateTime should be "YYYY:MM:DDThh:mm:ss"
-		arguments.creationDate = string.sub(dateTime, 1, 10) -- "YYYY:MM:DD"
-		arguments.creationTime = string.sub(dateTime, 12, 20) -- "hh:mm:ss"
+		arguments.creationDate = string.sub(arguments.dateCreated, 1, 10) -- "YYYY-MM-DD"
+		arguments.creationTime = string.sub(arguments.dateCreated, 12, 20) -- "hh:mm:ss"
 	else
 		arguments.creationDate = ''
 		arguments.creationTime = ''
