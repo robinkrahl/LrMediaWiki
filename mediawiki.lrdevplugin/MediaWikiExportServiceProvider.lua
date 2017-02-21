@@ -171,7 +171,6 @@ end
 
 MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right'
-	local widthLong = 440
 
 	return {
 		{
@@ -180,6 +179,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
+				fill_horizontal = 1,
 
 				viewFactory:row {
 					viewFactory:static_text {
@@ -190,7 +190,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'username',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -201,7 +201,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 					viewFactory:password_field {
 						value = bind 'password',
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -213,7 +213,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'api_path',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -225,7 +225,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'gallery',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 			},
@@ -236,6 +236,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
+				fill_horizontal = 1,
 				viewFactory:row {
 					viewFactory:static_text {
 						title = LOC "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox Template:",
@@ -261,6 +262,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:row {
 					place = "overlapping",
 					viewFactory:view {
+						fill_horizontal = 1,
 						spacing = viewFactory:control_spacing(),
 						visible = LrBinding.keyIsNot( 'info_template', 'Artwork' ),
 						viewFactory:row {
@@ -272,7 +274,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							viewFactory:edit_field {
 								value = bind 'info_source',
 								immediate = true,
-								width = widthLong,
+								fill_horizontal = 1,
 							},
 						},
 						viewFactory:row {
@@ -284,11 +286,12 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							viewFactory:edit_field {
 								value = bind 'info_author',
 								immediate = true,
-								width = widthLong,
+								fill_horizontal = 1,
 							},
 						},
 					},
 					viewFactory:view {
+						fill_horizontal = 1,
 						visible = LrBinding.keyEquals( 'info_template', 'Artwork' ),
 						viewFactory:row {
 							viewFactory:spacer {
@@ -297,7 +300,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							viewFactory:static_text {
 								title = LOC "$$$/LrMediaWiki/Section/Licensing/HintArtwork=“Author” and “Source” of infobox template “Artwork” can not maintained here.^nThey are maintained per file.",
 								alignment = 'center',
-								width = widthLong,
+								fill_horizontal = 1,
 							},
 						},
 					},
@@ -311,7 +314,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'info_permission',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -323,7 +326,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'info_templates',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -335,7 +338,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:combo_box {
 						value = bind 'info_license',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 						items = {
 							'{{Cc-by-sa-4.0}}',
 							'{{Cc-by-4.0}}',
@@ -352,7 +355,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'info_categories',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 						height_in_lines = 3,
 					},
 				},
