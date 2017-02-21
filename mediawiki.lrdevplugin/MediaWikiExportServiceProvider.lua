@@ -174,7 +174,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 	return {
 		{
-			title = LOC "$$$/LrMediaWiki/Section/User/Title=Login Information",
+			title = LOC "$$$/LrMediaWiki/Section/User/Title=LrMediaWiki Login Information",
 			synopsis = bind 'username',
 
 			viewFactory:column {
@@ -231,7 +231,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 			},
 		},
 		{
-			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=Upload Information",
+			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=LrMediaWiki Upload Information",
 			synopsis = bind 'info_template',
 
 			viewFactory:column {
