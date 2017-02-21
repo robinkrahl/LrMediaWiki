@@ -44,7 +44,6 @@ local fontSizeTooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSizeTool
 
 MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right'
-	local widthLong = 50
 
 	return {
 		{
@@ -53,6 +52,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
+				fill_horizontal = 1,
 
 				viewFactory:row {
 					spacing = viewFactory:label_spacing(),
@@ -75,7 +75,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'export_keyword',
 						immediate = true,
-						width_in_chars = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 
@@ -147,7 +147,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 							},
 							viewFactory:combo_box {
 								value = bind 'preview_wikitext_font_name',
-								width_in_chars = widthLong - 30,
+								width_in_chars = 20,
 								immediate = true,
 								items = { -- see [1]
 									'Courier', -- Mac, monospace
@@ -165,7 +165,7 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 							viewFactory:static_text {
 								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSize=Font Size:",
 								alignment = labelAlignment,
-								width = 68,
+								width = 80,
 								tooltip = fontSizeTooltip,
 							},
 							viewFactory:combo_box {
