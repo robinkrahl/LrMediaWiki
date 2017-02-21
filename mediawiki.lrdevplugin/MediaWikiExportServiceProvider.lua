@@ -455,8 +455,8 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 				},
 				factory:row {
 					factory:push_button {
-						-- 2 x U+25C0 = BLACK LEFT-POINTING TRIANGLE = ◀◀
-						title = '◀◀',
+						-- | + U+25C0 = BLACK LEFT-POINTING TRIANGLE = |◀
+						title = '|◀',
 						action = function() setPhoto('first') end,
 						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonFirst=First file",
 					},
@@ -473,8 +473,8 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonNext=Next file",
 					},
 					factory:push_button {
-						-- 2 x U+25B6 = BLACK RIGHT-POINTING TRIANGLE = ▶▶
-						title = '▶▶',
+						-- U+25B6 + | = BLACK RIGHT-POINTING TRIANGLE = ▶|
+						title = '▶|',
 						action = function() setPhoto('last') end,
 						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonLast=Last file",
 					},
