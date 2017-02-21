@@ -246,6 +246,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						value = bind 'info_template',
 						items = {
 							'Information',
+							'Information (de)',
 							'Artwork',
 							'Object photo',
 						},
@@ -294,7 +295,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 								width = LrView.share 'label_width',
 							},
 							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Licensing/HintArtwork=“Source” and “Author” of infobox template “Artwork” can not maintained here.^nThey are maintained per file.",
+								title = LOC "$$$/LrMediaWiki/Section/Licensing/HintArtwork=“Author” and “Source” of infobox template “Artwork” can not maintained here.^nThey are maintained per file.",
 								alignment = 'center',
 								width = widthLong,
 							},
@@ -598,7 +599,11 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
-		description = description .. '{{de|1=' .. descriptionDe .. '}}'
+		if propertyTable.info_template == 'Information (de)' then
+			description = descriptionDe
+		else
+			description = description .. '{{de|1=' .. descriptionDe .. '}}'
+		end
 		existDescription = true
 	end
 	if MediaWikiUtils.isStringFilled(descriptionAdditional) then

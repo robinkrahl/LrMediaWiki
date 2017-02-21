@@ -95,7 +95,7 @@
 "$$$/LrMediaWiki/Section/Config/Version=Suche nach neuer Zusatzmodul-Version, wenn Lightroom startet"
 "$$$/LrMediaWiki/Section/Licensing/Author=Urheber:"
 "$$$/LrMediaWiki/Section/Licensing/Categories=Kategorien:^nmit ; getrennt"
-"$$$/LrMediaWiki/Section/Licensing/HintArtwork=„Quelle“ und „Autor“ der Infobox-Vorlage „Artwork“ können hier nicht gepflegt werden.^nSie werden pro Datei gepfegt."
+"$$$/LrMediaWiki/Section/Licensing/HintArtwork=„Autor“ und „Quelle“ und der Infobox-Vorlage „Artwork“ können hier nicht gepflegt werden.^nSie werden pro Datei gepfegt."
 "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox-Vorlage"
 "$$$/LrMediaWiki/Section/Licensing/License=Lizenz:"
 "$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Andere Vorlagen:"

@@ -33,7 +33,9 @@ local MediaWikiInterface = {
 MediaWikiInterface.loadFileDescriptionTemplate = function(templateName)
 	local fileName
 	if templateName == 'Information' then -- default, see MediaWikiExportServiceProvider.exportPresetFields
-		fileName = '/descriptionInformation.txt'
+		fileName = '/descriptionInformationEn.txt'
+	elseif templateName == 'Information (de)' then
+		fileName = '/descriptionInformationDe.txt'
 	elseif templateName == 'Artwork' then
 		fileName = '/descriptionArtwork.txt'
 	elseif templateName == 'Object photo' then

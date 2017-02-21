@@ -17,7 +17,6 @@
 -- Wikimedia Commons infobox template "Object photo":
 -- <https://commons.wikimedia.org/wiki/Template:Object_photo>
 -- The fields "Source", "Author" and "Permission" are added at export dialog.
--- The field "Date" is addded by the value of IPTC field "Date Created".
 
 local Info = require 'Info'
 local pf = Info.LrToolkitIdentifier .. '.' -- Prefix, e.g. 'org.ireas.lightroom.mediawiki.'

@@ -95,7 +95,7 @@
 "$$$/LrMediaWiki/Section/Config/Version=Check for new plug-in version after Lightroom starts"
 "$$$/LrMediaWiki/Section/Licensing/Author=Author:"
 "$$$/LrMediaWiki/Section/Licensing/Categories=Categories:^nseparated by ;"
-"$$$/LrMediaWiki/Section/Licensing/HintArtwork=“Source” and “Author” of infobox template “Artwork” can not maintained here.^nThey are maintained per file."
+"$$$/LrMediaWiki/Section/Licensing/HintArtwork=“Author” and “Source” of infobox template “Artwork” can not maintained here.^nThey are maintained per file."
 "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox Template:"
 "$$$/LrMediaWiki/Section/Licensing/License=License:"
 "$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other Templates:"

@@ -17,7 +17,6 @@
 -- Wikimedia Commons infobox template "Artwork":
 -- <https://commons.wikimedia.org/wiki/Template:Artwork>
 -- The field "Permission" is added at export dialog.
--- The field "Date" is addded by the value of IPTC field "Date Created".
 
 local Info = require 'Info'
 local pf = Info.LrToolkitIdentifier .. '.' -- Prefix, e.g. 'org.ireas.lightroom.mediawiki.'
