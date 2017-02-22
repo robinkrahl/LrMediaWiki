@@ -609,7 +609,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		end
 		existDescription = true
 	end
-	if MediaWikiUtils.isStringFilled(descriptionAdditional) then
+	if MediaWikiUtils.isStringFilled(descriptionAdditional) and propertyTable.info_template ~= 'Information (de)' then
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
