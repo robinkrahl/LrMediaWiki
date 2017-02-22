@@ -1,7 +1,7 @@
 == {{int:filedesc}} ==
 {{Information
  | Description = ${description}
- | Date = ${timestamp}
+ | Date = ${date}
  | Source = ${source}
  | Author = ${author}
  | Permission = ${permission}

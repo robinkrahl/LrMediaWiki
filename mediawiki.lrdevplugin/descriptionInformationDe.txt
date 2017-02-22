@@ -1,0 +1,13 @@
+== {{int:filedesc}} ==
+{{Information
+ | Beschreibung = ${description}
+ | Datum = ${date}
+ | Quelle = ${source}
+ | Urheber = ${author}
+ | Genehmigung = ${permission}
+ | Andere Versionen = ${otherVersions}
+ | Anmerkungen = 
+}}
+${templates}
+${license}
+${categories}[[Kategorie:Hochgeladen mit LrMediaWiki]]

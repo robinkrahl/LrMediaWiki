@@ -118,7 +118,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				categories = '',
 				otherVersions = '',
 				otherFields = '',
-				timestamp = '',
+				date = '',
 				art = artworkParameters, -- Parameters of infobox template "Artwork"
 				objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 			}
@@ -171,15 +171,15 @@ end
 
 MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right'
-	local widthLong = 440
 
 	return {
 		{
-			title = LOC "$$$/LrMediaWiki/Section/User/Title=Login Information",
+			title = LOC "$$$/LrMediaWiki/Section/User/Title=LrMediaWiki Login Information",
 			synopsis = bind 'username',
 
 			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
+				fill_horizontal = 1,
 
 				viewFactory:row {
 					viewFactory:static_text {
@@ -190,7 +190,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'username',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -201,7 +201,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 					viewFactory:password_field {
 						value = bind 'password',
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -213,7 +213,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'api_path',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -225,17 +225,18 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'gallery',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 			},
 		},
 		{
-			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=Upload Information",
+			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=LrMediaWiki Upload Information",
 			synopsis = bind 'info_template',
 
 			viewFactory:column {
 				spacing = viewFactory:control_spacing(),
+				fill_horizontal = 1,
 				viewFactory:row {
 					viewFactory:static_text {
 						title = LOC "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox Template:",
@@ -246,6 +247,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 						value = bind 'info_template',
 						items = {
 							'Information',
+							'Information (de)',
 							'Artwork',
 							'Object photo',
 						},
@@ -260,6 +262,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				viewFactory:row {
 					place = "overlapping",
 					viewFactory:view {
+						fill_horizontal = 1,
 						spacing = viewFactory:control_spacing(),
 						visible = LrBinding.keyIsNot( 'info_template', 'Artwork' ),
 						viewFactory:row {
@@ -271,7 +274,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							viewFactory:edit_field {
 								value = bind 'info_source',
 								immediate = true,
-								width = widthLong,
+								fill_horizontal = 1,
 							},
 						},
 						viewFactory:row {
@@ -283,20 +286,21 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							viewFactory:edit_field {
 								value = bind 'info_author',
 								immediate = true,
-								width = widthLong,
+								fill_horizontal = 1,
 							},
 						},
 					},
 					viewFactory:view {
+						fill_horizontal = 1,
 						visible = LrBinding.keyEquals( 'info_template', 'Artwork' ),
 						viewFactory:row {
 							viewFactory:spacer {
 								width = LrView.share 'label_width',
 							},
 							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Licensing/HintArtwork=“Source” and “Author” of infobox template “Artwork” can not maintained here.^nThey are maintained per file.",
+								title = LOC "$$$/LrMediaWiki/Section/Licensing/HintArtwork=“Author” and “Source” of infobox template “Artwork” can not maintained here.^nThey are maintained per file.",
 								alignment = 'center',
-								width = widthLong,
+								fill_horizontal = 1,
 							},
 						},
 					},
@@ -310,7 +314,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'info_permission',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -322,7 +326,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'info_templates',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -334,7 +338,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:combo_box {
 						value = bind 'info_license',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 						items = {
 							'{{Cc-by-sa-4.0}}',
 							'{{Cc-by-4.0}}',
@@ -351,7 +355,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					viewFactory:edit_field {
 						value = bind 'info_categories',
 						immediate = true,
-						width = widthLong,
+						fill_horizontal = 1,
 						height_in_lines = 3,
 					},
 				},
@@ -451,8 +455,8 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 				},
 				factory:row {
 					factory:push_button {
-						-- 2 x U+25C0 = BLACK LEFT-POINTING TRIANGLE = ◀◀
-						title = '◀◀',
+						-- | + U+25C0 = BLACK LEFT-POINTING TRIANGLE = |◀
+						title = '|◀',
 						action = function() setPhoto('first') end,
 						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonFirst=First file",
 					},
@@ -469,8 +473,8 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonNext=Next file",
 					},
 					factory:push_button {
-						-- 2 x U+25B6 = BLACK RIGHT-POINTING TRIANGLE = ▶▶
-						title = '▶▶',
+						-- U+25B6 + | = BLACK RIGHT-POINTING TRIANGLE = ▶|
+						title = '▶|',
 						action = function() setPhoto('last') end,
 						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonLast=Last file",
 					},
@@ -550,7 +554,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		categories = '', -- '<!-- Per-file categories -->',
 		otherVersions = '', -- '<!-- Other versions -->',
 		otherFields = '', -- '<!-- Other fields -->',
-		timestamp = '', -- '<!-- Date -->', -- Meta data, no LrMediaWiki field
+		date = '', -- '<!-- Date -->',
 		art = artworkParameters, -- Parameters of infobox template "Artwork"
 		objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 	}
@@ -598,10 +602,14 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
-		description = description .. '{{de|1=' .. descriptionDe .. '}}'
+		if propertyTable.info_template == 'Information (de)' then
+			description = descriptionDe
+		else
+			description = description .. '{{de|1=' .. descriptionDe .. '}}'
+		end
 		existDescription = true
 	end
-	if MediaWikiUtils.isStringFilled(descriptionAdditional) then
+	if MediaWikiUtils.isStringFilled(descriptionAdditional) and propertyTable.info_template ~= 'Information (de)' then
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
@@ -694,18 +702,22 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		exportFields.otherFields = otherFields
 	end
 
-	-- Field "timestamp"
+	-- Field "date"
 	local timestamp = ''
 	local dateCreated = photo:getFormattedMetadata('dateCreated')
 	if MediaWikiUtils.isStringFilled(dateCreated) then
-		-- If metadata tagset is set to "EXIF and IPTC", "IPTC" or "Location", the field
+		-- If metadata set is set to "EXIF and IPTC", "IPTC" or "Location", the field
 		-- "Date Created" is editable. At some cases field checks work, at other cases not.
 		-- The format is "YYYY-MM-DDThh:mm:ss", according to ISO 8601.
 		-- To improve human readability, "T" is replaced with a blank sign:
 		dateCreated = string.gsub(dateCreated, 'T', ' ')
 		timestamp = dateCreated
 	end
-	exportFields.timestamp = timestamp
+	exportFields.date = timestamp
+	local date = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'date')
+	if MediaWikiUtils.isStringFilled(date) then
+		exportFields.date = date
+	end
 
 	-- Fields of infobox template "Artwork":
 	local artist = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'artist')
@@ -719,10 +731,6 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local title = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'title')
 	if MediaWikiUtils.isStringFilled(title) then
 		exportFields.art.title = title
-	end
-	local date = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'date')
-	if MediaWikiUtils.isStringFilled(date) then
-		exportFields.art.date = date
 	end
 	local medium = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'medium')
 	if MediaWikiUtils.isStringFilled(medium) then

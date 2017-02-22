@@ -32,15 +32,17 @@ GITHUB_REPO="LrMediaWiki"
 # paths and file names
 TMPDIR=`mktemp -d`
 LRDEVPLUGIN="mediawiki.lrdevplugin"
-LRPLUGIN="mediawiki.lrplugin"
+LRPLUGIN="LrMediaWiki.lrplugin"
 TAG="v$1"
-ARCHIVE_BASE_NAME="lrmediawiki-$VERSION"
+ARCHIVE_BASE_NAME="LrMediaWiki-$VERSION"
 ARCHIVE_NAME_ZIP="$ARCHIVE_BASE_NAME.zip"
 ARCHIVE_NAME_TAR_GZ="$ARCHIVE_BASE_NAME.tar.gz"
 CHECKSUM_NAME="checksums.md5"
 
 # create translated strings master file
-./create-translated-strings-master.sh
+./zstrings.sh
+
+rm $LRDEVPLUGIN/.DS_Store # created from Finder of macOS
 
 # copy required files to the temporary directory
 cp -p -r "$LRDEVPLUGIN" "$TMPDIR/$LRPLUGIN"

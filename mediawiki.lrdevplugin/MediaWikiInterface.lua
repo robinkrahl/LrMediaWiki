@@ -33,7 +33,9 @@ local MediaWikiInterface = {
 MediaWikiInterface.loadFileDescriptionTemplate = function(templateName)
 	local fileName
 	if templateName == 'Information' then -- default, see MediaWikiExportServiceProvider.exportPresetFields
-		fileName = '/descriptionInformation.txt'
+		fileName = '/descriptionInformationEn.txt'
+	elseif templateName == 'Information (de)' then
+		fileName = '/descriptionInformationDe.txt'
 	elseif templateName == 'Artwork' then
 		fileName = '/descriptionArtwork.txt'
 	elseif templateName == 'Object photo' then
@@ -205,12 +207,11 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		templates = exportFields.templates,
 		otherVersions = exportFields.otherVersions,
 		otherFields = exportFields.otherFields,
-		timestamp = exportFields.timestamp,
+		date = exportFields.date,
 		-- Parameter of infobox template "Artwork":
 		artArtist = exportFields.art.artist,
 		artAuthor = exportFields.art.author,
 		artTitle = exportFields.art.title,
-		artDate = exportFields.art.date,
 		artMedium = exportFields.art.medium,
 		artDimensions = exportFields.art.dimensions,
 		artInstitution = exportFields.art.institution,
@@ -343,10 +344,8 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 
 	if arguments.dateCreated ~= '' then
 		-- assumed format: "YYYY-MM-DDThh:mm:ss"
-		local dateTime = string.gsub(arguments.dateCreated, '-', ':')
-		-- now the format of dateTime should be "YYYY:MM:DDThh:mm:ss"
-		arguments.creationDate = string.sub(dateTime, 1, 10) -- "YYYY:MM:DD"
-		arguments.creationTime = string.sub(dateTime, 12, 20) -- "hh:mm:ss"
+		arguments.creationDate = string.sub(arguments.dateCreated, 1, 10) -- "YYYY-MM-DD"
+		arguments.creationTime = string.sub(arguments.dateCreated, 12, 20) -- "hh:mm:ss"
 	else
 		arguments.creationDate = ''
 		arguments.creationTime = ''
@@ -368,7 +367,7 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	end
 
 	wikitext = MediaWikiUtils.substitutePlaceholders(wikitext, arguments)
-	-- local msg = 'Wikitext: <' .. wikitext .. '>'
+	-- local msg = 'Wikitext:\n' .. wikitext
 	-- MediaWikiUtils.trace(msg)
 
 	return wikitext

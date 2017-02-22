@@ -25,6 +25,7 @@ return {
 	LrMetadataTagsetFactory = {
 		'MediaWikiMetadataSetAll.lua',
 		'MediaWikiMetadataSetInformation.lua',
+		'MediaWikiMetadataSetInformationDe.lua',
 		'MediaWikiMetadataSetArtwork.lua',
 		'MediaWikiMetadataSetObjectPhoto.lua',
 	},

@@ -17,7 +17,6 @@
 -- Wikimedia Commons infobox template "Information":
 -- <https://commons.wikimedia.org/wiki/Template:Information>
 -- The fields "Permission", "Source" and "Author" are added at export dialog.
--- The field "Date" is addded by the value of IPTC field "Date Created".
 
 local Info = require 'Info'
 local pf = Info.LrToolkitIdentifier .. '.' -- Prefix, e.g. 'org.ireas.lightroom.mediawiki.'
@@ -29,6 +28,8 @@ return {
 		{ pf .. 'description_en', LOC "$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)" },
 		{ pf .. 'description_de', LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)" },
 		{ pf .. 'description_additional', LOC "$$$/LrMediaWiki/Metadata/DescriptionAdditional=Description (other)" },
+		{ 'com.adobe.dateCreated', LOC "$$$/LrMediaWiki/Metadata/DateCreated=Date Created" },
+		{ pf .. 'date', LOC "$$$/LrMediaWiki/Metadata/Date=Date" },
 		{ pf .. 'otherVersions', LOC "$$$/LrMediaWiki/Metadata/OtherVersions=Other versions" },
 		{ pf .. 'otherFields', LOC "$$$/LrMediaWiki/Metadata/OtherFields=Other fields" },
 		{ pf .. 'templates', LOC "$$$/LrMediaWiki/Metadata/Templates=Templates" },
