@@ -54,14 +54,8 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	if MediaWikiUtils.isStringEmpty(exportSettings.api_path) then
 		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoApiPath=No API path given!")
 	end
-	if exportSettings.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportSettings.info_source) then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoSource=No source given!")
-	end
-	if exportSettings.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportSettings.info_author) then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoAuthor=No author given!")
-	end
-	if MediaWikiUtils.isStringEmpty(exportSettings.info_license) and MediaWikiUtils.isStringEmpty(exportSettings.info_permission) then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoLicense=No license given!")
+	if MediaWikiUtils.isStringEmpty(exportSettings.info_permission) and MediaWikiUtils.isStringEmpty(exportSettings.info_license) then
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPermissionLicense=No permission or license given!")
 	end
 
 	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path, exportSettings.info_template)
@@ -79,7 +73,6 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			-- do upload to MediaWiki
 			local artworkParameters = { -- Parameters of infobox template "Artwork" without "description" and "permission"
 				artist = '',
-				author = '',
 				title = '',
 				date = '',
 				medium = '',
@@ -95,7 +88,6 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				inscriptions = '',
 				notes = '',
 				references = '',
-				source = '',
 				wikidata = '',
 			}
 			local objectPhotoParameters = { -- Parameters of infobox template "Object photo" without "description" and "permission"
@@ -113,12 +105,14 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				info_categories = exportSettings.info_categories,
 				-- fields by file, to be filled by fillExportFields(), order by UI
 				description = '',
+				date = '',
+				source = '',
+				author = '',
 				location = '',
 				templates = '',
 				categories = '',
 				otherVersions = '',
 				otherFields = '',
-				date = '',
 				art = artworkParameters, -- Parameters of infobox template "Artwork"
 				objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 			}
@@ -260,49 +254,27 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 				},
 				viewFactory:row {
-					place = "overlapping",
-					viewFactory:view {
-						fill_horizontal = 1,
-						spacing = viewFactory:control_spacing(),
-						visible = LrBinding.keyIsNot( 'info_template', 'Artwork' ),
-						viewFactory:row {
-							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Licensing/Source=Source:",
-								alignment = labelAlignment,
-								width = LrView.share 'label_width',
-							},
-							viewFactory:edit_field {
-								value = bind 'info_source',
-								immediate = true,
-								fill_horizontal = 1,
-							},
-						},
-						viewFactory:row {
-							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Licensing/Author=Author:",
-								alignment = labelAlignment,
-								width = LrView.share 'label_width',
-							},
-							viewFactory:edit_field {
-								value = bind 'info_author',
-								immediate = true,
-								fill_horizontal = 1,
-							},
-						},
+					viewFactory:static_text {
+						title = LOC "$$$/LrMediaWiki/Section/Licensing/Source=Source:",
+						alignment = labelAlignment,
+						width = LrView.share 'label_width',
 					},
-					viewFactory:view {
+					viewFactory:edit_field {
+						value = bind 'info_source',
+						immediate = true,
 						fill_horizontal = 1,
-						visible = LrBinding.keyEquals( 'info_template', 'Artwork' ),
-						viewFactory:row {
-							viewFactory:spacer {
-								width = LrView.share 'label_width',
-							},
-							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Licensing/HintArtwork=“Author” and “Source” of infobox template “Artwork” can not maintained here.^nThey are maintained per file.",
-								alignment = 'center',
-								fill_horizontal = 1,
-							},
-						},
+					},
+				},
+				viewFactory:row {
+					viewFactory:static_text {
+						title = LOC "$$$/LrMediaWiki/Section/Licensing/Author=Author:",
+						alignment = labelAlignment,
+						width = LrView.share 'label_width',
+					},
+					viewFactory:edit_field {
+						value = bind 'info_author',
+						immediate = true,
+						fill_horizontal = 1,
 					},
 				},
 				viewFactory:row {
@@ -515,7 +487,6 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	-- All decisions done by this function should be documented at user's guide.
 	local artworkParameters = { -- Parameters of infobox template "Artwork"
 		artist = '', -- '<!-- Artist -->',
-		author = '', -- '<!-- Author -->',
 		title = '', -- '<!-- Title -->',
 		date = '', -- '<!-- Date -->',
 		medium = '', -- '<!-- Medium -->',
@@ -531,7 +502,6 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		inscriptions = '', -- '<!-- Inscriptions -->',
 		notes = '', -- '<!-- Notes -->',
 		references = '', -- '<!-- References -->',
-		source = '', -- '<!-- Source -->',
 		wikidata = '', -- '<!-- Wikidata -->',
 	}
 	local objectPhotoParameters = { -- Parameters of infobox template "Object photo" without "description" and "permission"
@@ -541,20 +511,20 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	}
 	local exportFields = { -- Fields set at export dialog, copied to return object, order by UI
 		info_template = propertyTable.info_template,
-		info_source = propertyTable.info_source,
-		info_author = propertyTable.info_author,
-		info_license = propertyTable.info_license,
 		info_permission = propertyTable.info_permission,
+		info_license = propertyTable.info_license,
 		info_templates = propertyTable.info_templates,
 		info_categories = propertyTable.info_categories,
 		-- Fields by file, to be filled by this function, ordered by UI:
 		description = '', -- '<!-- Description -->',
+		date = '', -- '<!-- Date -->',
+		source = '', -- '<!-- Source -->',
+		author = '', -- '<!-- Author -->',
+		otherVersions = '', -- '<!-- Other versions -->',
+		otherFields = '', -- '<!-- Other fields -->',
 		location = '', -- '<!-- {{Location}} if GPS metadata is available -->',
 		templates = '', -- '<!-- Templates -->',
 		categories = '', -- '<!-- Per-file categories -->',
-		otherVersions = '', -- '<!-- Other versions -->',
-		otherFields = '', -- '<!-- Other fields -->',
-		date = '', -- '<!-- Date -->',
 		art = artworkParameters, -- Parameters of infobox template "Artwork"
 		objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 	}
@@ -567,15 +537,33 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	-- * Source
 
 	-- Field "source"
-	if exportFields.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportFields.info_source) then
-		exportFields.info_source = '<!-- A source is required. -->'
-	elseif exportFields.info_template == 'Artwork' and MediaWikiUtils.isStringEmpty(exportFields.art.source) then
-		exportFields.art.source = '<!-- A source is required. -->'
+	if MediaWikiUtils.isStringFilled(propertyTable.info_source) then
+		exportFields.source = propertyTable.info_source
+	end
+	local source = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'source')
+	if MediaWikiUtils.isStringFilled(source) then
+		-- potentially overwrite the prior set value:
+		exportFields.source = source
+	end
+	-- All infobox templates require a source:
+	-- if MediaWikiUtils.isStringEmpty(exportFields.source) then
+	if exportFields.source == '' then
+		exportFields.source = '<!-- A source is required. -->'
 	end
 
 	-- Field "author"
-	if exportFields.info_template == 'Information' and MediaWikiUtils.isStringEmpty(exportFields.info_author) then
-		exportFields.info_author = '<!-- An author is required. -->'
+	if MediaWikiUtils.isStringFilled(propertyTable.info_author) then
+		exportFields.author = propertyTable.info_author
+	end
+	local author = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'author')
+	if MediaWikiUtils.isStringFilled(author) then
+		-- potentially overwrite the prior set value:
+		exportFields.author = author
+	end
+	-- At infobox template "Artwork" the parameter "author" is optional;
+	-- all other infobox templates require a parameter "author".
+	if exportFields.info_template ~= 'Artwork' and exportFields.author == '' then
+		exportFields.author = '<!-- An author is required. -->'
 	end
 
 	-- Field "license"
@@ -724,10 +712,6 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	if MediaWikiUtils.isStringFilled(artist) then
 		exportFields.art.artist = artist
 	end
-	local author = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'author')
-	if MediaWikiUtils.isStringFilled(author) then
-		exportFields.art.author = author
-	end
 	local title = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'title')
 	if MediaWikiUtils.isStringFilled(title) then
 		exportFields.art.title = title
@@ -783,10 +767,6 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	local references = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'references')
 	if MediaWikiUtils.isStringFilled(references) then
 		exportFields.art.references = references
-	end
-	local source = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'source')
-	if MediaWikiUtils.isStringFilled(source) then
-		exportFields.art.source = source
 	end
 	local wikidata = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'wikidata')
 	if MediaWikiUtils.isStringFilled(wikidata) then

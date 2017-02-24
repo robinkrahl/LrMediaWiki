@@ -1,7 +1,7 @@
 == {{int:filedesc}} ==
 {{Artwork
  | Artist = ${artArtist}
- | Author = ${artAuthor}
+ | Author = ${author}
  | Title = ${artTitle}
  | Description = ${description}
  | Date = ${date}
@@ -18,7 +18,7 @@
  | Inscriptions = ${artInscriptions}
  | Notes = ${artNotes}
  | References = ${artReferences}
- | Source = ${artSource}
+ | Source = ${source}
  | Permission = ${permission}
  | Other versions = ${otherVersions}
  | Other fields = ${otherFields}
