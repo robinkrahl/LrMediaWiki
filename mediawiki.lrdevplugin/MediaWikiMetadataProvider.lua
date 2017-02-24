@@ -53,7 +53,7 @@ return {
 		{
 			id = 'otherVersions',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/OtherVersions=Other versions",
+			title = LOC "$$$/LrMediaWiki/Metadata/OtherVersions=Other Versions",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -61,7 +61,7 @@ return {
 		{
 			id = 'otherFields',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/OtherFields=Other fields",
+			title = LOC "$$$/LrMediaWiki/Metadata/OtherFields=Other Fields",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -142,7 +142,7 @@ return {
 		{
 			id = 'accessionNumber',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/AccessionNumber=Accession number",
+			title = LOC "$$$/LrMediaWiki/Metadata/AccessionNumber=Accession Number",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -150,7 +150,7 @@ return {
 		{
 			id = 'placeOfCreation',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/PlaceOfCreation=Place of creation",
+			title = LOC "$$$/LrMediaWiki/Metadata/PlaceOfCreation=Place of Creation",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -158,7 +158,7 @@ return {
 		{
 			id = 'placeOfDiscovery',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/PlaceOfDiscovery=Place of discovery",
+			title = LOC "$$$/LrMediaWiki/Metadata/PlaceOfDiscovery=Place of Discovery",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -166,7 +166,7 @@ return {
 		{
 			id = 'objectHistory',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/ObjectHistory=Object history",
+			title = LOC "$$$/LrMediaWiki/Metadata/ObjectHistory=Object History",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -174,7 +174,7 @@ return {
 		{
 			id = 'exhibitionHistory',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/ExhibitionHistory=Exhibition history",
+			title = LOC "$$$/LrMediaWiki/Metadata/ExhibitionHistory=Exhibition History",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -182,7 +182,7 @@ return {
 		{
 			id = 'creditLine',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/CreditLine=Credit line",
+			title = LOC "$$$/LrMediaWiki/Metadata/CreditLine=Credit Line",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
@@ -247,7 +247,7 @@ return {
 		{
 			id = 'detailPosition',
 			version = 1,
-			title = LOC "$$$/LrMediaWiki/Metadata/DetailPosition=Detail position",
+			title = LOC "$$$/LrMediaWiki/Metadata/DetailPosition=Detail Position",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,

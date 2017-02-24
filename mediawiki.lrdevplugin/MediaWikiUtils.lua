@@ -34,8 +34,7 @@ end
 
 -- Substitute placeholders of format "<var>" – similar to function "formatString"
 MediaWikiUtils.substitutePlaceholders = function(str, arguments)
-	-- If the substitution doesn't work, an empty string will be returned.
-	return (str:gsub('(%b<>)', function(w) return arguments[w:sub(2, -2)] or '' end))
+	return (str:gsub('(%b<>)', function(w) return arguments[w:sub(2, -2)] or w end))
 end
 
 MediaWikiUtils.isStringEmpty = function(str)
