@@ -22,16 +22,34 @@ local Info = require 'Info'
 local pf = Info.LrToolkitIdentifier .. '.' -- Prefix, e.g. 'org.ireas.lightroom.mediawiki.'
 
 return {
-	id = 'LrMediaWikiMetadataSetInformatioDen', -- needs to be unique!
+	id = 'LrMediaWikiMetadataSetInformationDe', -- needs to be unique!
 	title = 'LrMediaWiki – Information (de)', -- no localization needed
 	items = {
-		{ pf .. 'description_de', LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)" },
-		{ 'com.adobe.dateCreated', LOC "$$$/LrMediaWiki/Metadata/DateCreated=Date Created" },
-		{ pf .. 'date', LOC "$$$/LrMediaWiki/Metadata/Date=Date" },
-		{ pf .. 'source', LOC "$$$/LrMediaWiki/Metadata/Source=Source" },
-		{ pf .. 'author', LOC "$$$/LrMediaWiki/Metadata/Author=Author" },
-		{ pf .. 'otherVersions', LOC "$$$/LrMediaWiki/Metadata/OtherVersions=Other Versions" },
-		{ pf .. 'templates', LOC "$$$/LrMediaWiki/Metadata/Templates=Templates" },
-		{ pf .. 'categories', LOC "$$$/LrMediaWiki/Metadata/Categories=Categories" },
+		{ 'com.adobe.label', label = 'LrMediaWiki – Information (de)' }, -- no localization needed
+		{ pf .. 'description_de', height_in_lines = 3 },
+		pf .. 'source',
+		pf .. 'author',
+		pf .. 'date',
+		pf .. 'otherVersions',
+		pf .. 'templates',
+		pf .. 'categories',
+		'com.adobe.separator',
+		{ 'com.adobe.label', label = 'Lightroom' },
+		'com.adobe.filename',
+		'com.adobe.copyname',
+		'com.adobe.headline',
+		'com.adobe.title',
+		{ 'com.adobe.caption', label = LOC "$$$/LrMediaWiki/Metadata/Caption=Description", height_in_lines = 3 },
+		'com.adobe.dateCreated',
+		'com.adobe.captureTime',
+		'com.adobe.captureDate',
+		'com.adobe.location',
+		'com.adobe.city',
+		'com.adobe.state',
+		'com.adobe.country',
+		'com.adobe.jobIdentifier',
+		{ 'com.adobe.personInImage', label = LOC "$$$/LrMediaWiki/Metadata/PersonShown=Person Shown" },
+		{ 'com.adobe.organisationInImageName', label = LOC "$$$/LrMediaWiki/Metadata/NameOrg=Name of Org Shown" },
+		'com.adobe.event',
 	},
 }
