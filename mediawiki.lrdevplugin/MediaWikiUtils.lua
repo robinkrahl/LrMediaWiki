@@ -46,6 +46,12 @@ MediaWikiUtils.isStringFilled = function(str)
 	return not MediaWikiUtils.isStringEmpty(str)
 end
 
+MediaWikiUtils.trim = function(str)
+	return string.match(str, '^%s*(.-)%s*$')
+	-- see e.g. http://lua-users.org/wiki/StringTrim
+	--- or http://lua-users.org/wiki/CommonFunctions
+end
+
 MediaWikiUtils.getFirstKey = function(table)
 	for key, value in pairs(table) do -- luacheck: ignore ("loop is executed at most once")
 		return key

@@ -185,11 +185,13 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	-- (LR 6 uses Lua 5.1.4)
 	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then
+			category = MediaWikiUtils.trim(category)
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
 	for category in string.gmatch(exportFields.info_categories, '[^;]+') do
 		if category then
+			category = MediaWikiUtils.trim(category)
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
