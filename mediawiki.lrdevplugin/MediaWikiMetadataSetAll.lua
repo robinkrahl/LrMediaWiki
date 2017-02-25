@@ -41,7 +41,7 @@ return {
 		pf .. 'otherVersions',
 		pf .. 'otherFields',
 		pf .. 'templates',
-		pf .. 'categories',
+		{ pf .. 'categories', label = LOC "$$$/LrMediaWiki/Metadata/Categories=Categories" },
 		-- second group
 		'com.adobe.separator',
 		{ 'com.adobe.label', label = 'Artwork' },

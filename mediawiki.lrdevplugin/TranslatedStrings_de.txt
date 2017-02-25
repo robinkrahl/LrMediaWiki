@@ -44,6 +44,7 @@
 "$$$/LrMediaWiki/Metadata/AuthorObjectPhoto=Fotograf"
 "$$$/LrMediaWiki/Metadata/Caption=Beschreibung"
 "$$$/LrMediaWiki/Metadata/Categories=Kategorien"
+"$$$/LrMediaWiki/Metadata/CategoriesTooltip=Kategorien^n^nOhne den Präfix „Category:“ (bzw. „Kategorie:“) und ohne eckige Klammern [[…]]. Mehrere Kategorien werden durch ein ; (Semikolon) getrennt. Vermeide Leerzeichen vor und nach dem Semikolon."
 "$$$/LrMediaWiki/Metadata/CreditLine=Anerkennung"
 "$$$/LrMediaWiki/Metadata/Date=Datum"
 "$$$/LrMediaWiki/Metadata/Department=Standort"

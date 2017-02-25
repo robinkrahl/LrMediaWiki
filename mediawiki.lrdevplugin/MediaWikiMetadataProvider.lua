@@ -93,7 +93,7 @@ return {
 		{
 			id = 'categories',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/Categories=Categories",
+			title = LOC "$$$/LrMediaWiki/Metadata/CategoriesTooltip=Categories^n^nWithout the prefix “Category:” and without square brackets [[…]]. Multiple categories are separated by a ; (semicolon). Avoid blanks before and after the semicolon.",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,

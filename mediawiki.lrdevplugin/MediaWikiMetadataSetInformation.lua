@@ -35,7 +35,7 @@ return {
 		pf .. 'otherVersions',
 		pf .. 'otherFields',
 		pf .. 'templates',
-		pf .. 'categories',
+		{ pf .. 'categories', label = LOC "$$$/LrMediaWiki/Metadata/Categories=Categories" },
 		'com.adobe.separator',
 		{ 'com.adobe.label', label = 'Lightroom' },
 		'com.adobe.filename',
