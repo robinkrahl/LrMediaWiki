@@ -1,12 +1,12 @@
 == {{int:filedesc}} ==
 {{Information
  | Beschreibung = ${description}
- | Datum = ${date}
  | Quelle = ${source}
  | Urheber = ${author}
+ | Datum = ${date}
  | Genehmigung = ${permission}
  | Andere Versionen = ${otherVersions}
- | Anmerkungen = 
+ | Anmerkungen =
 }}
 ${templates}
 ${license}
