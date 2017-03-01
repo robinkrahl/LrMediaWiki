@@ -26,12 +26,12 @@ return {
 	title = 'LrMediaWiki – Information (de)', -- no localization needed
 	items = {
 		{ 'com.adobe.label', label = 'LrMediaWiki – Information (de)' }, -- no localization needed
-		{ pf .. 'description_de', height_in_lines = 3 },
-		pf .. 'source',
-		pf .. 'author',
-		pf .. 'date',
-		pf .. 'otherVersions',
-		pf .. 'templates',
+		{ pf .. 'description_de', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)" },
+		{ pf .. 'source', label = LOC "$$$/LrMediaWiki/Metadata/Source=Source" },
+		{ pf .. 'author', label = LOC "$$$/LrMediaWiki/Metadata/Author=Author" },
+		{ pf .. 'date', label = LOC "$$$/LrMediaWiki/Metadata/Date=Date" },
+		{ pf .. 'otherVersions', label = LOC "$$$/LrMediaWiki/Metadata/OtherVersions=Other Versions" },
+		{ pf .. 'templates', label = LOC "$$$/LrMediaWiki/Metadata/Templates=Templates" },
 		{ pf .. 'categories', label = LOC "$$$/LrMediaWiki/Metadata/Categories=Categories" },
 		'com.adobe.separator',
 		{ 'com.adobe.label', label = 'Lightroom' },

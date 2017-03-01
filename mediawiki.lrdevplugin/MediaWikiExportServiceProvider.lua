@@ -166,9 +166,22 @@ end
 MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right'
 
+	-- The following tooltips are used twice, at the label and at the field. They are set as variables to avoid redundancy.
+	local usernameTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/UsernameTooltip=Username^n^nRequired field. Enter the username of your MediaWiki account."
+	local passwordTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/PasswordTooltip=Password^n^nRequired field. Enter the password of your MediaWiki account."
+	local apiPathTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/ApiPathTooltip=API Path^n^nRequired field. To determine the path, go to “Special:Version” → “Entry point URLs” → “api.php” of the intended MediaWiki."
+	local infoboxTemplateTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/InfoboxTemplateTooltip=Infobox Template^n^nThese are mainly templates of Wikimedia Commons. “Information (de)” is the template “Information” of the German language Wikipedia."
+	local sourceTooltip  = LOC "$$$/LrMediaWiki/Metadata/SourceTooltip=Source^n^nRequired field. Should be set per file or at export dialog. Setting per file has priority over setting at export dialog. Example: {{own}}.^nThe field is named “Source/Photographer” at infobox template “Artwork”."
+	local authorTooltip = LOC "$$$/LrMediaWiki/Metadata/AuthorTooltip=Author^n^nRequired field, if not “Artwork” has been chosen (“Artwork” recommends to use “Artist” or “Author”).^nShould be set per file or at export dialog. Setting per file has priority over setting at export dialog. Example:^n  [[User:MyUserName|MyRealName]]"
+	local permissionTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/PermisssionTooltip=Permission^n^nPermission information like {{PermissionOTRS}}. Either this field or “License” should be set."
+	local otherTemplatesTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/OtherTemplatesTooltip=Other Templates^n^nOther templates are inserted after the infobox template and before the licensing section. Examples:^n  {{Panorama}}^n  {{Personality rights}}^n  {{Location estimated}}"
+	local licenseTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/LicenseTooltip=License^n^nThe license template to use, e.g. {{Cc-by-sa-4.0}}. Either this field or “Permission” should be set."
+	local categoriesTooltip = LOC "$$$/LrMediaWiki/Metadata/CategoriesTooltip=Categories^n^nThe categories all uploaded images should be added to; without the prefix “Category:” and without square brackets [[…]]. Multiple categories are separated by a ; (semicolon)."
+	local galleryTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/GalleryTooltip=Gallery^n^nIf this field is set, a gallery of your uploads will be added to the page with the specified title. Example:^n  User:MyUserName/My Uploads"
+
 	return {
 		{
-			title = LOC "$$$/LrMediaWiki/Section/User/Title=LrMediaWiki Login Information",
+			title = LOC "$$$/LrMediaWiki/Section/LoginInformation/Title=LrMediaWiki Login Information",
 			synopsis = bind 'username',
 
 			viewFactory:column {
@@ -177,55 +190,55 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/Username=Username:",
+						title = LOC "$$$/LrMediaWiki/Section/LoginInformation/Username=Username" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = usernameTooltip,
 					},
 					viewFactory:edit_field {
 						value = bind 'username',
 						immediate = true,
 						fill_horizontal = 1,
+						tooltip = usernameTooltip,
 					},
 				},
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/Password=Password:",
+						title = LOC "$$$/LrMediaWiki/Section/LoginInformation/Password=Password" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = passwordTooltip,
 					},
 					viewFactory:password_field {
 						value = bind 'password',
 						fill_horizontal = 1,
+						tooltip = passwordTooltip,
 					},
 				},
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/ApiPath=API Path:",
+						title = LOC "$$$/LrMediaWiki/Section/LoginInformation/ApiPath=API Path" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = apiPathTooltip,
 					},
-					viewFactory:edit_field {
+					viewFactory:combo_box {
 						value = bind 'api_path',
 						immediate = true,
 						fill_horizontal = 1,
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/Gallery=Gallery:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:edit_field {
-						value = bind 'gallery',
-						immediate = true,
-						fill_horizontal = 1,
+						items = {
+							'https://commons.wikimedia.org/w/api.php',
+							'https://commons.wikimedia.beta.wmflabs.org/w/api.php',
+							'https://en.wikipedia.org/w/api.php',
+							'https://de.wikipedia.org/w/api.php',
+						},
+						tooltip = apiPathTooltip,
 					},
 				},
 			},
 		},
 		{
-			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=LrMediaWiki Upload Information",
+			title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Title=LrMediaWiki Upload Information",
 			synopsis = bind 'info_template',
 
 			viewFactory:column {
@@ -233,9 +246,10 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 				fill_horizontal = 1,
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox Template:",
+						title = LOC "$$$/LrMediaWiki/Section/UploadInformation/InfoboxTemplate=Infobox Template" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = infoboxTemplateTooltip,
 					},
 					viewFactory:popup_menu {
 						value = bind 'info_template',
@@ -245,67 +259,78 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							'Artwork',
 							'Object photo',
 						},
+						tooltip = infoboxTemplateTooltip,
 					},
 					viewFactory:push_button {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext",
+						title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Preview=Preview of generated wikitext",
 							action = function(button) -- luacheck: ignore button
 								MediaWikiExportServiceProvider.showPreview(propertyTable)
 							end,
+						tooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/PreviewTooltip=The preview shows how the wikitext of the file description page will look.",
 					},
 				},
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Source=Source:",
+						title = LOC "$$$/LrMediaWiki/Metadata/Source=Source" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = sourceTooltip,
 					},
 					viewFactory:edit_field {
 						value = bind 'info_source',
 						immediate = true,
 						fill_horizontal = 1,
+						tooltip = sourceTooltip,
 					},
 				},
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Author=Author:",
+						title = LOC "$$$/LrMediaWiki/Metadata/Author=Author" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = authorTooltip,
 					},
 					viewFactory:edit_field {
 						value = bind 'info_author',
 						immediate = true,
 						fill_horizontal = 1,
+						tooltip = authorTooltip,
 					},
 				},
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Permission=Permission:",
+						title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Permission=Permission" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = permissionTooltip,
 					},
 					viewFactory:edit_field {
 						value = bind 'info_permission',
 						immediate = true,
 						fill_horizontal = 1,
+						tooltip = permissionTooltip,
 					},
 				},
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other Templates:",
+						title = LOC "$$$/LrMediaWiki/Section/UploadInformation/OtherTemplates=Other Templates" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = otherTemplatesTooltip,
 					},
 					viewFactory:edit_field {
 						value = bind 'info_templates',
 						immediate = true,
 						fill_horizontal = 1,
+						tooltip = otherTemplatesTooltip,
 					},
 				},
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/License=License:",
+						title = LOC "$$$/LrMediaWiki/Section/UploadInformation/License=License" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = licenseTooltip,
 					},
 					viewFactory:combo_box {
 						value = bind 'info_license',
@@ -316,19 +341,36 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							'{{Cc-by-4.0}}',
 							'{{Cc-zero}}',
 						},
+						tooltip = licenseTooltip,
 					},
 				},
 				viewFactory:row {
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Categories=Categories:^nseparated by ;",
+						title = LOC "$$$/LrMediaWiki/Metadata/Categories=Categories" .. ':',
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
+						tooltip = categoriesTooltip,
 					},
 					viewFactory:edit_field {
 						value = bind 'info_categories',
 						immediate = true,
 						fill_horizontal = 1,
 						height_in_lines = 3,
+						tooltip = categoriesTooltip,
+					},
+				},
+				viewFactory:row {
+					viewFactory:static_text {
+						title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Gallery=Gallery" .. ':',
+						alignment = labelAlignment,
+						width = LrView.share 'label_width',
+						tooltip = galleryTooltip,
+					},
+					viewFactory:edit_field {
+						value = bind 'gallery',
+						immediate = true,
+						fill_horizontal = 1,
+						tooltip = galleryTooltip,
 					},
 				},
 			},
@@ -395,7 +437,7 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 
 			local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
 			wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
-			local dialogTitle = LOC "$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext"
+			local dialogTitle = LOC "$$$/LrMediaWiki/Section/UploadInformation/Preview=Preview of generated wikitext"
 			local factory = LrView.osFactory()
 			properties.dialogValue = wikitext
 
@@ -459,7 +501,7 @@ MediaWikiExportServiceProvider.showPreview = function(propertyTable)
 				},
 				factory:row {
 					factory:static_text {
-						title = LOC "$$$/LrMediaWiki/Preview/FileName=File Name:",
+						title = LOC "$$$/LrMediaWiki/Preview/FileName=File Name" .. ':',
 					},
 					factory:static_text {
 						bind_to_object = properties,
@@ -575,7 +617,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	-- Field "description"
 	local descriptionEn = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
 	local descriptionDe = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_de')
-	local descriptionAdditional = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_additional')
+	local descriptionOther = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_other')
 	local description = ''
 	local existDescription = false
 	-- If multiple description fields are set, priorities are considered. The sequence of detections
@@ -597,11 +639,11 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		end
 		existDescription = true
 	end
-	if MediaWikiUtils.isStringFilled(descriptionAdditional) and propertyTable.info_template ~= 'Information (de)' then
+	if MediaWikiUtils.isStringFilled(descriptionOther) and propertyTable.info_template ~= 'Information (de)' then
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
-		description = description .. descriptionAdditional
+		description = description .. descriptionOther
 		existDescription = true
 	end
 	if existDescription == false and exportFields.info_template == 'Information' then

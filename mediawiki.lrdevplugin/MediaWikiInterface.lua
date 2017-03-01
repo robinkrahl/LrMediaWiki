@@ -130,7 +130,7 @@ end
 
 MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, targetFileName)
 	if not MediaWikiInterface.loggedIn then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload.")
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload")
 	end
 	local comment = 'Uploaded with LrMediaWiki ' .. MediaWikiUtils.getVersionString()
 
