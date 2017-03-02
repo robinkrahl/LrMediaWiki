@@ -18,7 +18,7 @@ return {
 	LrInitPlugin = 'MediaWikiInit.lua',
 
 	LrExportServiceProvider = {
-		title = LOC "$$$/LrMediaWiki/MediaWiki=MediaWiki",
+		title = 'MediaWiki',
 		file = 'MediaWikiExportServiceProvider.lua',
 	},
 

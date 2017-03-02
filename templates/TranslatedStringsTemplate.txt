@@ -37,7 +37,6 @@
 "$$$/LrMediaWiki/Interface/UploadFailed=Upload failed: ^1"
 "$$$/LrMediaWiki/Interface/UsernameOrPasswordMissing=Username or password missing"
 "$$$/LrMediaWiki/Interface/VersionComment=Version comment"
-"$$$/LrMediaWiki/MediaWiki=MediaWiki"
 "$$$/LrMediaWiki/Metadata/AccessionNumber=Accession Number"
 "$$$/LrMediaWiki/Metadata/AccessionNumberTooltip=Accession Number^n^nMuseum’s accession number or some other inventory or identification number"
 "$$$/LrMediaWiki/Metadata/Artist=Artist"
