@@ -14,6 +14,11 @@
 -- i18n:  complete
 
 local LrView = import 'LrView'
+local LrHttp = import 'LrHttp'
+local LrColor = import 'LrColor'
+
+local blue = LrColor( 0, 0, 1 )
+-- local red = LrColor( 1, 0, 0 )
 
 local MediaWikiUtils = require 'MediaWikiUtils'
 
@@ -22,19 +27,21 @@ local bind = LrView.bind
 local MediaWikiPluginInfoProvider = {}
 
 MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
-  propertyTable.logging = MediaWikiUtils.getLogging()
+  propertyTable.lang_code = MediaWikiUtils.getLangCode()
   propertyTable.create_snapshots = MediaWikiUtils.getCreateSnapshots()
-  propertyTable.check_version = MediaWikiUtils.getCheckVersion()
   propertyTable.export_keyword = MediaWikiUtils.getExportKeyword()
+  propertyTable.check_version = MediaWikiUtils.getCheckVersion()
+  propertyTable.logging = MediaWikiUtils.getLogging()
   propertyTable.preview_wikitext_font_name = MediaWikiUtils.getPreviewWikitextFontName()
   propertyTable.preview_wikitext_font_size = MediaWikiUtils.getPreviewWikitextFontSize()
 end
 
 MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
-  MediaWikiUtils.setLogging(propertyTable.logging)
+  MediaWikiUtils.setLangCode(propertyTable.lang_code)
   MediaWikiUtils.setCreateSnapshots(propertyTable.create_snapshots)
-  MediaWikiUtils.setCheckVersion(propertyTable.check_version)
   MediaWikiUtils.setExportKeyword(propertyTable.export_keyword)
+  MediaWikiUtils.setCheckVersion(propertyTable.check_version)
+  MediaWikiUtils.setLogging(propertyTable.logging)
   MediaWikiUtils.setPreviewWikitextFontName(propertyTable.preview_wikitext_font_name)
   MediaWikiUtils.setPreviewWikitextFontSize(propertyTable.preview_wikitext_font_size)
 end
@@ -42,9 +49,10 @@ end
 MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right'
 
+	local exportKeywordTooltip = LOC "$$$/LrMediaWiki/Section/Config/ExportKeywordTooltip=If set, this keyword is added after successful export."
+	local languageCodeTooltip = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeTooltip=If a language code is set, the field “Description (other)” uses it to embed the description into a template {{Language code|1=description}}."
 	local fontNameTooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontNameTooltip=Font name of generated wikitext"
 	local fontSizeTooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSizeTooltip=Font size of generated wikitext"
-	local exportKeywordTooltip = LOC "$$$/LrMediaWiki/Section/Config/ExportKeywordTooltip=If set, this keyword is added after successful export."
 
 	return {
 		{
@@ -56,8 +64,50 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 				fill_horizontal = 1,
 
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
+					viewFactory:static_text {
+						title = LOC "$$$/LrMediaWiki/Section/Config/LanguageCode=Language code for “Description (other)”" .. ':',
+						alignment = labelAlignment,
+						tooltip = languageCodeTooltip,
+					},
 
+					viewFactory:combo_box {
+						value = bind 'lang_code',
+						width_in_chars = 2,
+						immediate = true,
+						items = {
+							'es', -- Español
+							'fr', -- Français
+							'it', -- Italiano
+							'nb', -- Norsk bokmål
+							'nn', -- Norsk nynorsk
+							'pl', -- Polski
+							'pt', -- Português
+							'ru', -- Русский
+							'sv', -- Svenska
+							'uk', -- Українська
+						},
+						tooltip = languageCodeTooltip,
+					},
+
+					viewFactory:static_text {
+						title = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeValues=Possible language codes",
+						alignment = labelAlignment,
+						mouse_down = function()
+							LrHttp.openUrlInBrowser('https://commons.wikimedia.org/wiki/Category:Language_templates')
+						end,
+						--[[ A try, to change the color of the URL by mouse hover
+						-- https://forums.adobe.com/message/2084765#2084765
+						[ WIN_ENV and 'adjustCursor' or 'adjust_cursor' ] = function()
+							MediaWikiUtils.trace('\nHover')
+							text_color = red
+						end,
+						--]]
+						text_color = blue,
+						tooltip = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeValuesTooltip=Opens “Category:Language templates” at Wikimedia Commons in the web browser",
+					},
+				},
+
+				viewFactory:row {
 					viewFactory:checkbox {
 						value = bind 'create_snapshots',
 						title = LOC "$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export",
@@ -66,9 +116,6 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 				},
 
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-					-- fill_horizontal = 1,
-
 					viewFactory:static_text {
 						alignment = labelAlignment,
 						width = LrView.share 'label_width',
@@ -85,8 +132,6 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 				},
 
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
 					viewFactory:checkbox {
 						value = bind 'check_version',
 						title = LOC "$$$/LrMediaWiki/Section/Config/Version=Check for new plug-in version after Lightroom starts",
@@ -94,8 +139,6 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 				},
 
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
 					viewFactory:checkbox {
 						value = bind 'logging',
 						title = LOC "$$$/LrMediaWiki/Section/Config/Logging=Enable logging",
@@ -103,17 +146,13 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 				},
 
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
 					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Description=If logging is enabled, all API requests are logged to the “LrMediaWikiLogger.log” file in the “Documents” folder.",
+						title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Description=If logging is enabled, all API requests are logged to “Documents/LrMediaWikiLogger.log”.",
 						wrap = true,
 					},
 				},
 
 				viewFactory:row {
-					spacing = viewFactory:label_spacing(),
-
 					viewFactory:static_text {
 						title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Warning=Warning" .. ':',
 						font = '<system/bold>',
@@ -141,7 +180,6 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 							},
 					},
 					viewFactory:column {
-						spacing = viewFactory:label_spacing(),
 						-- Font name
 						viewFactory:row {
 							viewFactory:static_text {

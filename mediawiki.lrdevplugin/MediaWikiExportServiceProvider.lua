@@ -643,6 +643,10 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
+		local langCode = MediaWikiUtils.getLangCode()
+		if MediaWikiUtils.isStringFilled(langCode) then
+			descriptionOther = '{{' .. langCode .. '|1=' .. descriptionOther .. '}}'
+		end
 		description = description .. descriptionOther
 		existDescription = true
 	end

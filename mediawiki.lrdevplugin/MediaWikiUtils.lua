@@ -80,12 +80,28 @@ end
 
 -- configuration
 
+MediaWikiUtils.getLangCode = function()
+	return prefs.lang_code or false
+end
+
+MediaWikiUtils.setLangCode = function(lang_code)
+	prefs.lang_code = lang_code
+end
+
 MediaWikiUtils.getCreateSnapshots = function()
 	return prefs.create_snapshot or false
 end
 
 MediaWikiUtils.setCreateSnapshots = function(create_snapshot)
 	prefs.create_snapshot = create_snapshot
+end
+
+MediaWikiUtils.getExportKeyword = function()
+	return prefs.export_keyword or nil
+end
+
+MediaWikiUtils.setExportKeyword = function(tag)
+	prefs.export_keyword = tag
 end
 
 MediaWikiUtils.getCheckVersion = function()
@@ -107,14 +123,6 @@ MediaWikiUtils.setLogging = function(logging)
 	else
 		myLogger:disable()
 	end
-end
-
-MediaWikiUtils.getExportKeyword = function()
-	return prefs.export_keyword or nil
-end
-
-MediaWikiUtils.setExportKeyword = function(tag)
-	prefs.export_keyword = tag
 end
 
 MediaWikiUtils.getPreviewWikitextFontName = function()
