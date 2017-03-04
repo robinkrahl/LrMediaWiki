@@ -15,6 +15,8 @@
 
 local LrApplication = import 'LrApplication'
 local LrLogger = import 'LrLogger'
+local LrPasswords = import 'LrPasswords'
+
 local Info = require 'Info'
 
 local MediaWikiUtils = {}
@@ -76,6 +78,22 @@ MediaWikiUtils.getVersionString = function()
 		error 'Unsupported platform – neither Windows nor macOS' -- unlikely case
 	end
 	return installedVersion .. ', LR ' .. LrApplication.versionString() .. ' ' .. platform
+end
+
+MediaWikiUtils.storePassword = function(apiPath, username, password)
+	-- passwordKey needs to be the same as at "retrievePassword"
+	local passwordKey = 'LrMediaWiki#' .. apiPath .. '#' .. username
+	LrPasswords.store(passwordKey, password)
+end
+
+MediaWikiUtils.retrievePassword = function(apiPath, username)
+	-- passwordKey needs to be the same as at "storePassword"
+	local passwordKey = 'LrMediaWiki#' .. apiPath .. '#' .. username
+	local password = LrPasswords.retrieve(passwordKey)
+	if password == nil then
+		password = ''
+	end
+	return password
 end
 
 -- configuration

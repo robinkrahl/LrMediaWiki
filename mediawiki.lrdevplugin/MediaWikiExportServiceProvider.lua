@@ -32,6 +32,23 @@ local MediaWikiUtils = require 'MediaWikiUtils'
 
 local MediaWikiExportServiceProvider = {}
 
+MediaWikiExportServiceProvider.startDialog = function(propertyTable)
+	if MediaWikiUtils.isStringFilled(propertyTable.password) then
+		MediaWikiUtils.storePassword(propertyTable.api_path, propertyTable.username, propertyTable.password)
+	else
+		propertyTable.password = MediaWikiUtils.retrievePassword(propertyTable.api_path, propertyTable.username)
+	end
+end
+
+MediaWikiExportServiceProvider.endDialog = function(propertyTable)
+	if MediaWikiUtils.isStringFilled(propertyTable.password) then
+		-- Don't store password in preferences!
+		-- Preferences are stored at file system and can read out from there.
+		-- Therefore delete field "password" from property table:
+		propertyTable.password = nil
+	end
+end
+
 MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext) -- luacheck: ignore functionContext
 	-- configure progress display
 	local exportSession = exportContext.exportSession
@@ -44,16 +61,19 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 
 	local exportSettings = assert(exportContext.propertyTable)
 
-	-- require username, password, apipath, source, author, license
+	-- require username, apipath, password, source, author, license
 	if MediaWikiUtils.isStringEmpty(exportSettings.username) then
 		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoUsername=No username given!")
-	end
-	if MediaWikiUtils.isStringEmpty(exportSettings.password) then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPassword=No password given!")
 	end
 	if MediaWikiUtils.isStringEmpty(exportSettings.api_path) then
 		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoApiPath=No API path given!")
 	end
+
+	exportSettings.password = MediaWikiUtils.retrievePassword(exportSettings.api_path, exportSettings.username)
+	if MediaWikiUtils.isStringEmpty(exportSettings.password) then
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPassword=No password given!")
+	end
+
 	if MediaWikiUtils.isStringEmpty(exportSettings.info_permission) and MediaWikiUtils.isStringEmpty(exportSettings.info_license) then
 		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPermissionLicense=No permission or license given!")
 	end
@@ -211,6 +231,11 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					},
 					viewFactory:password_field {
 						value = bind 'password',
+						immediate = true,
+						validate = function(view, password) -- luacheck: ignore view
+							MediaWikiUtils.storePassword(propertyTable.api_path, propertyTable.username, password)
+							return true, password
+						end,
 						fill_horizontal = 1,
 						tooltip = passwordTooltip,
 					},
