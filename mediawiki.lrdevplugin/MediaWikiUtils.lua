@@ -16,13 +16,14 @@
 local LrApplication = import 'LrApplication'
 local LrLogger = import 'LrLogger'
 local LrPasswords = import 'LrPasswords'
+local LrPrefs = import 'LrPrefs'
 
 local Info = require 'Info'
 
 local MediaWikiUtils = {}
 local myLogger = LrLogger('LrMediaWikiLogger')
 
-local prefs = import 'LrPrefs'.prefsForPlugin()
+local prefs = LrPrefs.prefsForPlugin(nil)
 if prefs.logging then
 	myLogger:enable('logfile')
 end

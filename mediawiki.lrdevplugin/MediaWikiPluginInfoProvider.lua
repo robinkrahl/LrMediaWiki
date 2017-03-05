@@ -17,9 +17,6 @@ local LrView = import 'LrView'
 local LrHttp = import 'LrHttp'
 local LrColor = import 'LrColor'
 
-local blue = LrColor( 0, 0, 1 )
--- local red = LrColor( 1, 0, 0 )
-
 local MediaWikiUtils = require 'MediaWikiUtils'
 
 local bind = LrView.bind
@@ -46,7 +43,7 @@ MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
   MediaWikiUtils.setPreviewWikitextFontSize(propertyTable.preview_wikitext_font_size)
 end
 
-MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, propertyTable)
+MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, propertyTable)
 	local labelAlignment = 'right'
 
 	local exportKeywordTooltip = LOC "$$$/LrMediaWiki/Section/Config/ExportKeywordTooltip=If set, this keyword is added after successful export."
@@ -56,182 +53,166 @@ MediaWikiPluginInfoProvider.sectionsForBottomOfDialog = function(viewFactory, pr
 
 	return {
 		{
-			title = LOC "$$$/LrMediaWiki/Section/Config/Title=Configuration",
+			title = LOC "$$$/LrMediaWiki/Section/Config/Title=LrMediaWiki Configuration",
+			synopsis = bind 'lang_code',
 			bind_to_object = propertyTable,
 
-			viewFactory:column {
+			viewFactory:row {
+					spacing = viewFactory:control_spacing(),
+					viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/Config/LanguageCode=Language code for “Description (other)”" .. ':',
+					-- alignment = labelAlignment,
+					tooltip = languageCodeTooltip,
+				},
+
+				viewFactory:combo_box {
+					value = bind 'lang_code',
+					width_in_chars = 2,
+					immediate = true,
+					items = {
+						'es', -- Español
+						'fr', -- Français
+						'it', -- Italiano
+						'nb', -- Norsk bokmål
+						'nn', -- Norsk nynorsk
+						'pl', -- Polski
+						'pt', -- Português
+						'ru', -- Русский
+						'sv', -- Svenska
+						'uk', -- Українська
+					},
+					tooltip = languageCodeTooltip,
+				},
+
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeValues=Possible language codes",
+					alignment = labelAlignment,
+					mouse_down = function()
+						LrHttp.openUrlInBrowser('https://commons.wikimedia.org/wiki/Category:Language_templates')
+					end,
+					--[[ A try, to change the color of the URL by mouse hover
+					-- https://forums.adobe.com/message/2084765#2084765
+					[ WIN_ENV and 'adjustCursor' or 'adjust_cursor' ] = function()
+						MediaWikiUtils.trace('\nHover')
+						text_color = LrColor('red')
+					end,
+					--]]
+					text_color = LrColor('blue'),
+					tooltip = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeValuesTooltip=Opens “Category:Language templates” at Wikimedia Commons in the web browser",
+				},
+			},
+
+			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
+
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontName=Font Name of Preview" .. ':',
+					width = LrView.share 'label_width',
+					alignment = labelAlignment,
+					tooltip = fontNameTooltip,
+				},
+				viewFactory:combo_box {
+					value = bind 'preview_wikitext_font_name',
+					width = 222,
+					immediate = true,
+					items = { -- see [1]
+						'Courier', -- Mac, monospace
+						'Courier New', -- Win & Mac, monospace
+						'Lucida Console', -- Win, monospace
+						'Monaco', -- Mac, monospace
+						'<system>', -- LR SDK
+						'<system/small>', -- LR SDK
+						'<system/bold>', -- LR SDK
+						'<system/small/bold>', -- LR SDK
+					},
+					tooltip = fontNameTooltip,
+				},
+
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSize=Font Size" .. ':',
+					tooltip = fontSizeTooltip,
+				},
+				viewFactory:combo_box {
+					value = bind {
+						key = 'preview_wikitext_font_size',
+						transform = function(value) -- see [2]
+							return tostring(value)
+						end,
+					},
+					width_in_chars = 3,
+					immediate = true,
+					items = { -- values have to be strings, see [2]
+						"10",
+						"12",
+						"14",
+						"16",
+						"18",
+						"20",
+					},
+					tooltip = fontSizeTooltip,
+				},
+			},
+
+			viewFactory:row {
+				spacing = viewFactory:control_spacing(),
+				viewFactory:static_text {
+					width = LrView.share 'label_width',
+					title = LOC "$$$/LrMediaWiki/Section/Config/ExportKeyword=Export Keyword" .. ':',
+					alignment = labelAlignment,
+					tooltip = exportKeywordTooltip,
+				},
+
+				viewFactory:edit_field {
+					value = bind 'export_keyword',
+					immediate = true,
+					width = 222,
+					-- fill_horizontal = 1,
+					tooltip = exportKeywordTooltip,
+				},
+			},
+
+			viewFactory:row {
+				viewFactory:checkbox {
+					value = bind 'create_snapshots',
+					title = LOC "$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export",
+					tooltip = LOC "$$$/LrMediaWiki/Section/Config/SnapshotsTooltip=If set, a snapshot is created after successful export.",
+				},
+			},
+
+			viewFactory:row {
+				viewFactory:checkbox {
+					value = bind 'check_version',
+					title = LOC "$$$/LrMediaWiki/Section/Config/Version=Check for new plug-in version after Lightroom starts",
+					tooltip = LOC "$$$/LrMediaWiki/Section/Config/VersionTooltip=If set, a call to GitHub is performed to determine the latest version number, which is then compared to the installed version.",
+				},
+			},
+
+			viewFactory:separator {
 				fill_horizontal = 1,
+			},
 
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Config/LanguageCode=Language code for “Description (other)”" .. ':',
-						alignment = labelAlignment,
-						tooltip = languageCodeTooltip,
-					},
+			viewFactory:row {
+				viewFactory:checkbox {
+					value = bind 'logging',
+					title = LOC "$$$/LrMediaWiki/Section/Config/Logging=Enable logging",
+				},
+			},
 
-					viewFactory:combo_box {
-						value = bind 'lang_code',
-						width_in_chars = 2,
-						immediate = true,
-						items = {
-							'es', -- Español
-							'fr', -- Français
-							'it', -- Italiano
-							'nb', -- Norsk bokmål
-							'nn', -- Norsk nynorsk
-							'pl', -- Polski
-							'pt', -- Português
-							'ru', -- Русский
-							'sv', -- Svenska
-							'uk', -- Українська
-						},
-						tooltip = languageCodeTooltip,
-					},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Description=If logging is enabled, all API requests are logged to “Documents/LrMediaWikiLogger.log”.",
+					wrap = true,
+				},
+			},
 
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeValues=Possible language codes",
-						alignment = labelAlignment,
-						mouse_down = function()
-							LrHttp.openUrlInBrowser('https://commons.wikimedia.org/wiki/Category:Language_templates')
-						end,
-						--[[ A try, to change the color of the URL by mouse hover
-						-- https://forums.adobe.com/message/2084765#2084765
-						[ WIN_ENV and 'adjustCursor' or 'adjust_cursor' ] = function()
-							MediaWikiUtils.trace('\nHover')
-							text_color = red
-						end,
-						--]]
-						text_color = blue,
-						tooltip = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeValuesTooltip=Opens “Category:Language templates” at Wikimedia Commons in the web browser",
-					},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Warning=Warning" .. ':',
+					font = '<system/bold>',
 				},
 
-				viewFactory:row {
-					viewFactory:checkbox {
-						value = bind 'create_snapshots',
-						title = LOC "$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export",
-						tooltip = LOC "$$$/LrMediaWiki/Section/Config/SnapshotsTooltip=If set, a snapshot is created after successful export.",
-					},
-				},
-
-				viewFactory:row {
-					viewFactory:static_text {
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-						title = LOC "$$$/LrMediaWiki/Section/Config/ExportKeyword=Export Keyword" .. ':',
-						tooltip = exportKeywordTooltip,
-					},
-
-					viewFactory:edit_field {
-						value = bind 'export_keyword',
-						immediate = true,
-						fill_horizontal = 1,
-						tooltip = exportKeywordTooltip,
-					},
-				},
-
-				viewFactory:row {
-					viewFactory:checkbox {
-						value = bind 'check_version',
-						title = LOC "$$$/LrMediaWiki/Section/Config/Version=Check for new plug-in version after Lightroom starts",
-					},
-				},
-
-				viewFactory:row {
-					viewFactory:checkbox {
-						value = bind 'logging',
-						title = LOC "$$$/LrMediaWiki/Section/Config/Logging=Enable logging",
-					},
-				},
-
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Description=If logging is enabled, all API requests are logged to “Documents/LrMediaWikiLogger.log”.",
-						wrap = true,
-					},
-				},
-
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Warning=Warning" .. ':',
-						font = '<system/bold>',
-					},
-
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Password=The log file contains your password!",
-					},
-				},
-
-				viewFactory:row {
-					viewFactory:separator {
-						fill_horizontal = 1, -- "1" means full width
-					},
-				},
-
-				viewFactory:row {
-					viewFactory:column {
-							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/Title=Preview",
-								alignment = labelAlignment,
-								width_in_chars = LrView.share 'label_width',
-								font = '<system/bold>',
-								tooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/TitleTooltip=Settings used at “Preview of generated wikitext”",
-							},
-					},
-					viewFactory:column {
-						-- Font name
-						viewFactory:row {
-							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontName=Font Name" .. ':',
-								alignment = labelAlignment,
-								width = 96,
-								tooltip = fontNameTooltip,
-							},
-							viewFactory:combo_box {
-								value = bind 'preview_wikitext_font_name',
-								width_in_chars = 20,
-								immediate = true,
-								items = { -- see [1]
-									'Courier', -- Mac, monospace
-									'Courier New', -- Win & Mac, monospace
-									'Lucida Console', -- Win, monospace
-									'Monaco', -- Mac, monospace
-									'<system>', -- LR SDK
-									'<system/small>', -- LR SDK
-									'<system/bold>', -- LR SDK
-									'<system/small/bold>', -- LR SDK
-								},
-								tooltip = fontNameTooltip,
-							},
-						-- Font size
-							viewFactory:static_text {
-								title = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSize=Font Size" .. ':',
-								alignment = labelAlignment,
-								width = 80,
-								tooltip = fontSizeTooltip,
-							},
-							viewFactory:combo_box {
-								value = bind {
-									key = 'preview_wikitext_font_size',
-									transform = function(value) -- see [2]
-										return tostring(value)
-									end,
-								},
-								width_in_chars = 3,
-								immediate = true,
-								items = { -- values have to be strings, see [2]
-									"10",
-									"12",
-									"14",
-									"16",
-									"18",
-									"20",
-								},
-								tooltip = fontSizeTooltip,
-							},
-						},
-					},
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/Config/Logging/Password=The log file contains your password!",
 				},
 			},
 		},
