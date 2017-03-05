@@ -54,8 +54,8 @@ return {
 		'com.adobe.state',
 		'com.adobe.country',
 		'com.adobe.jobIdentifier',
-		{ 'com.adobe.personInImage', label = LOC "$$$/LrMediaWiki/Metadata/PersonShown=Person Shown" },
-		{ 'com.adobe.organisationInImageName', label = LOC "$$$/LrMediaWiki/Metadata/NameOrg=Name of Org Shown" },
+		{ 'com.adobe.personInImage', form = "shortTitle" },
+		{ 'com.adobe.organisationInImageName', form = "shortTitle" },
 		'com.adobe.event',
 	},
 }
