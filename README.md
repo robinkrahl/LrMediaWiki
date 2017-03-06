@@ -34,7 +34,7 @@ and released under [CC-by 3.0][ccby3].
 
 ### APIs
 
-Beside [Lightroom SDK][lrsdk], LrMediawiki uses these APIs:
+Beside [Lightroom SDK][lrsdk], LrMediaWiki uses these APIs:
 * [MediaWiki API][mediawikiapi]
 * [GitHub API][githubapi]
 
