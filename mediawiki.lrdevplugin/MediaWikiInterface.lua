@@ -130,7 +130,7 @@ end
 
 MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, targetFileName)
 	if not MediaWikiInterface.loggedIn then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload.")
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload")
 	end
 	local comment = 'Uploaded with LrMediaWiki ' .. MediaWikiUtils.getVersionString()
 
@@ -185,11 +185,13 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	-- (LR 6 uses Lua 5.1.4)
 	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then
+			category = MediaWikiUtils.trim(category)
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
 	for category in string.gmatch(exportFields.info_categories, '[^;]+') do
 		if category then
+			category = MediaWikiUtils.trim(category)
 			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
 		end
 	end
@@ -340,13 +342,76 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		keywordTagsForExport = photo:getFormattedMetadata('keywordTagsForExport'),
 	}
 
+	arguments.creationDate = ''
+	arguments.creationLongDate = ''
+	arguments.creationMediumDate = ''
+	arguments.creationShortDate = ''
+	arguments.creationYear = ''
+	arguments.creationMonthXX = ''
+	arguments.creationMonth = ''
+	arguments.creationMonthName = ''
+	arguments.creationMonthNameLoc = ''
+	arguments.creationDayXX = ''
+	arguments.creationDay = ''
+	arguments.creationDayName = ''
+	arguments.creationDayNameLoc = ''
+	arguments.creationTime = ''
+	arguments.creationHour = ''
+	arguments.creationMinute = ''
+	arguments.creationSecond = ''
+
 	if arguments.dateCreated ~= '' then
-		-- assumed format: "YYYY-MM-DDThh:mm:ss"
+		local function getMonth(month)
+			local months = { 'January', 'February', 'March', 'April', 'May', 'June',
+			'July', 'August', 'September', 'October', 'November', 'December' }
+			return months[month]
+		end
+
+		-- Source: http://lua-users.org/wiki/DayOfWeekAndDaysInMonthExample
+		local function getDay(yy, mm, dd)
+			local dw = os.date('*t', os.time{year=yy, month=mm, day=dd}).wday
+			return ({ 'Sunday', 'Monday', 'Tuesday', 'Wednesday',
+						'Thusday', 'Friday', 'Saturday' })[dw]
+		end
+
+		-- Assumed format: "YYYY-MM-DDThh:mm:ss"
+		-- Index helper:    1234567890123456789
 		arguments.creationDate = string.sub(arguments.dateCreated, 1, 10) -- "YYYY-MM-DD"
-		arguments.creationTime = string.sub(arguments.dateCreated, 12, 20) -- "hh:mm:ss"
-	else
-		arguments.creationDate = ''
-		arguments.creationTime = ''
+		arguments.creationYear = string.sub(arguments.creationDate, 1, 4) -- "YYYY"
+		arguments.creationYear = tonumber(arguments.creationYear)
+		arguments.creationMonthXX = string.sub(arguments.creationDate, 6, 7) -- "MM"
+		if MediaWikiUtils.isStringFilled(arguments.creationMonthXX) then
+			arguments.creationMonth = tonumber(arguments.creationMonthXX)
+			arguments.creationMonthName = getMonth(arguments.creationMonth)
+		end
+		arguments.creationDayXX = string.sub(arguments.creationDate, 9, 10) -- "DD"
+		if	MediaWikiUtils.isStringFilled(arguments.creationDayXX) then
+			arguments.creationDay = tonumber(arguments.creationDayXX)
+			arguments.creationDayName = getDay(arguments.creationYear, arguments.creationMonth, arguments.creationDay)
+		end
+		arguments.creationTime = string.sub(arguments.dateCreated, 12, 19) -- "hh:mm:ss"
+		arguments.creationHour = string.sub(arguments.dateCreated, 12, 13) -- "hh"
+		arguments.creationMinute = string.sub(arguments.dateCreated, 15, 16) -- "mm"
+		arguments.creationSecond = string.sub(arguments.dateCreated, 18, 19) -- "ss"
+		if	MediaWikiUtils.isStringFilled(arguments.creationYear) and
+			MediaWikiUtils.isStringFilled(arguments.creationMonth) and
+			MediaWikiUtils.isStringFilled(arguments.creationDay) then
+			local cocoaDate = LrDate.timeFromComponents(
+				arguments.creationYear,
+				arguments.creationMonth,
+				arguments.creationDay,
+				arguments.creationHour,
+				arguments.creationMinute,
+				arguments.creationSecond
+				)
+			arguments.creationLongDate = LrDate.formatLongDate(cocoaDate)
+			arguments.creationMediumDate = LrDate.formatMediumDate(cocoaDate)
+			arguments.creationShortDate = LrDate.formatShortDate(cocoaDate)
+			arguments.creationMonthNameLoc = LrDate.timeToUserFormat(cocoaDate, '%B')
+			arguments.creationDayNameLoc = LrDate.timeToUserFormat(cocoaDate, '%A')
+		end
+		-- Test templates and outputs see:
+		-- https://github.com/robinkrahl/LrMediaWiki/issues/91
 	end
 
 	local gpsRaw = photo:getRawMetadata('gps')

@@ -15,12 +15,15 @@
 
 local LrApplication = import 'LrApplication'
 local LrLogger = import 'LrLogger'
+local LrPasswords = import 'LrPasswords'
+local LrPrefs = import 'LrPrefs'
+
 local Info = require 'Info'
 
 local MediaWikiUtils = {}
 local myLogger = LrLogger('LrMediaWikiLogger')
 
-local prefs = import 'LrPrefs'.prefsForPlugin()
+local prefs = LrPrefs.prefsForPlugin(nil)
 if prefs.logging then
 	myLogger:enable('logfile')
 end
@@ -44,6 +47,12 @@ end
 
 MediaWikiUtils.isStringFilled = function(str)
 	return not MediaWikiUtils.isStringEmpty(str)
+end
+
+MediaWikiUtils.trim = function(str)
+	return string.match(str, '^%s*(.-)%s*$')
+	-- see e.g. http://lua-users.org/wiki/StringTrim
+	--- or http://lua-users.org/wiki/CommonFunctions
 end
 
 MediaWikiUtils.getFirstKey = function(table)
@@ -72,7 +81,31 @@ MediaWikiUtils.getVersionString = function()
 	return installedVersion .. ', LR ' .. LrApplication.versionString() .. ' ' .. platform
 end
 
+MediaWikiUtils.storePassword = function(apiPath, username, password)
+	-- passwordKey needs to be the same as at "retrievePassword"
+	local passwordKey = 'LrMediaWiki#' .. apiPath .. '#' .. username
+	LrPasswords.store(passwordKey, password)
+end
+
+MediaWikiUtils.retrievePassword = function(apiPath, username)
+	-- passwordKey needs to be the same as at "storePassword"
+	local passwordKey = 'LrMediaWiki#' .. apiPath .. '#' .. username
+	local password = LrPasswords.retrieve(passwordKey)
+	if password == nil then
+		password = ''
+	end
+	return password
+end
+
 -- configuration
+
+MediaWikiUtils.getLangCode = function()
+	return prefs.lang_code or false
+end
+
+MediaWikiUtils.setLangCode = function(lang_code)
+	prefs.lang_code = lang_code
+end
 
 MediaWikiUtils.getCreateSnapshots = function()
 	return prefs.create_snapshot or false
@@ -80,6 +113,14 @@ end
 
 MediaWikiUtils.setCreateSnapshots = function(create_snapshot)
 	prefs.create_snapshot = create_snapshot
+end
+
+MediaWikiUtils.getExportKeyword = function()
+	return prefs.export_keyword or nil
+end
+
+MediaWikiUtils.setExportKeyword = function(tag)
+	prefs.export_keyword = tag
 end
 
 MediaWikiUtils.getCheckVersion = function()
@@ -101,14 +142,6 @@ MediaWikiUtils.setLogging = function(logging)
 	else
 		myLogger:disable()
 	end
-end
-
-MediaWikiUtils.getExportKeyword = function()
-	return prefs.export_keyword or nil
-end
-
-MediaWikiUtils.setExportKeyword = function(tag)
-	prefs.export_keyword = tag
 end
 
 MediaWikiUtils.getPreviewWikitextFontName = function()

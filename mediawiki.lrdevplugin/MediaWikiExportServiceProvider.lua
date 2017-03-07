@@ -32,458 +32,7 @@ local MediaWikiUtils = require 'MediaWikiUtils'
 
 local MediaWikiExportServiceProvider = {}
 
-MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext) -- luacheck: ignore functionContext
-	-- configure progress display
-	local exportSession = exportContext.exportSession
-	local photoCount = exportSession:countRenditions()
-	local MessageSingle = LOC("$$$/LrMediaWiki/Export/Progress=Exporting ^1 photos to a MediaWiki", photoCount)
-	local MessageMultiple = LOC "$$$/LrMediaWiki/Export/Progress/One=Exporting one photo to a MediaWiki"
-	exportContext:configureProgress{
-		title = photoCount > 1 and MessageSingle or MessageMultiple
-	}
-
-	local exportSettings = assert(exportContext.propertyTable)
-
-	-- require username, password, apipath, source, author, license
-	if MediaWikiUtils.isStringEmpty(exportSettings.username) then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoUsername=No username given!")
-	end
-	if MediaWikiUtils.isStringEmpty(exportSettings.password) then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPassword=No password given!")
-	end
-	if MediaWikiUtils.isStringEmpty(exportSettings.api_path) then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoApiPath=No API path given!")
-	end
-	if MediaWikiUtils.isStringEmpty(exportSettings.info_permission) and MediaWikiUtils.isStringEmpty(exportSettings.info_license) then
-		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPermissionLicense=No permission or license given!")
-	end
-
-	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path, exportSettings.info_template)
-
-	-- file names for gallery creation
-	local fileNames = {}
-
-	-- iterate over photos
-	for i, rendition in exportContext:renditions() do -- luacheck: ignore i
-		-- render photo
-		local success, pathOrMessage = rendition:waitForRender()
-		if success then
-			local photo = rendition.photo
-			local catalog = photo.catalog
-			-- do upload to MediaWiki
-			local artworkParameters = { -- Parameters of infobox template "Artwork" without "description" and "permission"
-				artist = '',
-				title = '',
-				date = '',
-				medium = '',
-				dimensions = '',
-				institution = '',
-				department = '',
-				accessionNumber = '',
-				placeOfCreation = '',
-				placeOfDiscovery = '',
-				objectHistory = '',
-				exhibitionHistory = '',
-				creditLine = '',
-				inscriptions = '',
-				notes = '',
-				references = '',
-				wikidata = '',
-			}
-			local objectPhotoParameters = { -- Parameters of infobox template "Object photo" without "description" and "permission"
-				object = '',
-				detail = '',
-				detailPosition = '',
-			}
-			local exportFields = { -- Fields set at export dialog, ordered by UI
-				info_template = exportSettings.info_template,
-				info_source = exportSettings.info_source,
-				info_author = exportSettings.info_author,
-				info_license = exportSettings.info_license,
-				info_permission = exportSettings.info_permission,
-				info_templates = exportSettings.info_templates,
-				info_categories = exportSettings.info_categories,
-				-- fields by file, to be filled by fillExportFields(), order by UI
-				description = '',
-				date = '',
-				source = '',
-				author = '',
-				location = '',
-				templates = '',
-				categories = '',
-				otherVersions = '',
-				otherFields = '',
-				art = artworkParameters, -- Parameters of infobox template "Artwork"
-				objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
-			}
-
-			local filledExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(exportFields, photo)
-			local fileDescription = MediaWikiInterface.buildFileDescription(filledExportFields, photo)
-
-			-- ensure that the target file name does not contain a series of spaces or
-			-- underscores (as this would cause the upload to fail without a proper
-			-- error message)
-			local fileName = string.gsub(LrPathUtils.leafName(pathOrMessage), '[ _]+', '_')
-			local hasDescription = MediaWikiUtils.isStringFilled(filledExportFields.description)
-			local message = MediaWikiInterface.uploadFile(pathOrMessage, fileDescription, hasDescription, fileName)
-			if message then
-				rendition:uploadFailed(message)
-			else
-				-- create new snapshot if the upload was successful
-				if MediaWikiUtils.getCreateSnapshots() then
-					local currentTimeStamp = LrDate.currentTime()
-					local currentDate = LrDate.formatShortDate(currentTimeStamp)
-					local currentTime = LrDate.formatShortTime(currentTimeStamp)
-					local snapshotTitle = LOC("$$$/LrMediaWiki/Export/Snapshot=MediaWiki export, ^1 ^2, ^3", currentDate, currentTime, exportSettings.api_path)
-					catalog:withWriteAccessDo('CreateDevelopSnapshot', function(context) -- luacheck: ignore context
-						photo:createDevelopSnapshot(snapshotTitle, true)
-					end)
-				end
-
-				-- add configured export keyword
-				local keyword = MediaWikiUtils.getExportKeyword()
-				if MediaWikiUtils.isStringFilled(keyword) then
-					catalog:withWriteAccessDo('AddExportKeyword', function(context) -- luacheck: ignore context
-						photo:addKeyword(catalog:createKeyword(keyword, {}, false, nil, true))
-					end)
-				end
-
-				-- file name for gallery creation
-				fileNames[#fileNames + 1] = fileName
-			end
-			LrFileUtils.delete(pathOrMessage)
-		else
-			-- rendering failed --> report failure
-			rendition:uploadFailed(pathOrMessage)
-		end
-	end
-
-	if MediaWikiUtils.isStringFilled(exportSettings.gallery) and fileNames then
-		MediaWikiInterface.addToGallery(fileNames, exportSettings.gallery)
-	end
-end
-
-MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, propertyTable)
-	local labelAlignment = 'right'
-
-	return {
-		{
-			title = LOC "$$$/LrMediaWiki/Section/User/Title=LrMediaWiki Login Information",
-			synopsis = bind 'username',
-
-			viewFactory:column {
-				spacing = viewFactory:control_spacing(),
-				fill_horizontal = 1,
-
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/Username=Username:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:edit_field {
-						value = bind 'username',
-						immediate = true,
-						fill_horizontal = 1,
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/Password=Password:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:password_field {
-						value = bind 'password',
-						fill_horizontal = 1,
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/ApiPath=API Path:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:edit_field {
-						value = bind 'api_path',
-						immediate = true,
-						fill_horizontal = 1,
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/User/Gallery=Gallery:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:edit_field {
-						value = bind 'gallery',
-						immediate = true,
-						fill_horizontal = 1,
-					},
-				},
-			},
-		},
-		{
-			title = LOC "$$$/LrMediaWiki/Section/Licensing/Title=LrMediaWiki Upload Information",
-			synopsis = bind 'info_template',
-
-			viewFactory:column {
-				spacing = viewFactory:control_spacing(),
-				fill_horizontal = 1,
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/InfoboxTemplate=Infobox Template:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:popup_menu {
-						value = bind 'info_template',
-						items = {
-							'Information',
-							'Information (de)',
-							'Artwork',
-							'Object photo',
-						},
-					},
-					viewFactory:push_button {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext",
-							action = function(button) -- luacheck: ignore button
-								MediaWikiExportServiceProvider.showPreview(propertyTable)
-							end,
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Source=Source:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:edit_field {
-						value = bind 'info_source',
-						immediate = true,
-						fill_horizontal = 1,
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Author=Author:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:edit_field {
-						value = bind 'info_author',
-						immediate = true,
-						fill_horizontal = 1,
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Permission=Permission:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:edit_field {
-						value = bind 'info_permission',
-						immediate = true,
-						fill_horizontal = 1,
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/OtherTemplates=Other Templates:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:edit_field {
-						value = bind 'info_templates',
-						immediate = true,
-						fill_horizontal = 1,
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/License=License:",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:combo_box {
-						value = bind 'info_license',
-						immediate = true,
-						fill_horizontal = 1,
-						items = {
-							'{{Cc-by-sa-4.0}}',
-							'{{Cc-by-4.0}}',
-							'{{Cc-zero}}',
-						},
-					},
-				},
-				viewFactory:row {
-					viewFactory:static_text {
-						title = LOC "$$$/LrMediaWiki/Section/Licensing/Categories=Categories:^nseparated by ;",
-						alignment = labelAlignment,
-						width = LrView.share 'label_width',
-					},
-					viewFactory:edit_field {
-						value = bind 'info_categories',
-						immediate = true,
-						fill_horizontal = 1,
-						height_in_lines = 3,
-					},
-				},
-			},
-		},
-	}
-end
-
-MediaWikiExportServiceProvider.showPreview = function(propertyTable)
-	-- This function to provide a preview message box needs to run as a separate task,
-	-- according to this discussion post: <https://forums.adobe.com/message/8493589#8493589>
-	LrTasks.startAsyncTask( function ()
-			LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
-			local properties = LrBinding.makePropertyTable(context)
-			local activeCatalog = LrApplication.activeCatalog()
-			properties.photoList = activeCatalog:getTargetPhotos()
-			local photo = properties.photoList[1] -- first photo of the selection
-			properties.fileName = photo:getFormattedMetadata('fileName')
-			properties.index = 1
-
-			local setCurrentOfAll = function(current)
-				properties.currentOfAll = current .. '/' .. #properties.photoList
-			end
-
-			local setPhoto = function(pos)
-				local max = #properties.photoList
-				if pos == 'first' then
-					properties.index = 1
-				elseif pos == 'previous' then
-					if properties.index > 1 then
-						properties.index = properties.index - 1
-					else -- we are at first position
-						return
-					end
-				elseif pos == 'next' then
-					if properties.index < max then
-						properties.index = properties.index + 1
-					else -- we are at last position
-						return
-					end
-				elseif pos == 'last' then
-					properties.index = max
-				else -- invalid parameter "pos"
-					return
-				end
-				LrTasks.startAsyncTask( function ()
-					-- LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
-						setCurrentOfAll(properties.index)
-						photo = properties.photoList[properties.index]
-						properties.fileName = photo:getFormattedMetadata('fileName')
-						local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
-						local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
-						properties.dialogValue = wikitext
-					-- end)
-				end)
-			end
-
-			setCurrentOfAll(1)
-			local wikitext
-			local result, message = MediaWikiInterface.loadFileDescriptionTemplate(propertyTable.info_template)
-			if not result then
-				LrDialogs.message(LOC "$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description", message, 'error')
-				return
-			end
-
-			local ExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(propertyTable, photo)
-			wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
-			local dialogTitle = LOC "$$$/LrMediaWiki/Section/Licensing/Preview=Preview of generated wikitext"
-			local factory = LrView.osFactory()
-			properties.dialogValue = wikitext
-
-			local contents = factory:column {
-				fill_horizontal = 1,
-				fill_vertical = 1,
-				spacing = factory:label_spacing(),
-				factory:row {
-					fill_vertical = 1,
-					bind_to_object = properties,
-					factory:static_text {
-						title = LrView.bind('dialogValue'),
-						height_in_lines = -1, -- to let the text wrap
-						width_in_chars = 60, -- text wrap needs a value too
-						height = 200, -- initial value
-						fill_horizontal = 1,
-						fill_vertical = 1,
-						font = { -- see [1]
-							name = MediaWikiUtils.getPreviewWikitextFontName(),
-							size = MediaWikiUtils.getPreviewWikitextFontSize(),
-						},
-						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipWikitext=Font name and font size of the wikitext are customizable at the plug-in’s configuration.",
-					},
-				},
-				factory:row {
-					factory:separator {
-						fill_horizontal = 1, -- "1" means full width
-					},
-				},
-				factory:row {
-					factory:push_button {
-						-- | + U+25C0 = BLACK LEFT-POINTING TRIANGLE = |◀
-						title = '|◀',
-						action = function() setPhoto('first') end,
-						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonFirst=First file",
-					},
-					factory:push_button {
-						-- U+25C0 = BLACK LEFT-POINTING TRIANGLE = ◀
-						title = '◀',
-						action = function() setPhoto('previous') end,
-						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonPrevious=Previous file",
-					},
-					factory:push_button {
-						-- U+25B6 = BLACK RIGHT-POINTING TRIANGLE = ▶
-						title = '▶',
-						action = function() setPhoto('next') end,
-						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonNext=Next file",
-					},
-					factory:push_button {
-						-- U+25B6 + | = BLACK RIGHT-POINTING TRIANGLE = ▶|
-						title = '▶|',
-						action = function() setPhoto('last') end,
-						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonLast=Last file",
-					},
-					factory:static_text {
-						bind_to_object = properties,
-						title = LrView.bind('currentOfAll'),
-						width_in_chars = 30,
-						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipCurrentOfAll=Current index in relation to the total number of selected files",
-					},
-				},
-				factory:row {
-					factory:static_text {
-						title = LOC "$$$/LrMediaWiki/Preview/FileName=File Name:",
-					},
-					factory:static_text {
-						bind_to_object = properties,
-						title = LrView.bind('fileName'),
-						width_in_chars = 30,
-						fill_horizontal = 1,
-						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipFileName=Current file name",
-					},
-				},
-			}
-
-			LrDialogs.presentModalDialog({
-				title = dialogTitle,
-				contents = contents,
-				-- cancelVerb = '< exclude >', -- no cancel button
-				resizable = true,
-				save_frame= 'PreviewDialogSaveFrame',
-			})
-
-		end)
-	end)
-end
-
-MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
+local fillFieldsByFile = function(propertyTable, photo)
 	-- All decisions done by this function should be documented at user's guide.
 	local artworkParameters = { -- Parameters of infobox template "Artwork"
 		artist = '', -- '<!-- Artist -->',
@@ -575,7 +124,7 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	-- Field "description"
 	local descriptionEn = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_en')
 	local descriptionDe = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_de')
-	local descriptionAdditional = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_additional')
+	local descriptionOther = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'description_other')
 	local description = ''
 	local existDescription = false
 	-- If multiple description fields are set, priorities are considered. The sequence of detections
@@ -597,11 +146,15 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 		end
 		existDescription = true
 	end
-	if MediaWikiUtils.isStringFilled(descriptionAdditional) and propertyTable.info_template ~= 'Information (de)' then
+	if MediaWikiUtils.isStringFilled(descriptionOther) and propertyTable.info_template ~= 'Information (de)' then
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
-		description = description .. descriptionAdditional
+		local langCode = MediaWikiUtils.getLangCode()
+		if MediaWikiUtils.isStringFilled(langCode) then
+			descriptionOther = '{{' .. langCode .. '|1=' .. descriptionOther .. '}}'
+		end
+		description = description .. descriptionOther
 		existDescription = true
 	end
 	if existDescription == false and exportFields.info_template == 'Information' then
@@ -786,6 +339,515 @@ MediaWikiExportServiceProvider.fillFieldsByFile = function(propertyTable, photo)
 	end
 
 	return exportFields
+end
+
+local showPreview = function(propertyTable)
+	-- This function to provide a preview message box needs to run as a separate task,
+	-- according to this discussion post: <https://forums.adobe.com/message/8493589#8493589>
+	LrTasks.startAsyncTask( function ()
+			LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
+			local properties = LrBinding.makePropertyTable(context)
+			local activeCatalog = LrApplication.activeCatalog()
+			properties.photoList = activeCatalog:getTargetPhotos()
+			local photo = properties.photoList[1] -- first photo of the selection
+			properties.fileName = photo:getFormattedMetadata('fileName')
+			properties.index = 1
+
+			local setCurrentOfAll = function(current)
+				properties.currentOfAll = current .. '/' .. #properties.photoList
+			end
+
+			local setPhoto = function(pos)
+				local max = #properties.photoList
+				if pos == 'first' then
+					properties.index = 1
+				elseif pos == 'previous' then
+					if properties.index > 1 then
+						properties.index = properties.index - 1
+					else -- we are at first position
+						return
+					end
+				elseif pos == 'next' then
+					if properties.index < max then
+						properties.index = properties.index + 1
+					else -- we are at last position
+						return
+					end
+				elseif pos == 'last' then
+					properties.index = max
+				else -- invalid parameter "pos"
+					return
+				end
+				LrTasks.startAsyncTask( function ()
+					-- LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
+						setCurrentOfAll(properties.index)
+						photo = properties.photoList[properties.index]
+						properties.fileName = photo:getFormattedMetadata('fileName')
+						local ExportFields = fillFieldsByFile(propertyTable, photo)
+						local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
+						properties.dialogValue = wikitext
+					-- end)
+				end)
+			end
+
+			setCurrentOfAll(1)
+			local wikitext
+			local result, message = MediaWikiInterface.loadFileDescriptionTemplate(propertyTable.info_template)
+			if not result then
+				LrDialogs.message(LOC "$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description", message, 'error')
+				return
+			end
+
+			local ExportFields = fillFieldsByFile(propertyTable, photo)
+			wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
+			local dialogTitle = LOC "$$$/LrMediaWiki/Section/UploadInformation/Preview=Preview of generated wikitext"
+			local factory = LrView.osFactory()
+			properties.dialogValue = wikitext
+
+			local contents = factory:column {
+				fill_horizontal = 1,
+				fill_vertical = 1,
+				spacing = factory:label_spacing(),
+				factory:row {
+					fill_vertical = 1,
+					bind_to_object = properties,
+					factory:static_text {
+						title = LrView.bind('dialogValue'),
+						height_in_lines = -1, -- to let the text wrap
+						width_in_chars = 60, -- text wrap needs a value too
+						height = 200, -- initial value
+						fill_horizontal = 1,
+						fill_vertical = 1,
+						font = { -- see [1]
+							name = MediaWikiUtils.getPreviewWikitextFontName(),
+							size = MediaWikiUtils.getPreviewWikitextFontSize(),
+						},
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipWikitext=Font name and font size of the wikitext are customizable at the plug-in’s configuration.",
+					},
+				},
+				factory:row {
+					factory:separator {
+						fill_horizontal = 1, -- "1" means full width
+					},
+				},
+				factory:row {
+					factory:push_button {
+						-- | + U+25C0 = BLACK LEFT-POINTING TRIANGLE = |◀
+						title = '|◀',
+						action = function() setPhoto('first') end,
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonFirst=First file",
+					},
+					factory:push_button {
+						-- U+25C0 = BLACK LEFT-POINTING TRIANGLE = ◀
+						title = '◀',
+						action = function() setPhoto('previous') end,
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonPrevious=Previous file",
+					},
+					factory:push_button {
+						-- U+25B6 = BLACK RIGHT-POINTING TRIANGLE = ▶
+						title = '▶',
+						action = function() setPhoto('next') end,
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonNext=Next file",
+					},
+					factory:push_button {
+						-- U+25B6 + | = BLACK RIGHT-POINTING TRIANGLE = ▶|
+						title = '▶|',
+						action = function() setPhoto('last') end,
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipButtonLast=Last file",
+					},
+					factory:static_text {
+						bind_to_object = properties,
+						title = LrView.bind('currentOfAll'),
+						width_in_chars = 30,
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipCurrentOfAll=Current index in relation to the total number of selected files",
+					},
+				},
+				factory:row {
+					factory:static_text {
+						title = LOC "$$$/LrMediaWiki/Preview/FileName=File Name" .. ':',
+					},
+					factory:static_text {
+						bind_to_object = properties,
+						title = LrView.bind('fileName'),
+						width_in_chars = 30,
+						fill_horizontal = 1,
+						tooltip = LOC "$$$/LrMediaWiki/Preview/TooltipFileName=Current file name",
+					},
+				},
+			}
+
+			LrDialogs.presentModalDialog({
+				title = dialogTitle,
+				contents = contents,
+				-- cancelVerb = '< exclude >', -- no cancel button
+				resizable = true,
+				save_frame= 'PreviewDialogSaveFrame',
+			})
+
+		end)
+	end)
+end
+
+MediaWikiExportServiceProvider.startDialog = function(propertyTable)
+	if MediaWikiUtils.isStringFilled(propertyTable.password) then
+		MediaWikiUtils.storePassword(propertyTable.api_path, propertyTable.username, propertyTable.password)
+	else
+		propertyTable.password = MediaWikiUtils.retrievePassword(propertyTable.api_path, propertyTable.username)
+	end
+end
+
+MediaWikiExportServiceProvider.endDialog = function(propertyTable)
+	if MediaWikiUtils.isStringFilled(propertyTable.password) then
+		-- Don't store password in preferences!
+		-- Preferences are stored at file system and can read out from there.
+		-- Therefore delete field "password" from property table:
+		propertyTable.password = nil
+	end
+end
+
+MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext, exportContext) -- luacheck: ignore functionContext
+	-- configure progress display
+	local exportSession = exportContext.exportSession
+	local photoCount = exportSession:countRenditions()
+	local MessageSingle = LOC("$$$/LrMediaWiki/Export/Progress=Exporting ^1 photos to a MediaWiki", photoCount)
+	local MessageMultiple = LOC "$$$/LrMediaWiki/Export/Progress/One=Exporting one photo to a MediaWiki"
+	exportContext:configureProgress{
+		title = photoCount > 1 and MessageSingle or MessageMultiple
+	}
+
+	local exportSettings = assert(exportContext.propertyTable)
+
+	-- require username, apipath, password, source, author, license
+	if MediaWikiUtils.isStringEmpty(exportSettings.username) then
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoUsername=No username given!")
+	end
+	if MediaWikiUtils.isStringEmpty(exportSettings.api_path) then
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoApiPath=No API path given!")
+	end
+
+	exportSettings.password = MediaWikiUtils.retrievePassword(exportSettings.api_path, exportSettings.username)
+	if MediaWikiUtils.isStringEmpty(exportSettings.password) then
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPassword=No password given!")
+	end
+
+	if MediaWikiUtils.isStringEmpty(exportSettings.info_permission) and MediaWikiUtils.isStringEmpty(exportSettings.info_license) then
+		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPermissionLicense=No permission or license given!")
+	end
+
+	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path, exportSettings.info_template)
+
+	-- file names for gallery creation
+	local fileNames = {}
+
+	-- iterate over photos
+	for i, rendition in exportContext:renditions() do -- luacheck: ignore i
+		-- render photo
+		local success, pathOrMessage = rendition:waitForRender()
+		if success then
+			local photo = rendition.photo
+			local catalog = photo.catalog
+			-- do upload to MediaWiki
+			local artworkParameters = { -- Parameters of infobox template "Artwork" without "description" and "permission"
+				artist = '',
+				title = '',
+				date = '',
+				medium = '',
+				dimensions = '',
+				institution = '',
+				department = '',
+				accessionNumber = '',
+				placeOfCreation = '',
+				placeOfDiscovery = '',
+				objectHistory = '',
+				exhibitionHistory = '',
+				creditLine = '',
+				inscriptions = '',
+				notes = '',
+				references = '',
+				wikidata = '',
+			}
+			local objectPhotoParameters = { -- Parameters of infobox template "Object photo" without "description" and "permission"
+				object = '',
+				detail = '',
+				detailPosition = '',
+			}
+			local exportFields = { -- Fields set at export dialog, ordered by UI
+				info_template = exportSettings.info_template,
+				info_source = exportSettings.info_source,
+				info_author = exportSettings.info_author,
+				info_license = exportSettings.info_license,
+				info_permission = exportSettings.info_permission,
+				info_templates = exportSettings.info_templates,
+				info_categories = exportSettings.info_categories,
+				-- fields by file, to be filled by fillExportFields(), order by UI
+				description = '',
+				date = '',
+				source = '',
+				author = '',
+				location = '',
+				templates = '',
+				categories = '',
+				otherVersions = '',
+				otherFields = '',
+				art = artworkParameters, -- Parameters of infobox template "Artwork"
+				objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
+			}
+
+			local filledExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(exportFields, photo)
+			local fileDescription = MediaWikiInterface.buildFileDescription(filledExportFields, photo)
+
+			-- ensure that the target file name does not contain a series of spaces or
+			-- underscores (as this would cause the upload to fail without a proper
+			-- error message)
+			local fileName = string.gsub(LrPathUtils.leafName(pathOrMessage), '[ _]+', '_')
+			local hasDescription = MediaWikiUtils.isStringFilled(filledExportFields.description)
+			local message = MediaWikiInterface.uploadFile(pathOrMessage, fileDescription, hasDescription, fileName)
+			if message then
+				rendition:uploadFailed(message)
+			else
+				-- create new snapshot if the upload was successful
+				if MediaWikiUtils.getCreateSnapshots() then
+					local currentTimeStamp = LrDate.currentTime()
+					local currentDate = LrDate.formatShortDate(currentTimeStamp)
+					local currentTime = LrDate.formatShortTime(currentTimeStamp)
+					local snapshotTitle = LOC("$$$/LrMediaWiki/Export/Snapshot=MediaWiki export, ^1 ^2, ^3", currentDate, currentTime, exportSettings.api_path)
+					catalog:withWriteAccessDo('CreateDevelopSnapshot', function(context) -- luacheck: ignore context
+						photo:createDevelopSnapshot(snapshotTitle, true)
+					end)
+				end
+
+				-- add configured export keyword
+				local keyword = MediaWikiUtils.getExportKeyword()
+				if MediaWikiUtils.isStringFilled(keyword) then
+					catalog:withWriteAccessDo('AddExportKeyword', function(context) -- luacheck: ignore context
+						photo:addKeyword(catalog:createKeyword(keyword, {}, false, nil, true))
+					end)
+				end
+
+				-- file name for gallery creation
+				fileNames[#fileNames + 1] = fileName
+			end
+			LrFileUtils.delete(pathOrMessage)
+		else
+			-- rendering failed --> report failure
+			rendition:uploadFailed(pathOrMessage)
+		end
+	end
+
+	if MediaWikiUtils.isStringFilled(exportSettings.gallery) and fileNames then
+		MediaWikiInterface.addToGallery(fileNames, exportSettings.gallery)
+	end
+end
+
+MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, propertyTable)
+	local labelAlignment = 'right'
+
+	-- The following tooltips are used twice, at the label and at the field. They are set as variables to avoid redundancy.
+	local usernameTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/UsernameTooltip=Username^n^nRequired field. Enter the username of your MediaWiki account."
+	local passwordTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/PasswordTooltip=Password^n^nRequired field. Enter the password of your MediaWiki account."
+	local apiPathTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/ApiPathTooltip=API Path^n^nRequired field. To determine the path, go to “Special:Version” → “Entry point URLs” → “api.php” of the intended MediaWiki."
+	local infoboxTemplateTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/InfoboxTemplateTooltip=Infobox Template^n^nThese are mainly templates of Wikimedia Commons. “Information (de)” is the template “Information” of the German language Wikipedia."
+	local sourceTooltip  = LOC "$$$/LrMediaWiki/Metadata/SourceTooltip=Source^n^nRequired field. Should be set per file or at export dialog. Setting per file has priority over setting at export dialog. Example: {{own}}.^nThe field is named “Source/Photographer” at infobox template “Artwork”."
+	local authorTooltip = LOC "$$$/LrMediaWiki/Metadata/AuthorTooltip=Author^n^nRequired field, if not “Artwork” has been chosen (“Artwork” recommends to use “Artist” or “Author”).^nShould be set per file or at export dialog. Setting per file has priority over setting at export dialog. Example:^n  [[User:MyUserName|MyRealName]]"
+	local permissionTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/PermisssionTooltip=Permission^n^nPermission information like {{PermissionOTRS}}. Either this field or “License” should be set."
+	local otherTemplatesTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/OtherTemplatesTooltip=Other Templates^n^nOther templates are inserted after the infobox template and before the licensing section. Examples:^n  {{Panorama}}^n  {{Personality rights}}^n  {{Location estimated}}"
+	local licenseTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/LicenseTooltip=License^n^nThe license template to use, e.g. {{Cc-by-sa-4.0}}. Either this field or “Permission” should be set."
+	local categoriesTooltip = LOC "$$$/LrMediaWiki/Metadata/CategoriesTooltip=Categories^n^nThe categories all uploaded images should be added to; without the prefix “Category:” and without square brackets [[…]]. Multiple categories are separated by a ; (semicolon)."
+	local galleryTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/GalleryTooltip=Gallery^n^nIf this field is set, a gallery of your uploads will be added to the page with the specified title. Example:^n  User:MyUserName/My Uploads"
+
+	return {
+		{	-- first section
+			title = LOC "$$$/LrMediaWiki/Section/LoginInformation/Title=LrMediaWiki Login Information",
+			synopsis = bind 'username',
+
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/LoginInformation/Username=Username" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = usernameTooltip,
+				},
+				viewFactory:edit_field {
+					value = bind 'username',
+					immediate = true,
+					fill_horizontal = 1,
+					tooltip = usernameTooltip,
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/LoginInformation/Password=Password" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = passwordTooltip,
+				},
+				viewFactory:password_field {
+					value = bind 'password',
+					immediate = true,
+					validate = function(view, password) -- luacheck: ignore view
+						MediaWikiUtils.storePassword(propertyTable.api_path, propertyTable.username, password)
+						return true, password
+					end,
+					fill_horizontal = 1,
+					tooltip = passwordTooltip,
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/LoginInformation/ApiPath=API Path" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = apiPathTooltip,
+				},
+				viewFactory:combo_box {
+					value = bind 'api_path',
+					immediate = true,
+					fill_horizontal = 1,
+					items = {
+						'https://commons.wikimedia.org/w/api.php',
+						'https://commons.wikimedia.beta.wmflabs.org/w/api.php',
+						'https://en.wikipedia.org/w/api.php',
+						'https://de.wikipedia.org/w/api.php',
+					},
+					tooltip = apiPathTooltip,
+				},
+			},
+		},
+		{	-- second section
+			title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Title=LrMediaWiki Upload Information",
+			synopsis = bind 'info_template',
+
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/UploadInformation/InfoboxTemplate=Infobox Template" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = infoboxTemplateTooltip,
+				},
+				viewFactory:popup_menu {
+					value = bind 'info_template',
+					items = {
+						'Information',
+						'Information (de)',
+						'Artwork',
+						'Object photo',
+					},
+					tooltip = infoboxTemplateTooltip,
+				},
+				viewFactory:push_button {
+					title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Preview=Preview of generated wikitext",
+						action = function(button) -- luacheck: ignore button
+							showPreview(propertyTable)
+						end,
+					tooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/PreviewTooltip=The preview shows how the wikitext of the file description page will look.",
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Metadata/Source=Source" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = sourceTooltip,
+				},
+				viewFactory:edit_field {
+					value = bind 'info_source',
+					immediate = true,
+					fill_horizontal = 1,
+					tooltip = sourceTooltip,
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Metadata/Author=Author" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = authorTooltip,
+				},
+				viewFactory:edit_field {
+					value = bind 'info_author',
+					immediate = true,
+					fill_horizontal = 1,
+					tooltip = authorTooltip,
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Permission=Permission" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = permissionTooltip,
+				},
+				viewFactory:edit_field {
+					value = bind 'info_permission',
+					immediate = true,
+					fill_horizontal = 1,
+					tooltip = permissionTooltip,
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/UploadInformation/OtherTemplates=Other Templates" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = otherTemplatesTooltip,
+				},
+				viewFactory:edit_field {
+					value = bind 'info_templates',
+					immediate = true,
+					fill_horizontal = 1,
+					tooltip = otherTemplatesTooltip,
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/UploadInformation/License=License" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = licenseTooltip,
+				},
+				viewFactory:combo_box {
+					value = bind 'info_license',
+					immediate = true,
+					fill_horizontal = 1,
+					items = {
+						'{{Cc-by-sa-4.0}}',
+						'{{Cc-by-4.0}}',
+						'{{Cc-zero}}',
+					},
+					tooltip = licenseTooltip,
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Metadata/Categories=Categories" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = categoriesTooltip,
+				},
+				viewFactory:edit_field {
+					value = bind 'info_categories',
+					immediate = true,
+					fill_horizontal = 1,
+					height_in_lines = 3,
+					tooltip = categoriesTooltip,
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Gallery=Gallery" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = galleryTooltip,
+				},
+				viewFactory:edit_field {
+					value = bind 'gallery',
+					immediate = true,
+					fill_horizontal = 1,
+					tooltip = galleryTooltip,
+				},
+			},
+		},
+	}
 end
 
 MediaWikiExportServiceProvider.hidePrintResolution = true
