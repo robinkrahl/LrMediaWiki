@@ -13,7 +13,7 @@
 -- doc:   missing
 -- i18n:  complete
 
--- This Metadata Set "LrMediaWiki – Information" shows fields defined by the
+-- This Metadata Set "LrMediaWiki – Information (de)" shows fields defined by the
 -- German Wikimpdia infobox template "Information":
 -- <https://de.wikipedia.org/wiki/Vorlage:Information>
 -- The fields "Permission", "Source" and "Author" are added at export dialog.
@@ -26,7 +26,7 @@ return {
 	title = 'LrMediaWiki – Information (de)', -- no localization needed
 	items = {
 		{ 'com.adobe.label', label = 'LrMediaWiki – Information (de)' }, -- no localization needed
-		{ pf .. 'description_de', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)" },
+		{ pf .. 'description_de', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)", height_in_lines = 3 },
 		{ pf .. 'source', label = LOC "$$$/LrMediaWiki/Metadata/Source=Source" },
 		{ pf .. 'author', label = LOC "$$$/LrMediaWiki/Metadata/Author=Author" },
 		{ pf .. 'date', label = LOC "$$$/LrMediaWiki/Metadata/Date=Date" },

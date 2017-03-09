@@ -58,7 +58,7 @@
 "$$$/LrMediaWiki/Metadata/DescriptionEn=Beschreibung (en)"
 "$$$/LrMediaWiki/Metadata/DescriptionEnTooltip=Beschreibung (en)^n^nBeschreibung in Englisch"
 "$$$/LrMediaWiki/Metadata/DescriptionOther=Beschreibung (andere)"
-"$$$/LrMediaWiki/Metadata/DescriptionOtherTooltip=Beschreibung (andere)^n^nBeschreibung in einer anderen Sprache. Beispiel:^n  {{fr|Une description française}}^n^nDie Sprache dieses Feldes kann in den Einstellungen (Datei → Zusatzmodul-Manager… → Einstellungen) angepasst werden. Wenn dort z. B. das Sprachkürzel „fr“ gesetzt wurde, wird der Inhalt dieses Feldes als Französisch betrachtet."
+"$$$/LrMediaWiki/Metadata/DescriptionOtherTooltip=Beschreibung (andere)^n^nBeschreibung in einer anderen Sprache. Beispiel:^n  {{fr|Une description française}}^n^nOptional kann die Sprache dieses Feldes in den Einstellungen (Datei → Zusatzmodul-Manager… → Einstellungen) gesetzt werden. Wenn dort z. B. das Sprachkürzel „fr“ gesetzt wurde, wird der Inhalt dieses Feldes als Französisch betrachtet und der Text muss nicht in die Vorlage {{fr|…}} gesetzt werden."
 "$$$/LrMediaWiki/Metadata/Detail=Ausschnitt"
 "$$$/LrMediaWiki/Metadata/DetailTooltip=Ausschnitt^n^nSchreibe „yes“, wenn die Meldung „This photograph shows a detail …“ vor dem Abschnitt „Gegenstand“ angezeigt werden soll. Man kann auch erklären, welcher Ausschnitt gezeigt wird; dann wird beides angezeit, die Meldung und im Feld „Beschreibung“ des Abschnitts „Fotografie“ wird erklärt, welcher Ausschnitt es ist."
 "$$$/LrMediaWiki/Metadata/DetailPosition=Ausschnitt-Position"

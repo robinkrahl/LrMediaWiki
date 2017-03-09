@@ -37,7 +37,7 @@ return {
 		{
 			id = 'description_other',
 			version = 2,
-			title = LOC "$$$/LrMediaWiki/Metadata/DescriptionOtherTooltip=Description (other)^n^nDescription in another language. Example:^n  {{fr|Une description française}}^n^nThe language of this field can be adjusted in the configuration (File → Plug-in Manager… → Configuration). If, for example, the language code “fr” has been set there, the content of this field is considered to be French.",
+			title = LOC "$$$/LrMediaWiki/Metadata/DescriptionOtherTooltip=Description (other)^n^nDescription in another language. Example:^n  {{fr|Une description française}}^n^nOptional, the language of this field can be set in the configuration (File → Plug-in Manager… → Configuration). For example, if the language code “fr” has been set, the text here is considered to be French and it needs not be set in the template {{fr|…}}.",
 			dataType = 'string',
 			searchable = false,
 			browsable = false,
