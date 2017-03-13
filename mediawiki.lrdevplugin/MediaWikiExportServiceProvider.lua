@@ -593,7 +593,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 			}
 
-			local filledExportFields = MediaWikiExportServiceProvider.fillFieldsByFile(exportFields, photo)
+			local filledExportFields = fillFieldsByFile(exportFields, photo)
 			local fileDescription = MediaWikiInterface.buildFileDescription(filledExportFields, photo)
 
 			-- ensure that the target file name does not contain a series of spaces or
