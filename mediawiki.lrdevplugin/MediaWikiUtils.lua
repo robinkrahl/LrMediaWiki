@@ -103,6 +103,14 @@ MediaWikiUtils.getLangCode = function()
 	return prefs.lang_code or false
 end
 
+MediaWikiUtils.getLangCodeLabel = function()
+	local langCode = MediaWikiUtils.getLangCode()
+	if MediaWikiUtils.isStringEmpty(langCode) then
+		langCode = LOC "$$$/LrMediaWiki/Metadata/DescriptionOtherLangCode=other"
+	end
+	return langCode
+end
+
 MediaWikiUtils.setLangCode = function(lang_code)
 	prefs.lang_code = lang_code
 end

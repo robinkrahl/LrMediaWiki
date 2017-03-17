@@ -21,6 +21,9 @@
 local Info = require 'Info'
 local pf = Info.LrToolkitIdentifier .. '.' -- Prefix, e.g. 'org.ireas.lightroom.mediawiki.'
 
+local MediaWikiUtils = require 'MediaWikiUtils'
+local langCodeLabel = MediaWikiUtils.getLangCodeLabel()
+
 return {
 	id = 'LrMediaWikiMetadataSetInformation', -- needs to be unique!
 	title = 'LrMediaWiki – Information',
@@ -28,7 +31,7 @@ return {
 		{ 'com.adobe.label', label = 'LrMediaWiki – Information' },
 		{ pf .. 'description_en', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)", height_in_lines = 3 },
 		{ pf .. 'description_de', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)" },
-		{ pf .. 'description_other', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionOther=Description (other)" },
+		{ pf .. 'description_other', label = LOC ("$$$/LrMediaWiki/Metadata/DescriptionOther=Description (^1)", langCodeLabel) },
 		{ pf .. 'date', label = LOC "$$$/LrMediaWiki/Metadata/Date=Date" },
 		{ pf .. 'source', label = LOC "$$$/LrMediaWiki/Metadata/Source=Source" },
 		{ pf .. 'author', label = LOC "$$$/LrMediaWiki/Metadata/Author=Author" },

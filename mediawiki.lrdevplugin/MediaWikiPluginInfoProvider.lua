@@ -58,8 +58,9 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 			bind_to_object = propertyTable,
 
 			viewFactory:row {
-					spacing = viewFactory:control_spacing(),
-					viewFactory:static_text {
+				spacing = viewFactory:control_spacing(),
+
+				viewFactory:static_text {
 					title = LOC "$$$/LrMediaWiki/Section/Config/LanguageCode=Language code for “Description (other)”" .. ':',
 					-- alignment = labelAlignment,
 					tooltip = languageCodeTooltip,
@@ -69,6 +70,10 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 					value = bind 'lang_code',
 					width_in_chars = 2,
 					immediate = true,
+					validate = function(view, value) -- luacheck: ignore view
+						MediaWikiUtils.setLangCode(value)
+						return true, value
+					end,
 					items = {
 						'es', -- Español
 						'fr', -- Français
@@ -82,6 +87,12 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 						'uk', -- Українська
 					},
 					tooltip = languageCodeTooltip,
+				},
+
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/Config/HintReload=After change “Reload Plug-in”!",
+					alignment = labelAlignment,
+					tooltip = LOC "$$$/LrMediaWiki/Section/Config/HintReloadTooltip=The plug-in needs to be reloaded to show the change at the label of the metadata field “Description (other)”.^nUse “Reload Plug-in” at section “Plug-in Author Tools” below.",
 				},
 
 				viewFactory:static_text {

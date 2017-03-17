@@ -345,7 +345,7 @@ local showPreview = function(propertyTable)
 	-- This function to provide a preview message box needs to run as a separate task,
 	-- according to this discussion post: <https://forums.adobe.com/message/8493589#8493589>
 	LrTasks.startAsyncTask( function ()
-			LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
+		LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
 			local properties = LrBinding.makePropertyTable(context)
 			local activeCatalog = LrApplication.activeCatalog()
 			properties.photoList = activeCatalog:getTargetPhotos()
@@ -379,14 +379,12 @@ local showPreview = function(propertyTable)
 					return
 				end
 				LrTasks.startAsyncTask( function ()
-					-- LrFunctionContext.callWithContext ('showPreview', function(context) -- luacheck: ignore context
-						setCurrentOfAll(properties.index)
-						photo = properties.photoList[properties.index]
-						properties.fileName = photo:getFormattedMetadata('fileName')
-						local ExportFields = fillFieldsByFile(propertyTable, photo)
-						local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
-						properties.dialogValue = wikitext
-					-- end)
+					setCurrentOfAll(properties.index)
+					photo = properties.photoList[properties.index]
+					properties.fileName = photo:getFormattedMetadata('fileName')
+					local ExportFields = fillFieldsByFile(propertyTable, photo)
+					local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
+					properties.dialogValue = wikitext
 				end)
 			end
 
