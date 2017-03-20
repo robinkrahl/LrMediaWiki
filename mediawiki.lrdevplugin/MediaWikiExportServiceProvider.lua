@@ -150,7 +150,7 @@ local fillFieldsByFile = function(propertyTable, photo)
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
-		local langCode = MediaWikiUtils.getLangCode()
+		local langCode = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'language')
 		if MediaWikiUtils.isStringFilled(langCode) then
 			descriptionOther = '{{' .. langCode .. '|1=' .. descriptionOther .. '}}'
 		end
@@ -656,7 +656,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 	return {
 		{	-- first section
 			title = LOC "$$$/LrMediaWiki/Section/LoginInformation/Title=LrMediaWiki Login Information",
-			synopsis = bind 'username',
+			synopsis = bind 'api_path',
 
 			viewFactory:row {
 				viewFactory:static_text {

@@ -14,8 +14,6 @@
 -- i18n:  complete
 
 local LrView = import 'LrView'
-local LrHttp = import 'LrHttp'
-local LrColor = import 'LrColor'
 
 local MediaWikiUtils = require 'MediaWikiUtils'
 
@@ -24,7 +22,6 @@ local bind = LrView.bind
 local MediaWikiPluginInfoProvider = {}
 
 MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
-  propertyTable.lang_code = MediaWikiUtils.getLangCode()
   propertyTable.create_snapshots = MediaWikiUtils.getCreateSnapshots()
   propertyTable.export_keyword = MediaWikiUtils.getExportKeyword()
   propertyTable.check_version = MediaWikiUtils.getCheckVersion()
@@ -34,7 +31,6 @@ MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
 end
 
 MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
-  MediaWikiUtils.setLangCode(propertyTable.lang_code)
   MediaWikiUtils.setCreateSnapshots(propertyTable.create_snapshots)
   MediaWikiUtils.setExportKeyword(propertyTable.export_keyword)
   MediaWikiUtils.setCheckVersion(propertyTable.check_version)
@@ -47,71 +43,14 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 	local labelAlignment = 'right'
 
 	local exportKeywordTooltip = LOC "$$$/LrMediaWiki/Section/Config/ExportKeywordTooltip=If set, this keyword is added after successful export."
-	local languageCodeTooltip = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeTooltip=If a language code is set, the field “Description (other)” uses it to embed the description into a template {{Language code|1=description}}."
 	local fontNameTooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontNameTooltip=Font name of generated wikitext"
 	local fontSizeTooltip = LOC "$$$/LrMediaWiki/Section/Config/Preview/FontSizeTooltip=Font size of generated wikitext"
 
 	return {
 		{
 			title = LOC "$$$/LrMediaWiki/Section/Config/Title=LrMediaWiki Configuration",
-			synopsis = bind 'lang_code',
+			synopsis = bind 'preview_wikitext_font_name',
 			bind_to_object = propertyTable,
-
-			viewFactory:row {
-				spacing = viewFactory:control_spacing(),
-
-				viewFactory:static_text {
-					title = LOC "$$$/LrMediaWiki/Section/Config/LanguageCode=Language code for “Description (other)”" .. ':',
-					-- alignment = labelAlignment,
-					tooltip = languageCodeTooltip,
-				},
-
-				viewFactory:combo_box {
-					value = bind 'lang_code',
-					width_in_chars = 2,
-					immediate = true,
-					validate = function(view, value) -- luacheck: ignore view
-						MediaWikiUtils.setLangCode(value)
-						return true, value
-					end,
-					items = {
-						'es', -- Español
-						'fr', -- Français
-						'it', -- Italiano
-						'nb', -- Norsk bokmål
-						'nn', -- Norsk nynorsk
-						'pl', -- Polski
-						'pt', -- Português
-						'ru', -- Русский
-						'sv', -- Svenska
-						'uk', -- Українська
-					},
-					tooltip = languageCodeTooltip,
-				},
-
-				viewFactory:static_text {
-					title = LOC "$$$/LrMediaWiki/Section/Config/HintReload=After change “Reload Plug-in”!",
-					alignment = labelAlignment,
-					tooltip = LOC "$$$/LrMediaWiki/Section/Config/HintReloadTooltip=The plug-in needs to be reloaded to show the change at the label of the metadata field “Description (other)”.^nUse “Reload Plug-in” at section “Plug-in Author Tools” below.",
-				},
-
-				viewFactory:static_text {
-					title = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeValues=Possible language codes",
-					alignment = labelAlignment,
-					mouse_down = function()
-						LrHttp.openUrlInBrowser('https://commons.wikimedia.org/wiki/Category:Language_templates')
-					end,
-					--[[ A try, to change the color of the URL by mouse hover
-					-- https://forums.adobe.com/message/2084765#2084765
-					[ WIN_ENV and 'adjustCursor' or 'adjust_cursor' ] = function()
-						MediaWikiUtils.trace('\nHover')
-						text_color = LrColor('red')
-					end,
-					--]]
-					text_color = LrColor('blue'),
-					tooltip = LOC "$$$/LrMediaWiki/Section/Config/LanguageCodeValuesTooltip=Opens “Category:Language templates” at Wikimedia Commons in the web browser",
-				},
-			},
 
 			viewFactory:row {
 				spacing = viewFactory:control_spacing(),
@@ -153,12 +92,12 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 					width_in_chars = 3,
 					immediate = true,
 					items = { -- values have to be strings, see [2]
-						"10",
-						"12",
-						"14",
-						"16",
-						"18",
-						"20",
+						'10',
+						'12',
+						'14',
+						'16',
+						'18',
+						'20',
 					},
 					tooltip = fontSizeTooltip,
 				},
