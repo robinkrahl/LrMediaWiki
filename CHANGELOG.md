@@ -9,7 +9,7 @@
 - #81: Optimization of fields at export dialog (enhancement)
 - #82: Consolidation of the plug-in’s names (enhancement)
 - #83: Date field (enhancement)
-- #84: Format of placeholder <creationDate> (bug)
+- #84: Format of placeholder &lt;creationDate&gt; (bug)
 - #85: Add German template Information (enhancement)
 - #86: Alignment of UI elements at export dialog (enhancement)
 - #87: Sections of export dialog (enhancement)
