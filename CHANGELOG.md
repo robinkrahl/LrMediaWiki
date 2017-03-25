@@ -1,5 +1,25 @@
 # LrMediaWiki changelog
 
+## v0.8: Several usability improvements, a security improvement and two bug fixes (2017-03-25)
+
+### Issues
+- #47: Customize description languages (enhancement)
+- #79: Better support of translations (enhancement)
+- #80: Additional metadata sets (enhancement)
+- #81: Optimization of fields at export dialog (enhancement)
+- #82: Consolidation of the plug-in’s names (enhancement)
+- #83: Date field (enhancement)
+- #84: Format of placeholder <creationDate> (bug)
+- #85: Add German template Information (enhancement)
+- #86: Alignment of UI elements at export dialog (enhancement)
+- #87: Sections of export dialog (enhancement)
+- #88: Source and author per file (enhancement)
+- #89: Trim category names (enhancement)
+- #90: Provide more tooltips (enhancement)
+- #91: Additional placeholders derived from creation date (enhancement)
+- #92: Encrypted password storage (enhancement)
+- #93: Bug of placeholder substitution (bug)
+
 ## v0.7.1: Improvement of preview resizing (2017-02-15)
 
 ### Issues

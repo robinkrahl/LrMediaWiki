@@ -71,9 +71,7 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 						'Lucida Console', -- Win, monospace
 						'Monaco', -- Mac, monospace
 						'<system>', -- LR SDK
-						'<system/small>', -- LR SDK
 						'<system/bold>', -- LR SDK
-						'<system/small/bold>', -- LR SDK
 					},
 					tooltip = fontNameTooltip,
 				},
