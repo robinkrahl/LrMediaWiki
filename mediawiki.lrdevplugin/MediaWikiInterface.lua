@@ -433,7 +433,21 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	-- local msg = 'Wikitext:\n' .. wikitext
 	-- MediaWikiUtils.trace(msg)
 
-	return wikitext
+	-- Search for placeholders which are not substituted by a filled variable.
+	-- A typical error is an empty variable.
+	-- Another error can be caused by a faulty placeholder name, e. g. <personsShown> instead of <personShown>,
+	local success
+	local placeholder = wikitext:match("<%a+>") -- a pattern starting with "<", multiple ASCII chars, ending with ">"
+	if placeholder then
+		local message = LOC("$$$/LrMediaWiki/Interface/PlaceholderErrorMessage=The placeholder ^1 was not replaced.", placeholder)
+		local info = LOC("$$$/LrMediaWiki/Interface/PlaceholderErrorInfo=File: ^1", arguments.fileName)
+		LrDialogs.message(message, info, "critical")
+		success = false
+	else
+		success = true
+	end
+
+	return wikitext, success
 end
 
 return MediaWikiInterface

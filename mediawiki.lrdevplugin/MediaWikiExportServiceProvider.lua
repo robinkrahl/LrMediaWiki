@@ -592,7 +592,13 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			}
 
 			local filledExportFields = fillFieldsByFile(exportFields, photo)
-			local fileDescription = MediaWikiInterface.buildFileDescription(filledExportFields, photo)
+			local fileDescription, success = MediaWikiInterface.buildFileDescription(filledExportFields, photo)
+
+			if success == false then
+				local mesg = LOC("$$$/LrMediaWiki/Export/CancelMessage=The export failed due to empty variable or faulty placeholder name.")
+				rendition:uploadFailed(mesg)
+				return -- Stop any further export, neither this one nor other in the queue
+			end
 
 			-- ensure that the target file name does not contain a series of spaces or
 			-- underscores (as this would cause the upload to fail without a proper
