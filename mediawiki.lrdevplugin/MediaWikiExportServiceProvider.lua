@@ -150,7 +150,7 @@ local fillFieldsByFile = function(propertyTable, photo)
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
-		local langCode = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'language')
+		local langCode = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'language') -- Here we are
 		if MediaWikiUtils.isStringFilled(langCode) then
 			descriptionOther = '{{' .. langCode .. '|1=' .. descriptionOther .. '}}'
 		else
