@@ -153,6 +153,9 @@ local fillFieldsByFile = function(propertyTable, photo)
 		local langCode = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'language')
 		if MediaWikiUtils.isStringFilled(langCode) then
 			descriptionOther = '{{' .. langCode .. '|1=' .. descriptionOther .. '}}'
+		else
+			local subMsg = "File: " .. photo:getFormattedMetadata('fileName')
+			LrDialogs.message(LOC "$$$/LrMediaWiki/Export/LanguagOtherNotSet=Warning: The field “Description (other)” is filled, but “Language (other)” is not set.", subMsg)
 		end
 		description = description .. descriptionOther
 		existDescription = true
@@ -592,7 +595,8 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			}
 
 			local filledExportFields = fillFieldsByFile(exportFields, photo)
-			local fileDescription, success = MediaWikiInterface.buildFileDescription(filledExportFields, photo)
+			local fileDescription
+			fileDescription, success = MediaWikiInterface.buildFileDescription(filledExportFields, photo)
 
 			if success == false then
 				local mesg = LOC("$$$/LrMediaWiki/Export/CancelMessage=The export failed due to empty variable or faulty placeholder name.")
