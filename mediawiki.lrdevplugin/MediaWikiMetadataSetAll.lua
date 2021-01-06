@@ -31,6 +31,7 @@ return {
 	id = 'LrMediaWikiMetadataSetAll', -- needs to be unique!
 	title = LOC "$$$/LrMediaWiki/MetadataSetAll=LrMediaWiki – All Fields",
 	items = {
+		{ 'com.adobe.label', label = 'LrMediaWiki' },
 		-- first group
 		{ pf .. 'description_en', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)", height_in_lines = 3 },
 		{ pf .. 'description_de', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)" },
