@@ -25,6 +25,7 @@ MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
   propertyTable.create_snapshots = MediaWikiUtils.getCreateSnapshots()
   propertyTable.export_keyword = MediaWikiUtils.getExportKeyword()
   propertyTable.check_version = MediaWikiUtils.getCheckVersion()
+  propertyTable.location_template = MediaWikiUtils.getLocationTemplate()
   propertyTable.logging = MediaWikiUtils.getLogging()
   propertyTable.preview_wikitext_font_name = MediaWikiUtils.getPreviewWikitextFontName()
   propertyTable.preview_wikitext_font_size = MediaWikiUtils.getPreviewWikitextFontSize()
@@ -34,6 +35,7 @@ MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
   MediaWikiUtils.setCreateSnapshots(propertyTable.create_snapshots)
   MediaWikiUtils.setExportKeyword(propertyTable.export_keyword)
   MediaWikiUtils.setCheckVersion(propertyTable.check_version)
+  MediaWikiUtils.setLocationTemplate(propertyTable.location_template)
   MediaWikiUtils.setLogging(propertyTable.logging)
   MediaWikiUtils.setPreviewWikitextFontName(propertyTable.preview_wikitext_font_name)
   MediaWikiUtils.setPreviewWikitextFontSize(propertyTable.preview_wikitext_font_size)
@@ -132,6 +134,14 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 					value = bind 'check_version',
 					title = LOC "$$$/LrMediaWiki/Section/Config/Version=Check for new plug-in version after Lightroom starts",
 					tooltip = LOC "$$$/LrMediaWiki/Section/Config/VersionTooltip=If set, a call to GitHub is performed to determine the latest version number, which is then compared to the installed version.",
+				},
+			},
+
+			viewFactory:row {
+				viewFactory:checkbox {
+					value = bind 'location_template',
+					title = LOC "$$$/LrMediaWiki/Section/Config/LocationTemplate=Enable {{Location}} template",
+					tooltip = LOC "$$$/LrMediaWiki/Section/Config/LocationTemplateTooltip=Enables the creation of a {{Location}} template on base of GPS data",
 				},
 			},
 

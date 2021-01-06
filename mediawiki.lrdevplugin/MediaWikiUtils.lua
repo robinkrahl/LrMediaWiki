@@ -123,6 +123,14 @@ MediaWikiUtils.setCheckVersion = function(check_version)
 	prefs.check_version = check_version
 end
 
+MediaWikiUtils.getLocationTemplate = function()
+	return prefs.location_template or false
+end
+
+MediaWikiUtils.setLocationTemplate = function(location_template)
+	prefs.location_template = location_template
+end
+
 MediaWikiUtils.getLogging = function()
 	return prefs.logging or false
 end
