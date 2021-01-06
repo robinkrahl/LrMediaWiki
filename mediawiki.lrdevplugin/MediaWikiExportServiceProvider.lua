@@ -192,7 +192,7 @@ local fillFieldsByFile = function(propertyTable, photo)
 	local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
 	local subText = LOC "$$$/LrMediaWiki/Interface/MessageByLrMediaWiki=Message by LrMediaWiki"
 	exportFields.location = ''
-	if gps and gps.latitude and gps.longitude then
+	if gps and gps.latitude and gps.longitude and MediaWikiUtils.getLocationTemplate() then -- Only include {{Location}} if the setting allows it
 		local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
 		if LrMajorVersion >= 6 then
 			local heading = photo:getRawMetadata('gpsImgDirection')

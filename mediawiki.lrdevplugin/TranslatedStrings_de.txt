@@ -163,6 +163,8 @@
 "$$$/LrMediaWiki/Preview/TooltipWikitext=Schriftname und Schriftgröße sind in den Einstellungen des Zusatzmoduls konfigurierbar."
 "$$$/LrMediaWiki/Section/Config/ExportKeyword=Export-Stichwort"
 "$$$/LrMediaWiki/Section/Config/ExportKeywordTooltip=Wenn gesetzt, wird nach einem erfolgreichen Export dieses Stichwort hinzugefügt."
+"$$$/LrMediaWiki/Section/Config/LocationTemplate={{Location}}-Vorlage aktivieren",
+"$$$/LrMediaWiki/Section/Config/LocationTemplateTooltip=Aktiviert das Erzeugen einer {{Location}}-Vorlage auf der Basis von GPS-Daten",
 "$$$/LrMediaWiki/Section/Config/Logging/Description=Wenn die Protokollierung aktiviert ist, werden alle API-Abfragen in „Dokumente/LrMediaWikiLogger.log“ aufgezeichnet."
 "$$$/LrMediaWiki/Section/Config/Logging/Password=Die Protokoll-Datei enthält auch Ihr Passwort im Klartext!"
 "$$$/LrMediaWiki/Section/Config/Logging/Warning=Achtung"
