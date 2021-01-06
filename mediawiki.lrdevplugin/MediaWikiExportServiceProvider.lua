@@ -60,6 +60,7 @@ local fillFieldsByFile = function(propertyTable, photo)
 	}
 	local exportFields = { -- Fields set at export dialog, copied to return object, order by UI
 		info_template = propertyTable.info_template,
+		info_language = propertyTable.info_language,
 		info_permission = propertyTable.info_permission,
 		info_license = propertyTable.info_license,
 		info_templates = propertyTable.info_templates,
@@ -150,7 +151,7 @@ local fillFieldsByFile = function(propertyTable, photo)
 		if existDescription then
 			description = description .. '\n' -- Newline
 		end
-		local langCode = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'language') -- Here we are
+		local langCode = propertyTable.info_language
 		if MediaWikiUtils.isStringFilled(langCode) then
 			descriptionOther = '{{' .. langCode .. '|1=' .. descriptionOther .. '}}'
 		else
@@ -574,6 +575,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			}
 			local exportFields = { -- Fields set at export dialog, ordered by UI
 				info_template = exportSettings.info_template,
+				info_language = exportSettings.info_language,
 				info_source = exportSettings.info_source,
 				info_author = exportSettings.info_author,
 				info_license = exportSettings.info_license,
@@ -655,6 +657,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 	local passwordTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/PasswordTooltip=Password^n^nRequired field. Enter the password of your MediaWiki account."
 	local apiPathTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/ApiPathTooltip=API Path^n^nRequired field. To determine the path, go to “Special:Version” → “Entry point URLs” → “api.php” of the intended MediaWiki."
 	local infoboxTemplateTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/InfoboxTemplateTooltip=Infobox Template^n^nThese are mainly templates of Wikimedia Commons. “Information (de)” is the template “Information” of the German language Wikipedia."
+	local languageOtherTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/LanguageOtherTooltip=Language of “Description (other)”"
 	local sourceTooltip  = LOC "$$$/LrMediaWiki/Metadata/SourceTooltip=Source^n^nRequired field. Should be set per file or at export dialog. Setting per file has priority over setting at export dialog. Example: {{own}}.^nThe field is named “Source/Photographer” at infobox template “Artwork”."
 	local authorTooltip = LOC "$$$/LrMediaWiki/Metadata/AuthorTooltip=Author^n^nRequired field, if not “Artwork” has been chosen (“Artwork” recommends to use “Artist” or “Author”).^nShould be set per file or at export dialog. Setting per file has priority over setting at export dialog. Example:^n  [[User:MyUserName|MyRealName]]"
 	local permissionTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/PermisssionTooltip=Permission^n^nPermission information like {{PermissionOTRS}}. Either this field or “License” should be set."
@@ -748,6 +751,212 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 							showPreview(propertyTable)
 						end,
 					tooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/PreviewTooltip=The preview shows how the wikitext of the file description page will look.",
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/UploadInformation/LanguageOther=Language (other)" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = languageOtherTooltip,
+				},
+				viewFactory:popup_menu {
+					value = bind 'info_language',
+					items = {
+						{
+							value = nil,
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/None=None"
+						},
+						{
+							value = 'ar',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/ar=ar – Arabic"
+						},
+						{
+							value = 'be',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/be=be – Belarusian"
+						},
+						{
+							value = 'bg',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/bg=bg – Bulgarian"
+						},
+						{
+							value = 'bn',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/bn=bn – Bangla"
+						},
+						{
+							value = 'ca',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/ca=ca – Catalan"
+						},
+						{
+							value = 'cs',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/cs=cs – Czech"
+						},
+						{
+							value = 'da',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/da=da – Danish"
+						},
+						{
+							value = 'el',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/el=el – Greek"
+						},
+						{
+							value = 'es',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/es=es – Spanish"
+						},
+						{
+							value = 'et',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/et=et – Estonian"
+						},
+						{
+							value = 'fa',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/fa=fa – Persian"
+						},
+						{
+							value = 'fi',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/fi=fi – Finnish"
+						},
+						{
+							value = 'fr',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/fr=fr – French"
+						},
+						{
+							value = 'ga',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/ga=ga – Irish"
+						},
+						{
+							value = 'he',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/he=he – Hebrew"
+						},
+						{
+							value = 'hi',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/hi=hi – Hindi"
+						},
+						{
+							value = 'hr',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/hr=hr – Croatian"
+						},
+						{
+							value = 'hu',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/hu=hu – Hungarian"
+						},
+						{
+							value = 'hy',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/hy=hy – Armenian"
+						},
+						{
+							value = 'id',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/id=id – Indonesian"
+						},
+						{
+							value = 'is',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/is=is – Icelandic"
+						},
+						{
+							value = 'it',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/it=it – Italian"
+						},
+						{
+							value = 'ja',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/ja=ja – Japanese"
+						},
+						{
+							value = 'ka',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/ka=ka – Georgian"
+						},
+						{
+							value = 'ko',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/ko=ko – Korean"
+						},
+						{
+							value = 'la',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/la=la – Latin"
+						},
+						{
+							value = 'lt',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/lt=lt – Lithuanian"
+						},
+						{
+							value = 'lv',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/lv=lv – Latvian"
+						},
+						{
+							value = 'mk',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/mk=mk – Macedonian"
+						},
+						{
+							value = 'nb',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/nb=nb – Norwegian Bokmål"
+						},
+						{
+							value = 'nl',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/nl=nl – Dutch"
+						},
+						{
+							value = 'nn',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/nn=nn – Norwegian Nynorsk"
+						},
+						{
+							value = 'pl',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/pl=pl – Polish"
+						},
+						{
+							value = 'pt',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/pt=pt – Portuguese"
+						},
+						{
+							value = 'ro',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/ro=ro – Romanian"
+						},
+						{
+							value = 'ru',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/ru=ru – Russian"
+						},
+						{
+							value = 'sk',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/sk=sk – Slovak"
+						},
+						{
+							value = 'sl',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/sl=sl – Slovenian"
+						},
+						{
+							value = 'sr',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/sr=sr – Serbian"
+						},
+						{
+							value = 'sv',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/sv=sv – Swedish"
+						},
+						{
+							value = 'th',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/th=th – Thai"
+						},
+						{
+							value = 'tr',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/tr=tr – Turkish"
+						},
+						{
+							value = 'uk',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/uk=uk – Ukrainian"
+						},
+						{
+							value = 'vi',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/vi=vi – Vietnamese"
+						},
+						{
+							value = 'yi',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/yi=yi – Yiddish"
+						},
+						{
+							value = 'zh',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/zh=zh – Chinese (Simplified)"
+						},
+						{
+							value = 'zh-hant',
+							title = LOC "$$$/LrMediaWiki/Metadata/Language/zh-hant=zh-hant – Chinese (Traditional)"
+						},
+					},
+					tooltip = languageOtherTooltip,
 				},
 			},
 			viewFactory:row {
@@ -869,17 +1078,20 @@ MediaWikiExportServiceProvider.allowColorSpaces = {'sRGB'}
 MediaWikiExportServiceProvider.canExportVideo = false
 
 MediaWikiExportServiceProvider.exportPresetFields = {
+	-- Section Login Information:
 	{ key = 'username', default = '' },
 	{ key = 'password', default = '' },
 	{ key = 'api_path', default = 'https://commons.wikimedia.org/w/api.php' },
-	{ key = 'gallery', default = '' },
+	-- Section Upload Information:
 	{ key = 'info_template', default = 'Information' },
+	{ key = 'info_language', default = '' },
 	{ key = 'info_source', default = '{{own}}' },
 	{ key = 'info_author', default = '' },
-	{ key = 'info_license', default = '{{Cc-by-sa-4.0}}' },
 	{ key = 'info_permission', default = '' },
 	{ key = 'info_templates', default = '' },
+	{ key = 'info_license', default = '{{Cc-by-sa-4.0}}' },
 	{ key = 'info_categories', default = '' },
+	{ key = 'gallery', default = '' },
 }
 
 return MediaWikiExportServiceProvider
