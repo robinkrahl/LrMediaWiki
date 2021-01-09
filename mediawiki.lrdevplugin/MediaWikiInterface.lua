@@ -128,41 +128,53 @@ MediaWikiInterface.addToGallery = function(fileNames, galleryName)
 	MediaWikiApi.appendToPage(galleryName, section, text, comment)
 end
 
-MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, targetFileName)
+MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, targetFileName, info_mode, updateCommentForAll)
 	if not MediaWikiInterface.loggedIn then
 		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Interface/Internal/NotLoggedIn=Internal error: not logged in before upload")
 	end
-	local comment = 'Uploaded with LrMediaWiki ' .. MediaWikiUtils.getVersionString()
+	local comment = 'Uploaded with LrMediaWiki ' .. MediaWikiUtils.getVersionString() -- for new files
+	local commentSuffix = ' (LrMediaWiki ' .. MediaWikiUtils.getVersionString() .. ')' -- for updates
 
 	local ignorewarnings = false
 	if MediaWikiApi.existsFile(targetFileName) then
-		local message = LOC "$$$/LrMediaWiki/Interface/InUse=File name already in use"
-		local info = LOC("$$$/LrMediaWiki/Interface/InUse/Details=There already is a file with the name ^1. Overwrite? (File description won’t be changed.)", targetFileName)
-		local actionVerb = LOC "$$$/LrMediaWiki/Interface/InUse/OK=Overwrite"
-		local cancelVerb = LOC "$$$/LrMediaWiki/Interface/InUse/Cancel=Cancel"
-		local otherVerb = LOC "$$$/LrMediaWiki/Interface/InUse/Rename=Rename"
-		local continue = LrDialogs.confirm(message, info, actionVerb, cancelVerb, otherVerb)
-		if continue == 'ok' then
-			local versionComment = LOC "$$$/LrMediaWiki/Interface/VersionComment=Version comment"
-			local newComment = MediaWikiInterface.prompt(versionComment, versionComment)
-			if MediaWikiUtils.isStringFilled(newComment) then
-				comment = newComment .. ' (LrMediaWiki ' .. MediaWikiUtils.getVersionString() .. ')'
+		if MediaWikiUtils.isStringEmpty(updateCommentForAll) then
+			local message = LOC "$$$/LrMediaWiki/Interface/InUse=File name already in use"
+			local info = LOC("$$$/LrMediaWiki/Interface/InUse/Details=There already is a file with the name ^1. Overwrite? (File description won’t be changed.)", targetFileName)
+			local actionVerb = LOC "$$$/LrMediaWiki/Interface/InUse/OK=Overwrite"
+			local cancelVerb = LOC "$$$/LrMediaWiki/Interface/InUse/Cancel=Cancel"
+			local otherVerb = LOC "$$$/LrMediaWiki/Interface/InUse/Rename=Rename"
+			local continue = LrDialogs.confirm(message, info, actionVerb, cancelVerb, otherVerb)
+			if continue == 'ok' then -- Overwrite
+				local versionComment = LOC "$$$/LrMediaWiki/Interface/VersionComment=Version comment"
+				local newComment = MediaWikiInterface.prompt(versionComment, versionComment)
+				if MediaWikiUtils.isStringFilled(newComment) then
+					comment = newComment .. commentSuffix
+				end
+				ignorewarnings = true
+			elseif continue == 'other' then -- Rename
+				local renameFile = LOC "$$$/LrMediaWiki/Interface/Rename=Rename file"
+				local newName = LOC "$$$/LrMediaWiki/Interface/Rename/NewName=New file name"
+				local newFileName = MediaWikiInterface.prompt(renameFile, newName, targetFileName)
+				if MediaWikiUtils.isStringFilled(newFileName) and newFileName ~= targetFileName then
+					MediaWikiInterface.uploadFile(filePath, description, hasDescription, newFileName, 'Standard')
+				end
+				return
+			else -- Cancel
+				return
 			end
+		else -- File exists, updateCommentForAll is filled, no interaction with user is needed, overwrite
+			assert(info_mode == 'UpdateOnly') -- updateCommentForAll is only filled if mode is UpdateOnly
+			comment = updateCommentForAll .. commentSuffix
 			ignorewarnings = true
-		elseif continue == 'other' then
-			local renameFile = LOC "$$$/LrMediaWiki/Interface/Rename=Rename file"
-			local newName = LOC "$$$/LrMediaWiki/Interface/Rename/NewName=New file name"
-			local newFileName = MediaWikiInterface.prompt(renameFile, newName, targetFileName)
-			if MediaWikiUtils.isStringFilled(newFileName) and newFileName ~= targetFileName then
-				MediaWikiInterface.uploadFile(filePath, description, hasDescription, newFileName)
-			end
-			return
-		else
-			return
 		end
-	else
+	else -- targetFileName exists not, the file is a new upload. New files need a description.
 		if not hasDescription then
 			return LOC "$$$/LrMediaWiki/Export/NoDescription=No description given for this file!"
+		end
+		if info_mode == 'UpdateOnly' then
+			LrDialogs.message(LOC "$$$/LrMediaWiki/Interface/NoUpload=Information: No upload of this new file in mode “Update only”",
+								LOC "$$$/LrMediaWiki/Interface/NoUploadFile=File" .. ': ' .. targetFileName)
+			return nil -- Don't upload if it's a new file
 		end
 	end
 	local uploadResult = MediaWikiApi.upload(targetFileName, filePath, description, comment, ignorewarnings)

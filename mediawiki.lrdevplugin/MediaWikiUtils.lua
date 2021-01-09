@@ -164,4 +164,8 @@ MediaWikiUtils.trace = function(message)
 	myLogger:trace(message)
 end
 
+MediaWikiUtils.tracef = function(format, message)
+	myLogger:tracef(format, message)
+end
+
 return MediaWikiUtils

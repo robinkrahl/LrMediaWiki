@@ -60,6 +60,7 @@ local fillFieldsByFile = function(propertyTable, photo)
 	}
 	local exportFields = { -- Fields set at export dialog, copied to return object, order by UI
 		info_template = propertyTable.info_template,
+		info_mode = propertyTable.info_mode,
 		info_language = propertyTable.info_language,
 		info_permission = propertyTable.info_permission,
 		info_license = propertyTable.info_license,
@@ -536,6 +537,12 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 		LrErrors.throwUserError(LOC "$$$/LrMediaWiki/Export/NoPermissionLicense=No permission or license given!")
 	end
 
+	local updateCommentForAll = ''
+	if exportSettings.info_mode == 'UpdateOnly' then
+		updateCommentForAll = MediaWikiInterface.prompt(LOC "$$$/LrMediaWiki/Export/UpdateOnlyPromptTitle=Leave empty or Cancel to set comments per file",
+														LOC "$$$/LrMediaWiki/Export/UpdateOnlyPromptLabel=Update comment for all selected files")
+	end
+
 	MediaWikiInterface.prepareUpload(exportSettings.username, exportSettings.password, exportSettings.api_path, exportSettings.info_template)
 
 	-- file names for gallery creation
@@ -575,6 +582,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			}
 			local exportFields = { -- Fields set at export dialog, ordered by UI
 				info_template = exportSettings.info_template,
+				info_mode = exportSettings.info_mode,
 				info_language = exportSettings.info_language,
 				info_source = exportSettings.info_source,
 				info_author = exportSettings.info_author,
@@ -611,7 +619,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			-- error message)
 			local fileName = string.gsub(LrPathUtils.leafName(pathOrMessage), '[ _]+', '_')
 			local hasDescription = MediaWikiUtils.isStringFilled(filledExportFields.description)
-			local message = MediaWikiInterface.uploadFile(pathOrMessage, fileDescription, hasDescription, fileName)
+			local message = MediaWikiInterface.uploadFile(pathOrMessage, fileDescription, hasDescription, fileName, exportSettings.info_mode, updateCommentForAll)
 			if message then
 				rendition:uploadFailed(message)
 			else
@@ -657,6 +665,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 	local passwordTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/PasswordTooltip=Password^n^nRequired field. Enter the password of your MediaWiki account."
 	local apiPathTooltip = LOC "$$$/LrMediaWiki/Section/LoginInformation/ApiPathTooltip=API Path^n^nRequired field. To determine the path, go to “Special:Version” → “Entry point URLs” → “api.php” of the intended MediaWiki."
 	local infoboxTemplateTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/InfoboxTemplateTooltip=Infobox Template^n^nThese are mainly templates of Wikimedia Commons. “Information (de)” is the template “Information” of the German language Wikipedia."
+	local modeTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/Mode/ModeTooltip=Choose “Upload only” if no new files should be uploaded."
 	local languageOtherTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/LanguageOtherTooltip=Language of “Description (other)”"
 	local sourceTooltip  = LOC "$$$/LrMediaWiki/Metadata/SourceTooltip=Source^n^nRequired field. Should be set per file or at export dialog. Setting per file has priority over setting at export dialog. Example: {{own}}.^nThe field is named “Source/Photographer” at infobox template “Artwork”."
 	local authorTooltip = LOC "$$$/LrMediaWiki/Metadata/AuthorTooltip=Author^n^nRequired field, if not “Artwork” has been chosen (“Artwork” recommends to use “Artist” or “Author”).^nShould be set per file or at export dialog. Setting per file has priority over setting at export dialog. Example:^n  [[User:MyUserName|MyRealName]]"
@@ -755,6 +764,28 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 			},
 			viewFactory:row {
 				viewFactory:static_text {
+					title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Mode=Mode" .. ':',
+					alignment = labelAlignment,
+					width = LrView.share 'label_width',
+					tooltip = modeTooltip,
+				},
+				viewFactory:popup_menu {
+					value = bind 'info_mode',
+					items = {
+						{
+							value = 'Standard',
+							title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Mode/Standard=Standard"
+						},
+						{
+							value = 'UpdateOnly',
+							title = LOC "$$$/LrMediaWiki/Section/UploadInformation/Mode/UpdateOnly=Update only"
+						},
+					},
+					tooltip = modeTooltip,
+				},
+			},
+			viewFactory:row {
+				viewFactory:static_text {
 					title = LOC "$$$/LrMediaWiki/Section/UploadInformation/LanguageOther=Language (other)" .. ':',
 					alignment = labelAlignment,
 					width = LrView.share 'label_width',
@@ -764,7 +795,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 					value = bind 'info_language',
 					items = {
 						{
-							value = nil,
+							value = '',
 							title = LOC "$$$/LrMediaWiki/Metadata/Language/None=None"
 						},
 						{
@@ -1084,6 +1115,7 @@ MediaWikiExportServiceProvider.exportPresetFields = {
 	{ key = 'api_path', default = 'https://commons.wikimedia.org/w/api.php' },
 	-- Section Upload Information:
 	{ key = 'info_template', default = 'Information' },
+	{ key = 'info_mode', default = 'Standard' },
 	{ key = 'info_language', default = '' },
 	{ key = 'info_source', default = '{{own}}' },
 	{ key = 'info_author', default = '' },
