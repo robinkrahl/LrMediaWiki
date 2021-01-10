@@ -6,9 +6,9 @@
 - #97: Language (other) must be set for each item (enhancement)
 - #100: Exception handling if a variable is empty missing (enhancement)
 - #8: MetaWikiMetadataSetAll.lua has no com.adobe.title (bug fix)
-– #12: Feature: Update only (enhancement)
-– #13: Do not fill location template if "Remove Location Info" is checked (enhancement)
-– #22: Current date as placeholder (enhancement)
+- #12: Feature: Update only (enhancement)
+- #13: Do not fill location template if "Remove Location Info" is checked (enhancement)
+- #22: Current date as placeholder (enhancement)
 
 ## v0.8: Several usability improvements, a security improvement and two bug fixes (2017-03-25)
 
