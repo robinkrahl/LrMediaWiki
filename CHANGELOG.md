@@ -1,6 +1,6 @@
 # LrMediaWiki changelog
 
-## v1.0: Several enhancements and a bug fix (2021-01-10)
+## v1.0.2: Several enhancements and a bug fix (2021-01-10)
 
 ### Issues
 - #97: Language (other) must be set for each item (enhancement)
