@@ -1,5 +1,15 @@
 # LrMediaWiki changelog
 
+## v1.0: Several enhancements and a bug fix (2021-01-10)
+
+### Issues
+- #97: Language (other) must be set for each item (enhancement)
+- #100: Exception handling if a variable is empty missing (enhancement)
+- #8: MetaWikiMetadataSetAll.lua has no com.adobe.title (bug fix)
+– #12: Feature: Update only (enhancement)
+– #13: Do not fill location template if "Remove Location Info" is checked (enhancement)
+– #22: Current date as placeholder (enhancement)
+
 ## v0.8: Several usability improvements, a security improvement and two bug fixes (2017-03-25)
 
 ### Issues
@@ -9,7 +19,7 @@
 - #81: Optimization of fields at export dialog (enhancement)
 - #82: Consolidation of the plug-in’s names (enhancement)
 - #83: Date field (enhancement)
-- #84: Format of placeholder &lt;creationDate&gt; (bug)
+- #84: Format of placeholder <creationDate> (bug)
 - #85: Add German template Information (enhancement)
 - #86: Alignment of UI elements at export dialog (enhancement)
 - #87: Sections of export dialog (enhancement)
