@@ -209,6 +209,15 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		end
 	end
 
+	-- Keyword-based categories / categories as keyword hashtags, e. g. "#foobar"
+	local keywordTagsForExport = photo:getFormattedMetadata('keywordTagsForExport')
+	for category in string.gmatch(keywordTagsForExport, '#([^,]+)') do
+		if category then
+			category = MediaWikiUtils.trim(category)
+			table.insert(categoriesList, category)
+		end
+	end
+
 	-- remove duplicate categories, see https://stackoverflow.com/questions/20066835/lua-remove-duplicate-elements
 	local categoriesListTwo = {}
 	local hash = {}
