@@ -219,6 +219,7 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 		end
 	end
 	local categoriesString = ''
+	local category
 	for i = 1, #categoriesListTwo do
 		category = string.format('[[Category:%s]]\n',  categoriesListTwo[i])
 		categoriesString = categoriesString .. category
