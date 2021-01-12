@@ -185,7 +185,7 @@ MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, 
 end
 
 MediaWikiInterface.buildFileDescription = function(exportFields, photo)
-	local categoriesString = ''
+		local categoriesList = {}
 	-- The following 2 calls of the Lua function "string.gmatch()" iterate the given strings
 	-- "categories" and "info_categories" by the pattern "[^;]+".
 	-- It separates all occurrences of categories (by using "+") without the character ";".
@@ -198,14 +198,30 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	for category in string.gmatch(exportFields.categories, '[^;]+') do
 		if category then
 			category = MediaWikiUtils.trim(category)
-			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
+			table.insert(categoriesList, category)
 		end
 	end
+
 	for category in string.gmatch(exportFields.info_categories, '[^;]+') do
 		if category then
 			category = MediaWikiUtils.trim(category)
-			categoriesString = categoriesString .. string.format('[[Category:%s]]\n', category)
+			table.insert(categoriesList, category)
 		end
+	end
+
+	-- remove duplicate categories, see https://stackoverflow.com/questions/20066835/lua-remove-duplicate-elements
+	local categoriesListTwo = {}
+	local hash = {}
+	for _,v in ipairs(categoriesList) do
+		if not hash[v] then
+			categoriesListTwo[#categoriesListTwo + 1] = v
+			hash[v] = true
+		end
+	end
+	local categoriesString = ''
+	for i = 1, #categoriesListTwo do
+		category = string.format('[[Category:%s]]\n',  categoriesListTwo[i])
+		categoriesString = categoriesString .. category
 	end
 
 	local arguments = {
