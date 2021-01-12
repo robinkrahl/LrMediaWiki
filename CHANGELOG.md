@@ -1,5 +1,12 @@
 # LrMediaWiki changelog
 
+## v1.1: Two enhancements and a bug fix (2021-01-13)
+
+### Issues
+* #45: Keyword-based categories (enhancement)
+* #99: Remove duplicate categories (enhancement)
+* #26: Location template default should be "On" (bug)
+
 ## v1.0.2: Several enhancements and a bug fix (2021-01-10)
 
 ### Issues
