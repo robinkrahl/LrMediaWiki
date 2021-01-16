@@ -210,7 +210,7 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	end
 
 	-- Keyword-based categories / categories as keyword hashtags, e. g. "#foobar"
-	local keywordTagsForExport = photo:getFormattedMetadata('keywordTagsForExport')
+	local keywordTagsForExport = photo:getFormattedMetadata('keywordTags')
 	for category in string.gmatch(keywordTagsForExport, '#([^,]+)') do
 		if category then
 			category = MediaWikiUtils.trim(category)

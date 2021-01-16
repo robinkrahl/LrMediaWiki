@@ -1,5 +1,10 @@
 # LrMediaWiki changelog
 
+## v1.1.1: Issue #27
+
+### Issues
+* #27: As private marked hashtag keywords should be used as categories (enhancement)
+
 ## v1.1: Two enhancements and a bug fix (2021-01-13)
 
 ### Issues
