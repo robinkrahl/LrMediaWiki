@@ -1,5 +1,10 @@
 # LrMediaWiki changelog
 
+## v1.1.2: Issue #26 fixed
+
+### Issues
+* #26: Location template default should be "On" (bug)
+
 ## v1.1.1: Issue #27
 
 ### Issues
