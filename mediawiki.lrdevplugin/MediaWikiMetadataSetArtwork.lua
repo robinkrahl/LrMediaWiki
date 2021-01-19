@@ -29,6 +29,7 @@ return {
 		{ pf .. 'artist', label = LOC "$$$/LrMediaWiki/Metadata/Artist=Artist" },
 		{ pf .. 'author', label = LOC "$$$/LrMediaWiki/Metadata/Author=Author" },
 		{ pf .. 'title', label = LOC "$$$/LrMediaWiki/Metadata/Title=Title" },
+		{ pf .. 'caption_en', label = LOC "$$$/LrMediaWiki/Metadata/FileCaptionEn=Caption (en)" },
 		{ pf .. 'description_en', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)", height_in_lines = 3 },
 		{ pf .. 'description_de', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)" },
 		{ pf .. 'description_other', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionOther=Description (other)" },

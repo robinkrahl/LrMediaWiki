@@ -66,6 +66,8 @@ local fillFieldsByFile = function(propertyTable, photo)
 		info_license = propertyTable.info_license,
 		info_templates = propertyTable.info_templates,
 		info_categories = propertyTable.info_categories,
+		-- Structured data
+		caption_en = '', -- '<!-- File Caption (en) -->',
 		-- Fields by file, to be filled by this function, ordered by UI:
 		description = '', -- '<!-- Description -->',
 		date = '', -- '<!-- Date -->',
@@ -121,6 +123,12 @@ local fillFieldsByFile = function(propertyTable, photo)
 	-- "== {{int:license-header}} ==" is only used, if followed by a filled license line
 	if MediaWikiUtils.isStringFilled(exportFields.info_license)  then
 		exportFields.info_license = '== {{int:license-header}} ==\n' .. exportFields.info_license .. '\n'
+	end
+
+	-- Field "File caption (en)"
+	local captionEn = photo:getPropertyForPlugin(Info.LrToolkitIdentifier, 'caption_en')
+	if MediaWikiUtils.isStringFilled(captionEn) then
+		exportFields.caption_en = captionEn
 	end
 
 	-- Field "description"
@@ -591,6 +599,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				info_templates = exportSettings.info_templates,
 				info_categories = exportSettings.info_categories,
 				-- fields by file, to be filled by fillExportFields(), order by UI
+				caption_en = '',
 				description = '',
 				date = '',
 				source = '',
@@ -623,6 +632,12 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			if message then
 				rendition:uploadFailed(message)
 			else
+				-- publish capption_en
+				message = MediaWikiInterface.wbSetLabel(filledExportFields, fileName)
+				if message then
+					rendition:uploadFailed(message)
+				end
+
 				-- create new snapshot if the upload was successful
 				if MediaWikiUtils.getCreateSnapshots() then
 					local currentTimeStamp = LrDate.currentTime()
