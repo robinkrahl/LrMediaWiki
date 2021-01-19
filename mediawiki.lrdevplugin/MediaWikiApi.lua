@@ -287,6 +287,41 @@ function MediaWikiApi.existsFile(fileName)
 	return xml.query and xml.query.pages and xml.query.pages.page and not xml.query.pages.page.missing
 end
 
+function MediaWikiApi.getPageID(fileName)
+	local arguments = {
+		action = 'query',
+		titles = 'File:' .. fileName,
+	}
+	local xml = MediaWikiApi.performRequest(arguments)
+	return xml.query.pages.page.pageid
+end
+
+function MediaWikiApi.wbSetLabel(pageID, caption)
+	local arguments = {
+		action = 'wbsetlabel',
+		id = 'M' .. pageID,
+		language = 'en',
+		value = caption,
+		token = MediaWikiApi.getEditToken(),
+	}
+	local xml = MediaWikiApi.performRequest(arguments)
+	return xml
+end
+
+function MediaWikiApi.wbCreateClaim(pageID, property, value) -- not used yet, may be buggy
+	local arguments = {
+		action = 'wbcreateclaim',
+		entity = 'M' .. pageID,
+		snaktype = 'value',
+		property = property,
+		value = value,
+		token = MediaWikiApi.getEditToken(),
+		format = 'xml',
+	}
+	local xml = MediaWikiApi.performRequest(arguments)
+	return xml
+end
+
 function MediaWikiApi.upload(fileName, sourceFilePath, text, comment, ignoreWarnings)
 	local sourceFileName = LrPathUtils.leafName(sourceFilePath)
 

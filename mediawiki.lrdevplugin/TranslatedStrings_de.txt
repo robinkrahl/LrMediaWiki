@@ -75,6 +75,8 @@
 "$$$/LrMediaWiki/Metadata/DimensionsTooltip=Maße^n^nDimensionen des Kunstwerks. Bitte benutze die Vorlage {{Size}} zur Formatierung."
 "$$$/LrMediaWiki/Metadata/ExhibitionHistory=Ausstellungsgeschichte"
 "$$$/LrMediaWiki/Metadata/ExhibitionHistoryTooltip=Ausstellungsgeschichte^n^nAusstellungsgeschichte, {{Temporary Exhibition}}"
+"$$$/LrMediaWiki/Metadata/FileCaptionEn=Kurzbeschreibung (en)"
+"$$$/LrMediaWiki/Metadata/FileCaptionEnTooltip=Kurzbeschreibung (en)^n^nEine kurze Beschreibung in Englisch",
 "$$$/LrMediaWiki/Metadata/Inscriptions=Inschriften"
 "$$$/LrMediaWiki/Metadata/InscriptionsTooltip=Inschriften^n^nBeschreibung von: Inschriften, Wasserzeichen, Untertiteln, Wappen, etc. Benutze {{inscription}}."
 "$$$/LrMediaWiki/Metadata/Institution=Institution"

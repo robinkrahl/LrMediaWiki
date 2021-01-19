@@ -26,6 +26,7 @@ return {
 	title = 'LrMediaWiki – Information',
 	items = {
 		{ 'com.adobe.label', label = 'LrMediaWiki – Information' },
+		{ pf .. 'caption_en', label = LOC "$$$/LrMediaWiki/Metadata/FileCaptionEn=Caption (en)" },
 		{ pf .. 'description_en', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionEn=Description (en)", height_in_lines = 3 },
 		{ pf .. 'description_de', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionDe=Description (de)" },
 		{ pf .. 'description_other', label = LOC "$$$/LrMediaWiki/Metadata/DescriptionOther=Description (other)" },

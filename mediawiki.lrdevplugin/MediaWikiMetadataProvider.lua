@@ -19,6 +19,14 @@ return {
 	metadataFieldsForPhotos = {
 		-- Fields of templates "Information" and "Artwork":
 		{
+			id = 'caption_en',
+			version = 1,
+			title = LOC "$$$/LrMediaWiki/Metadata/FileCaptionEnTooltip=Caption (en)^n^nA short description in English",
+			dataType = 'string',
+			searchable = false,
+			browsable = false,
+		},
+		{
 			id = 'description_en',
 			version = 2,
 			title = LOC "$$$/LrMediaWiki/Metadata/DescriptionEnTooltip=Description (en)^n^nDescription in English",
@@ -253,5 +261,5 @@ return {
 			browsable = false,
 		},
 	},
-	schemaVersion = 8,
+	schemaVersion = 9,
 }

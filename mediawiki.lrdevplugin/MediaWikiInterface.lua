@@ -185,7 +185,7 @@ MediaWikiInterface.uploadFile = function(filePath, description, hasDescription, 
 end
 
 MediaWikiInterface.buildFileDescription = function(exportFields, photo)
-		local categoriesList = {}
+	local categoriesList = {}
 	-- The following 2 calls of the Lua function "string.gmatch()" iterate the given strings
 	-- "categories" and "info_categories" by the pattern "[^;]+".
 	-- It separates all occurrences of categories (by using "+") without the character ";".
@@ -504,6 +504,17 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	end
 
 	return wikitext, success
+end
+
+MediaWikiInterface.wbSetLabel = function(exportFields, fileName)
+	local pageID = MediaWikiApi.getPageID(fileName)
+	if not pageID then
+		return true -- error
+	end
+	-- LrDialogs.message('Info', 'Caption: ' .. exportFields.caption_en .. '\nFile: ' .. fileName .. '\nPage ID: ' .. pageID)
+	MediaWikiApi.wbSetLabel(pageID, exportFields.caption_en) -- result is unchecked!
+	-- MediaWikiApi.wbCreateClaim(pageID, 'P170', '\"' .. exportFields.author .. '\"') -- P170 == creator
+	return false -- no error
 end
 
 return MediaWikiInterface
