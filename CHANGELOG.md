@@ -1,5 +1,10 @@
 # LrMediaWiki changelog
 
+## v1.2: Support for File captions
+
+### Issues
+* #9: Support for File captions
+
 ## v1.1.2: Issue #26 fixed
 
 ### Issues
