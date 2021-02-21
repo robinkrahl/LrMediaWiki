@@ -495,10 +495,14 @@ MediaWikiInterface.buildFileDescription = function(exportFields, photo)
 	local success
 	local placeholder = wikitext:match("<%a+>") -- a pattern starting with "<", multiple ASCII chars, ending with ">"
 	if placeholder then
-		message = LOC("$$$/LrMediaWiki/Interface/PlaceholderErrorMessage=The placeholder ^1 was not replaced.", placeholder)
-		local info = LOC("$$$/LrMediaWiki/Interface/PlaceholderErrorInfo=File: ^1", arguments.fileName)
-		LrDialogs.message(message, info, "critical")
-		success = false
+		if placeholder == '<br>' or placeholder == '<hr>' then -- These are no placeholders.
+			success = true
+		else
+			message = LOC("$$$/LrMediaWiki/Interface/PlaceholderErrorMessage=The placeholder ^1 was not replaced.", placeholder)
+			local info = LOC("$$$/LrMediaWiki/Interface/PlaceholderErrorInfo=File: ^1", arguments.fileName)
+			LrDialogs.message(message, info, "critical")
+			success = false
+		end
 	else
 		success = true
 	end
