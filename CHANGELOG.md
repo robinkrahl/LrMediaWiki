@@ -1,9 +1,15 @@
 # LrMediaWiki changelog
 
+## v1.2.1: Issues #31 and #33
+
+### Issues
+- #31: HTML tags <br> and <hr> are no placeholders (bug)
+- #33: Remove warning "The field “Description (other)” is filled, but “Language (other)” is not set." (enhancement)
+
 ## v1.2: Support for File captions
 
 ### Issues
-* #9: Support for File captions
+* #9: Support for File captions (enhancement)
 
 ## v1.1.2: Issue #26 fixed
 
