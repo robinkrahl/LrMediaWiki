@@ -3,7 +3,6 @@
 "$$$/LrMediaWiki/Api/NoConnection=Kann keine Netzwerkverbindung aufbauen."
 "$$$/LrMediaWiki/Export/CancelMessage=Der Export ist fehlgeschlagen wegen einer leeren Variablen oder einem fehlerhaften Platzhalternamen."
 "$$$/LrMediaWiki/Export/DescriptionError=Fehler beim Lesen der Dateibeschreibung"
-"$$$/LrMediaWiki/Export/LanguagOtherNotSet=Warnung: Das Feld „Beschreibung (andere)“ ist gefüllt, aber „Sprache (andere)“ ist nicht gesetzt."
 "$$$/LrMediaWiki/Export/NoApiPath=Kein API-Pfad angegeben!"
 "$$$/LrMediaWiki/Export/NoDescription=Für diese Datei ist keine Beschreibung angegeben!"
 "$$$/LrMediaWiki/Export/NoPermissionLicense=Keine Genehmigung oder Lizenz angegeben!"

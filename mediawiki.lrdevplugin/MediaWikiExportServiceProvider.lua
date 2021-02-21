@@ -163,9 +163,6 @@ local fillFieldsByFile = function(propertyTable, photo)
 		local langCode = propertyTable.info_language
 		if MediaWikiUtils.isStringFilled(langCode) then
 			descriptionOther = '{{' .. langCode .. '|1=' .. descriptionOther .. '}}'
-		else
-			local subMsg = "File: " .. photo:getFormattedMetadata('fileName')
-			LrDialogs.message(LOC "$$$/LrMediaWiki/Export/LanguagOtherNotSet=Warning: The field “Description (other)” is filled, but “Language (other)” is not set.", subMsg)
 		end
 		description = description .. descriptionOther
 		existDescription = true
