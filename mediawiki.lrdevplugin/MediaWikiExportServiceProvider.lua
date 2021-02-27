@@ -629,10 +629,12 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 			if message then
 				rendition:uploadFailed(message)
 			else
-				-- publish capption_en
-				message = MediaWikiInterface.wbSetLabel(filledExportFields, fileName)
-				if message then
-					rendition:uploadFailed(message)
+				-- publish caption_en
+				if MediaWikiUtils.isStringFilled(filledExportFields.caption_en) then
+					message = MediaWikiInterface.wbSetLabel(filledExportFields, fileName)
+					if message then
+						rendition:uploadFailed(message)
+					end
 				end
 
 				-- create new snapshot if the upload was successful
