@@ -630,13 +630,14 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				rendition:uploadFailed(message)
 			else
 				-- publish caption_en
-				if MediaWikiUtils.isStringFilled(filledExportFields.caption_en) then
-					message = MediaWikiInterface.wbSetLabel(filledExportFields, fileName)
-					if message then
-						rendition:uploadFailed(message)
+				if MediaWikiUtils.getStructuredData() then -- Only if structured data is supported by the server
+					if MediaWikiUtils.isStringFilled(filledExportFields.caption_en) then
+						message = MediaWikiInterface.wbSetLabel(filledExportFields, fileName)
+						if message then
+							rendition:uploadFailed(message)
+						end
 					end
 				end
-
 				-- create new snapshot if the upload was successful
 				if MediaWikiUtils.getCreateSnapshots() then
 					local currentTimeStamp = LrDate.currentTime()

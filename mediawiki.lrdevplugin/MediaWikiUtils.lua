@@ -134,6 +134,17 @@ MediaWikiUtils.setLocationTemplate = function(location_template)
 	prefs.location_template = location_template
 end
 
+MediaWikiUtils.getStructuredData = function()
+	if prefs.structured_data == nil then -- first call
+		prefs.structured_data = true -- default
+	end
+	return prefs.structured_data
+end
+
+MediaWikiUtils.setStructuredData = function(structured_data)
+	prefs.structured_data = structured_data
+end
+
 MediaWikiUtils.getLogging = function()
 	return prefs.logging or false
 end

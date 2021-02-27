@@ -26,6 +26,7 @@ MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
   propertyTable.export_keyword = MediaWikiUtils.getExportKeyword()
   propertyTable.check_version = MediaWikiUtils.getCheckVersion()
   propertyTable.location_template = MediaWikiUtils.getLocationTemplate()
+  propertyTable.structured_data = MediaWikiUtils.getStructuredData()
   propertyTable.logging = MediaWikiUtils.getLogging()
   propertyTable.preview_wikitext_font_name = MediaWikiUtils.getPreviewWikitextFontName()
   propertyTable.preview_wikitext_font_size = MediaWikiUtils.getPreviewWikitextFontSize()
@@ -36,6 +37,7 @@ MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
   MediaWikiUtils.setExportKeyword(propertyTable.export_keyword)
   MediaWikiUtils.setCheckVersion(propertyTable.check_version)
   MediaWikiUtils.setLocationTemplate(propertyTable.location_template)
+  MediaWikiUtils.setStructuredData(propertyTable.structured_data)
   MediaWikiUtils.setLogging(propertyTable.logging)
   MediaWikiUtils.setPreviewWikitextFontName(propertyTable.preview_wikitext_font_name)
   MediaWikiUtils.setPreviewWikitextFontSize(propertyTable.preview_wikitext_font_size)
@@ -142,6 +144,14 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 					value = bind 'location_template',
 					title = LOC "$$$/LrMediaWiki/Section/Config/LocationTemplate=Enable {{Location}} template",
 					tooltip = LOC "$$$/LrMediaWiki/Section/Config/LocationTemplateTooltip=Enables the creation of a {{Location}} template on base of GPS data",
+				},
+			},
+
+			viewFactory:row {
+				viewFactory:checkbox {
+					value = bind 'structured_data',
+					title = LOC "$$$/LrMediaWiki/Section/Config/StructuredData=Support structured data",
+					tooltip = LOC "$$$/LrMediaWiki/Section/Config/StructuredDataTooltip=Support of structured data",
 				},
 			},
 
