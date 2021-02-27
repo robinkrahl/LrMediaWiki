@@ -180,6 +180,8 @@
 "$$$/LrMediaWiki/Section/Config/Preview/FontSizeTooltip=Schriftgröße des generierten Wikitextes"
 "$$$/LrMediaWiki/Section/Config/Snapshots=Beim Export einen Schnappschuss anlegen"
 "$$$/LrMediaWiki/Section/Config/SnapshotsTooltip=Wenn gesetzt, wird nach einem erfolgreichen Export ein Schnappschuss erstellt."
+"$$$/LrMediaWiki/Section/Config/StructuredData=Unterstützung strukturierter Daten",
+"$$$/LrMediaWiki/Section/Config/StructuredDataTooltip=Unterstützung von strukturierten Daten",
 "$$$/LrMediaWiki/Section/Config/Title=LrMediaWiki-Einstellungen"
 "$$$/LrMediaWiki/Section/Config/Version=Suche nach neuer Zusatzmodul-Version, wenn Lightroom startet"
 "$$$/LrMediaWiki/Section/Config/VersionTooltip=Wenn gesetzt, wird ein Aufruf von GitHub durchgeführt, um die neueste Versionsnummer zu ermitteln, die dann mit der installierten Version verglichen wird."
