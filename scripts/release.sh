@@ -40,7 +40,7 @@ ARCHIVE_NAME_TAR_GZ="$ARCHIVE_BASE_NAME.tar.gz"
 CHECKSUM_NAME="checksums.md5"
 
 # create translated strings master file
-./zstrings.sh
+scripts/zstrings.sh
 
 rm $LRDEVPLUGIN/.DS_Store # created from Finder of macOS
 
@@ -59,8 +59,10 @@ md5sum "$ARCHIVE_NAME_ZIP" "$ARCHIVE_NAME_TAR_GZ" > "$CHECKSUM_NAME"
 # upload
 for FILE in "$ARCHIVE_NAME_ZIP" "$ARCHIVE_NAME_TAR_GZ" "$CHECKSUM_NAME"
 do
+  echo "Upload $FILE"
   github-release upload --tag "$TAG" --name "$FILE" --file "$FILE" --user "$GITHUB_USER" --repo "$GITHUB_REPO"
 done
 
 rm -r "$TMPDIR"
+# echo TMPDIR: "$TMPDIR"
 echo "DONE"
