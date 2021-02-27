@@ -1,36 +1,42 @@
 # LrMediaWiki changelog
 
-## v1.2.1: Issues #31 and #33
+## v1.3: Two enhancements (2021-02-27)
 
-### Issues
+### Fixed issues
+- #35: Support servers without structured data (enhancement)
+- #36: "Caption (en)" should only be set if filled by a value (enhancement)
+
+## v1.2.1: Issues #31 and #33 (2021-02-21)
+
+### Fixed issues
 - #31: HTML tags <br> and <hr> are no placeholders (bug)
 - #33: Remove warning "The field “Description (other)” is filled, but “Language (other)” is not set." (enhancement)
 
-## v1.2: Support for File captions
+## v1.2: Support for File captions (2021-01-20)
 
-### Issues
+### Fixed issues
 * #9: Support for File captions (enhancement)
 
-## v1.1.2: Issue #26 fixed
+## v1.1.2: Issue #26 fixed (2021-01-17)
 
-### Issues
+### Fixed issues
 * #26: Location template default should be "On" (bug)
 
-## v1.1.1: Issue #27
+## v1.1.1: Issue #27 (2021-01-16)
 
-### Issues
+### Fixed issues
 * #27: As private marked hashtag keywords should be used as categories (enhancement)
 
 ## v1.1: Two enhancements and a bug fix (2021-01-13)
 
-### Issues
+### Fixed issues
 * #45: Keyword-based categories (enhancement)
 * #99: Remove duplicate categories (enhancement)
 * #26: Location template default should be "On" (bug)
 
 ## v1.0.2: Several enhancements and a bug fix (2021-01-10)
 
-### Issues
+### Fixed issues
 - #97: Language (other) must be set for each item (enhancement)
 - #100: Exception handling if a variable is empty missing (enhancement)
 - #8: MetaWikiMetadataSetAll.lua has no com.adobe.title (bug fix)
@@ -40,7 +46,7 @@
 
 ## v0.8: Several usability improvements, a security improvement and two bug fixes (2017-03-25)
 
-### Issues
+### Fixed issues
 - #47: Customize description languages (enhancement)
 - #79: Better support of translations (enhancement)
 - #80: Additional metadata sets (enhancement)
@@ -60,14 +66,14 @@
 
 ## v0.7.1: Improvement of preview resizing (2017-02-15)
 
-### Issues
+### Fixed issues
 - #78: Improve resizing of preview (enhancement)
 
 ## v0.7: 4 enhancements (2017-02-13)
 
 "Variables" have been renamed to "placeholders".
 
-### Issues
+### Fixed issues
 - #74: Additional variables (enhancement)
 - #75: Support of template Object photo (enhancement)
 - #76: Improve handling of fields "Other versions" and "Other fields" (enhancement)
@@ -77,11 +83,12 @@
 
 This version introduces variables.
 
-### Issues
+### Fixed issues
 - #72: Variables (enhancement)
 - #73: Number of deleted control characters (bug)
 
 ## v0.5.3: Version number update (2017-01-11)
+
 ### Fixed issues
 - #71: Version 0.5.2 didn't include an updated version number
 
@@ -152,7 +159,7 @@ At `{{Location}}` template the LR stored value of 359.9876 is set.
 
 ## v0.4.1: Bugfix for Lightroom 6.2 (2015-10-06)
 
-This bugfix releases fixes a typo that caused errors in the new Lightroom version.
+This bugfix release fixes a typo that caused errors in the new Lightroom version.
 
 ### Fixed issues
 
