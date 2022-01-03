@@ -32,7 +32,7 @@ local MediaWikiUtils = require 'MediaWikiUtils'
 
 local MediaWikiExportServiceProvider = {}
 
-local fillFieldsByFile = function(propertyTable, photo)
+local fillFieldsByFile = function(propertyTable, photo, useLocationInfo)
 	-- All decisions done by this function should be documented at user's guide.
 	local artworkParameters = { -- Parameters of infobox template "Artwork"
 		artist = '', -- '<!-- Artist -->',
@@ -198,7 +198,7 @@ local fillFieldsByFile = function(propertyTable, photo)
 	local LrVersionString = LrApplication.versionString() -- string with major, minor and revison numbers
 	local subText = LOC "$$$/LrMediaWiki/Interface/MessageByLrMediaWiki=Message by LrMediaWiki"
 	exportFields.location = ''
-	if gps and gps.latitude and gps.longitude and MediaWikiUtils.getLocationTemplate() then -- Only include {{Location}} if the setting allows it
+	if gps and gps.latitude and gps.longitude and useLocationInfo then -- Only include {{Location}} if the setting allows it
 		local location = '{{Location|' .. gps.latitude .. '|' .. gps.longitude
 		if LrMajorVersion >= 6 then
 			local heading = photo:getRawMetadata('gpsImgDirection')
@@ -351,6 +351,19 @@ local fillFieldsByFile = function(propertyTable, photo)
 	return exportFields
 end
 
+local getUseLocationInfo = function(propertyTable)
+	-- determine if the switch "Remove Location Info" is set or not at Export dialog section "Metadata"
+	local useLocationInfo = true
+	for key, value in pairs(propertyTable) do
+		for key2, value2 in pairs(value) do
+			if key2 == 'LR_removeLocationMetadata' then
+				useLocationInfo = not value2
+			end
+		end
+	end
+	return useLocationInfo
+end
+
 local showPreview = function(propertyTable)
 	-- This function to provide a preview message box needs to run as a separate task,
 	-- according to this discussion post: <https://forums.adobe.com/message/8493589#8493589>
@@ -388,11 +401,16 @@ local showPreview = function(propertyTable)
 				else -- invalid parameter "pos"
 					return
 				end
+
 				LrTasks.startAsyncTask( function ()
 					setCurrentOfAll(properties.index)
+
 					photo = properties.photoList[properties.index]
 					properties.fileName = photo:getFormattedMetadata('fileName')
-					local ExportFields = fillFieldsByFile(propertyTable, photo)
+
+					local useLocationInfo = getUseLocationInfo(propertyTable)
+
+					local ExportFields = fillFieldsByFile(propertyTable, photo, useLocationInfo)
 					local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
 					properties.dialogValue = wikitext
 				end)
@@ -406,7 +424,9 @@ local showPreview = function(propertyTable)
 				return
 			end
 
-			local ExportFields = fillFieldsByFile(propertyTable, photo)
+			local useLocationInfo = getUseLocationInfo(propertyTable)
+
+			local ExportFields = fillFieldsByFile(propertyTable, photo, useLocationInfo)
 			wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
 			local dialogTitle = LOC "$$$/LrMediaWiki/Section/UploadInformation/Preview=Preview of generated wikitext"
 			local factory = LrView.osFactory()
@@ -553,6 +573,8 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 	-- file names for gallery creation
 	local fileNames = {}
 
+	local useLocationInfo = getUseLocationInfo(exportContext.propertyTable)
+
 	-- iterate over photos
 	for i, rendition in exportContext:renditions() do -- luacheck: ignore i
 		-- render photo
@@ -610,7 +632,7 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 				objectPhoto = objectPhotoParameters, -- Parameters of infobox template "Object photo"
 			}
 
-			local filledExportFields = fillFieldsByFile(exportFields, photo)
+			local filledExportFields = fillFieldsByFile(exportFields, photo, useLocationInfo)
 			local fileDescription
 			fileDescription, success = MediaWikiInterface.buildFileDescription(filledExportFields, photo)
 

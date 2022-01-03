@@ -123,17 +123,6 @@ MediaWikiUtils.setCheckVersion = function(check_version)
 	prefs.check_version = check_version
 end
 
-MediaWikiUtils.getLocationTemplate = function()
-	if prefs.location_template == nil then -- first call
-		prefs.location_template = true -- default
-	end
-	return prefs.location_template
-end
-
-MediaWikiUtils.setLocationTemplate = function(location_template)
-	prefs.location_template = location_template
-end
-
 MediaWikiUtils.getStructuredData = function()
 	if prefs.structured_data == nil then -- first call
 		prefs.structured_data = true -- default

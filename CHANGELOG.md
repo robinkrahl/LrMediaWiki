@@ -1,5 +1,10 @@
 # LrMediaWiki changelog
 
+## v1.4: One issue (2022-01-03)
+
+### Fixed issues
+- #41: LrMediaWiki still includes coordinates in the file page when 'Remove Location Info' is selected (enhancement)
+
 ## v1.3: Two enhancements (2021-02-27)
 
 ### Fixed issues

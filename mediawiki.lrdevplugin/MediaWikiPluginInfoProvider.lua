@@ -25,7 +25,7 @@ MediaWikiPluginInfoProvider.startDialog = function(propertyTable)
   propertyTable.create_snapshots = MediaWikiUtils.getCreateSnapshots()
   propertyTable.export_keyword = MediaWikiUtils.getExportKeyword()
   propertyTable.check_version = MediaWikiUtils.getCheckVersion()
-  propertyTable.location_template = MediaWikiUtils.getLocationTemplate()
+  -- propertyTable.location_template = MediaWikiUtils.getLocationTemplate()
   propertyTable.structured_data = MediaWikiUtils.getStructuredData()
   propertyTable.logging = MediaWikiUtils.getLogging()
   propertyTable.preview_wikitext_font_name = MediaWikiUtils.getPreviewWikitextFontName()
@@ -36,7 +36,7 @@ MediaWikiPluginInfoProvider.endDialog = function(propertyTable)
   MediaWikiUtils.setCreateSnapshots(propertyTable.create_snapshots)
   MediaWikiUtils.setExportKeyword(propertyTable.export_keyword)
   MediaWikiUtils.setCheckVersion(propertyTable.check_version)
-  MediaWikiUtils.setLocationTemplate(propertyTable.location_template)
+  -- MediaWikiUtils.setLocationTemplate(propertyTable.location_template)
   MediaWikiUtils.setStructuredData(propertyTable.structured_data)
   MediaWikiUtils.setLogging(propertyTable.logging)
   MediaWikiUtils.setPreviewWikitextFontName(propertyTable.preview_wikitext_font_name)
@@ -139,6 +139,7 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 				},
 			},
 
+--[[
 			viewFactory:row {
 				viewFactory:checkbox {
 					value = bind 'location_template',
@@ -146,6 +147,7 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 					tooltip = LOC "$$$/LrMediaWiki/Section/Config/LocationTemplateTooltip=Enables the creation of a {{Location}} template on base of GPS data",
 				},
 			},
+--]]
 
 			viewFactory:row {
 				viewFactory:checkbox {
