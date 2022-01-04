@@ -178,6 +178,8 @@
 "$$$/LrMediaWiki/Section/Config/Preview/FontSizeTooltip=Font size of generated wikitext"
 "$$$/LrMediaWiki/Section/Config/Snapshots=Create snapshots on export"
 "$$$/LrMediaWiki/Section/Config/SnapshotsTooltip=If set, a snapshot is created after successful export."
+"$$$/LrMediaWiki/Section/Config/StructuredData=Support structured data"
+"$$$/LrMediaWiki/Section/Config/StructuredDataTooltip=Support of structured data"
 "$$$/LrMediaWiki/Section/Config/Title=LrMediaWiki Configuration"
 "$$$/LrMediaWiki/Section/Config/Version=Check for new plug-in version after Lightroom starts"
 "$$$/LrMediaWiki/Section/Config/VersionTooltip=If set, a call to GitHub is performed to determine the latest version number, which is then compared to the installed version."

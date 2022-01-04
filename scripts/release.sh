@@ -54,7 +54,9 @@ cd $TMPDIR
 zip -r "$ARCHIVE_NAME_ZIP" "$LRPLUGIN"
 tar -czf "$ARCHIVE_NAME_TAR_GZ" "$LRPLUGIN"
 # create checksums
-md5sum "$ARCHIVE_NAME_ZIP" "$ARCHIVE_NAME_TAR_GZ" > "$CHECKSUM_NAME"
+# md5sum "$ARCHIVE_NAME_ZIP" "$ARCHIVE_NAME_TAR_GZ" > "$CHECKSUM_NAME"
+# macOS has no "md5sum", instead "md5"; option "-r" is for the same output format than "md5sum":
+md5 -r "$ARCHIVE_NAME_ZIP" "$ARCHIVE_NAME_TAR_GZ" > "$CHECKSUM_NAME"
 
 # upload
 for FILE in "$ARCHIVE_NAME_ZIP" "$ARCHIVE_NAME_TAR_GZ" "$CHECKSUM_NAME"
