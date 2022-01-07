@@ -139,16 +139,6 @@ MediaWikiPluginInfoProvider.sectionsForTopOfDialog = function(viewFactory, prope
 				},
 			},
 
---[[
-			viewFactory:row {
-				viewFactory:checkbox {
-					value = bind 'location_template',
-					title = LOC "$$$/LrMediaWiki/Section/Config/LocationTemplate=Enable {{Location}} template",
-					tooltip = LOC "$$$/LrMediaWiki/Section/Config/LocationTemplateTooltip=Enables the creation of a {{Location}} template on base of GPS data",
-				},
-			},
---]]
-
 			viewFactory:row {
 				viewFactory:checkbox {
 					value = bind 'structured_data',

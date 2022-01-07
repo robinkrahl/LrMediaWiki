@@ -191,7 +191,7 @@
 "$$$/LrMediaWiki/Section/LoginInformation/Username=Benutzername"
 "$$$/LrMediaWiki/Section/LoginInformation/UsernameTooltip=Benutzername^n^nPflichtfeld. Geben Sie den Benutzernamen Ihres MediaWiki-Benutzerkontos ein."
 "$$$/LrMediaWiki/Section/UploadInformation/Gallery=Galerie"
-"$$$/LrMediaWiki/Section/UploadInformation/GalleryTooltip=Galerie^n^nFalls dieses Feld gefüllt ist, wird eine Galerie Ihrer hochgeladenen Dateien dem spezifizierten Dateinamen hinzugefügt. Beispiel:^n  User:MeinBenutzername/Meine Uploads"
+"$$$/LrMediaWiki/Section/UploadInformation/GalleryTooltip=Galerie^n^nFalls dieses Feld gefüllt ist, wird eine Galerie Ihrer hochgeladenen Dateien dem spezifizierten Dateinamen hinzugefügt. Platzhalter in Bezug zum aktuellen Datum werden berücksichtigt. Beispiel:^n  User:MeinBenutzername/Meine Uploads vom <currentLongDate>"
 "$$$/LrMediaWiki/Section/UploadInformation/InfoboxTemplate=Infobox-Vorlage"
 "$$$/LrMediaWiki/Section/UploadInformation/InfoboxTemplateTooltip=Infobox-Vorlage^n^nDiese sind überwiegend Vorlagen von Wikimedia Commons. „Information (de)“ ist die Vorlage „Information“ der deutschsprachigen Wikipedia."
 "$$$/LrMediaWiki/Section/UploadInformation/LanguageOther=Sprache (andere)"

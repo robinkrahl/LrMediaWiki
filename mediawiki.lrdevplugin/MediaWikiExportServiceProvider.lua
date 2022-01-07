@@ -364,6 +364,21 @@ local getUseLocationInfo = function(propertyTable)
 	return useLocationInfo
 end
 
+local preparePreviewText = function(propertyTable, photo)
+	local useLocationInfo = getUseLocationInfo(propertyTable)
+	local ExportFields = fillFieldsByFile(propertyTable, photo, useLocationInfo)
+	local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
+
+	-- substitute placeholders in export dialog field "gallery"
+	if MediaWikiUtils.isStringFilled(propertyTable.gallery) then
+		local arguments = {}
+		arguments = MediaWikiUtils.currentDate(arguments) -- get list of date related placeholders
+		local substitutedGallery = MediaWikiUtils.substitutePlaceholders(propertyTable.gallery, arguments)
+		wikitext = wikitext .. "\n___ Gallery: ___\n" .. substitutedGallery
+	end
+	return wikitext
+end
+
 local showPreview = function(propertyTable)
 	-- This function to provide a preview message box needs to run as a separate task,
 	-- according to this discussion post: <https://forums.adobe.com/message/8493589#8493589>
@@ -407,27 +422,19 @@ local showPreview = function(propertyTable)
 
 					photo = properties.photoList[properties.index]
 					properties.fileName = photo:getFormattedMetadata('fileName')
-
-					local useLocationInfo = getUseLocationInfo(propertyTable)
-
-					local ExportFields = fillFieldsByFile(propertyTable, photo, useLocationInfo)
-					local wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
+					local wikitext = preparePreviewText(propertyTable, photo)
 					properties.dialogValue = wikitext
 				end)
 			end
 
 			setCurrentOfAll(1)
-			local wikitext
 			local result, message = MediaWikiInterface.loadFileDescriptionTemplate(propertyTable.info_template)
 			if not result then
 				LrDialogs.message(LOC "$$$/LrMediaWiki/Export/DescriptionError=Error reading the file description", message, 'error')
 				return
 			end
 
-			local useLocationInfo = getUseLocationInfo(propertyTable)
-
-			local ExportFields = fillFieldsByFile(propertyTable, photo, useLocationInfo)
-			wikitext = MediaWikiInterface.buildFileDescription(ExportFields, photo)
+			local wikitext = preparePreviewText(propertyTable, photo)
 			local dialogTitle = LOC "$$$/LrMediaWiki/Section/UploadInformation/Preview=Preview of generated wikitext"
 			local factory = LrView.osFactory()
 			properties.dialogValue = wikitext
@@ -689,8 +696,12 @@ MediaWikiExportServiceProvider.processRenderedPhotos = function(functionContext,
 		end
 	end
 
+	-- add gallery
 	if MediaWikiUtils.isStringFilled(exportSettings.gallery) and fileNames then
-		MediaWikiInterface.addToGallery(fileNames, exportSettings.gallery)
+		local arguments = {}
+		arguments = MediaWikiUtils.currentDate(arguments) -- get list of date related placeholders
+		local substitutedGallery = MediaWikiUtils.substitutePlaceholders(exportSettings.gallery, arguments)
+		MediaWikiInterface.addToGallery(fileNames, substitutedGallery)
 	end
 end
 
@@ -710,7 +721,7 @@ MediaWikiExportServiceProvider.sectionsForTopOfDialog = function(viewFactory, pr
 	local otherTemplatesTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/OtherTemplatesTooltip=Other Templates^n^nOther templates are inserted after the infobox template and before the licensing section. Examples:^n  {{Panorama}}^n  {{Personality rights}}^n  {{Location estimated}}"
 	local licenseTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/LicenseTooltip=License^n^nThe license template to use, e.g. {{Cc-by-sa-4.0}}. Either this field or “Permission” should be set."
 	local categoriesTooltip = LOC "$$$/LrMediaWiki/Metadata/CategoriesTooltip=Categories^n^nThe categories all uploaded images should be added to; without the prefix “Category:” and without square brackets [[…]]. Multiple categories are separated by a ; (semicolon)."
-	local galleryTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/GalleryTooltip=Gallery^n^nIf this field is set, a gallery of your uploads will be added to the page with the specified title. Example:^n  User:MyUserName/My Uploads"
+	local galleryTooltip = LOC "$$$/LrMediaWiki/Section/UploadInformation/GalleryTooltip=Gallery^n^nIf this field is set, a gallery of your uploads will be added to the page with the specified title. Current date related placeholders are recognized. Example:^n  User:MyUserName/My Uploads at <currentLongDate>"
 
 	return {
 		{	-- first section

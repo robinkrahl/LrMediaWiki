@@ -17,6 +17,7 @@ local LrApplication = import 'LrApplication'
 local LrLogger = import 'LrLogger'
 local LrPasswords = import 'LrPasswords'
 local LrPrefs = import 'LrPrefs'
+local LrDate = import 'LrDate'
 
 local Info = require 'Info'
 
@@ -169,6 +170,27 @@ end
 
 MediaWikiUtils.tracef = function(format, message)
 	myLogger:tracef(format, message)
+end
+
+MediaWikiUtils.currentDate = function(arguments) -- returns list of date related placeholders
+	local currentTime = LrDate.currentTime() -- number of seconds since midnight UTC on January 1, 2001
+	arguments.currentIsoDate = LrDate.timeToIsoDate(currentTime) -- 2021-01-09
+	arguments.currentLongDate = LrDate.formatLongDate(currentTime) -- 9. Januar 2021
+	arguments.currentMediumDate = LrDate.formatMediumDate(currentTime) -- 09.01.2021
+	arguments.currentShortDate = LrDate.formatShortDate(currentTime) -- 09.01.21
+	arguments.currentYear = LrDate.timeToUserFormat(currentTime, '%Y') -- 2021
+	arguments.currentYearXX = LrDate.timeToUserFormat(currentTime, '%y') -- 21
+	arguments.currentMonthXX = LrDate.timeToUserFormat(currentTime, '%m') -- 01
+	arguments.currentMonth = tonumber(arguments.currentMonthXX) -- 1
+	arguments.currentMonthName = LrDate.timeToUserFormat(currentTime, '%B') -- January
+	arguments.currentDayXX = LrDate.timeToUserFormat(currentTime, '%d') -- 09
+	arguments.currentDay = LrDate.timeToUserFormat(currentTime, '%e') -- 9
+	arguments.currentDayName = LrDate.timeToUserFormat(currentTime, '%A') -- Saturday
+	arguments.currentTime = LrDate.timeToUserFormat(currentTime, '%H:%M:%S') -- 20:40:15
+	arguments.currentHour = LrDate.timeToUserFormat(currentTime, '%H') -- 20
+	arguments.currentMinute = LrDate.timeToUserFormat(currentTime, '%M') -- 40
+	arguments.currentSecond = LrDate.timeToUserFormat(currentTime, '%S') -- 15
+	return arguments
 end
 
 return MediaWikiUtils
