@@ -38,7 +38,11 @@ return {
 
 	VERSION = {
 		major = 1,
+<<<<<<< HEAD
 		minor = 5,
+=======
+		minor = 4,
+>>>>>>> parent of 071f19e... v1.5.1
 		revision = 0,
 	},
 }

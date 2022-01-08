@@ -1,5 +1,13 @@
 # LrMediaWiki changelog
 
+<<<<<<< HEAD
+=======
+## v1.5: One issue: Placeholders in Gallery (2022-01-03)
+
+### Fixed issues
+- #39: Placeholders in Gallery (enhancement)
+
+>>>>>>> parent of 071f19e... v1.5.1
 ## v1.4: One issue (2022-01-03)
 
 ### Fixed issues
